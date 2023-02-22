@@ -1,0 +1,28 @@
+package com.flylx.wand_mod;
+
+
+import com.flylx.wand_mod.screen.MagicScreenHandler;
+import com.flylx.wand_mod.item.modItemRegistry;
+
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+public class Wand_mod implements ModInitializer {
+    public static final String ModID = "wand_mod";
+    public static final Logger LOGGER = LogManager.getLogger();
+
+    public static final ScreenHandlerType<MagicScreenHandler> MAGIC_SCREEN_HANDLER =
+            new ScreenHandlerType<>(MagicScreenHandler::new);
+
+    @Override
+    public void onInitialize() {
+        Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
+    }
+}

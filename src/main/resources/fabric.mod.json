@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "wand_mod",
+  "version": "${version}",
+  "name": "Wand_mod",
+  "description": "a wand mod",
+  "authors": [
+    "flylx"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/wand_mod/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.flylx.wand_mod.client.Wand_modClient"
+    ],
+    "main": [
+      "com.flylx.wand_mod.Wand_mod"
+    ]
+  },
+  "mixins": [
+    "wand_mod.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.12",
+    "fabric": "*",
+    "minecraft": "1.19.2",
+    "fabric-key-binding-api-v1": "*"
+  }
+}
