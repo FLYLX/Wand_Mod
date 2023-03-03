@@ -52,8 +52,6 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class animated_base_wand extends Item implements  IAnimatable, ISyncable {
 
-    private static KeyBinding keyBinding;
-
 
     public static final String controllerName = "controller";
     public static final int ANIM_OPEN = 1;
@@ -63,12 +61,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
         super(settings.maxDamage(201));
         GeckoLibNetwork.registerSyncable(this);
         MinecraftClient.getInstance().getClass();
-        keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "com.flylx.wand_mod.magic", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
-                GLFW.GLFW_KEY_R, // The keycode of the key
-                "com.wand_mod" // The translation key of the keybinding's category.
-        ));
+
     }
     private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
@@ -128,13 +121,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("base_wand",ILoopType.EDefaultLoopTypes.LOOP));
         }
-        if(keyBinding.isPressed()){
-            if(entity instanceof PlayerEntity){
 
-                ((PlayerEntity) entity).openHandledScreen(createScreenHandlerFactory(stack));
-                LogManager.getLogger().info("yes");
-            }
-        }
     }
     private NamedScreenHandlerFactory createScreenHandlerFactory(ItemStack stack) {
         return new SimpleNamedScreenHandlerFactory((syncId, inventory, player) -> {

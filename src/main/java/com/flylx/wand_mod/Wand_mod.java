@@ -1,6 +1,7 @@
 package com.flylx.wand_mod;
 
 
+import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
 import com.flylx.wand_mod.item.modItemRegistry;
 
@@ -24,5 +25,6 @@ public class Wand_mod implements ModInitializer {
     @Override
     public void onInitialize() {
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
+        ModMessages.registerC2SPackets();
     }
 }

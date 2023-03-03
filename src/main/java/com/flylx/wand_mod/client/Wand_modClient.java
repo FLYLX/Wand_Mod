@@ -7,8 +7,11 @@ import com.flylx.wand_mod.BasicMagicRenderer;
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.entity.WandTableEntityRenderer;
 import com.flylx.wand_mod.entity.modEntityRegistry;
+import com.flylx.wand_mod.event.KeyInputHandler;
+import com.flylx.wand_mod.hud.MagicSwitchHud;
 import com.flylx.wand_mod.item.modItemRegistry;
 
+import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.screen.MagicScreen;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -17,6 +20,7 @@ import net.fabricmc.api.Environment;
 
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
@@ -33,6 +37,12 @@ public class Wand_modClient implements ClientModInitializer {
         EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
         HandledScreens.register(Wand_mod.MAGIC_SCREEN_HANDLER, MagicScreen::new);
+
+        KeyInputHandler.register();
+
+        HudRenderCallback.EVENT.register(new MagicSwitchHud());
+
+        ModMessages.registerS2CPackets();
 
     }
 }
