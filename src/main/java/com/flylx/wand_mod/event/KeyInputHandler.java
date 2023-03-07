@@ -1,10 +1,13 @@
 package com.flylx.wand_mod.event;
 
+import com.flylx.wand_mod.hud.MagicSwitchHud;
 import com.flylx.wand_mod.networking.ModMessages;
+import com.flylx.wand_mod.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +26,7 @@ public class KeyInputHandler {
             if(switch_magic_key.isPressed()){
                 //创建数据包并发送
 //                ClientPlayNetworking.send(ModMessages.EXAMPLE_ID, PacketByteBufs.create());
+                ClientPlayNetworking.send(ModMessages.SWITCH_MAGIC,PacketByteBufs.create());
                 ISPRESS_R = true;
             }else {
                 ISPRESS_R = false;

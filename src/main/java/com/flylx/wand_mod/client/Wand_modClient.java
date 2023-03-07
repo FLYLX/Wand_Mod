@@ -1,11 +1,11 @@
 package com.flylx.wand_mod.client;
 
 
-import com.flylx.wand_mod.AnimatedItemRenderer;
-import com.flylx.wand_mod.BasicMagicRenderer;
+import com.flylx.wand_mod.render.AnimatedItemRenderer;
+import com.flylx.wand_mod.render.BasicMagicRenderer;
 
 import com.flylx.wand_mod.Wand_mod;
-import com.flylx.wand_mod.entity.WandTableEntityRenderer;
+import com.flylx.wand_mod.render.WandTableEntityRenderer;
 import com.flylx.wand_mod.entity.modEntityRegistry;
 import com.flylx.wand_mod.event.KeyInputHandler;
 import com.flylx.wand_mod.hud.MagicSwitchHud;
@@ -21,7 +21,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 

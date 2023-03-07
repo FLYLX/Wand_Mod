@@ -2,61 +2,46 @@ package com.flylx.wand_mod.hud;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.event.KeyInputHandler;
+import com.flylx.wand_mod.util.IEntityDataSaver;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 import org.apache.logging.log4j.LogManager;
 
 public class MagicSwitchHud implements HudRenderCallback {
     private static final Identifier VIEWFINDER = new Identifier(Wand_mod.ModID, "textures/hud/switch_menu.png");
-    public static Quaternion quaternion = new Quaternion(0,0,0,0);
+    public static float change = 0;
 
-    public void setQuaternion(Quaternion quaternion){
-        this.quaternion = new Quaternion(quaternion.getX()+this.quaternion.getX(),
-                quaternion.getY()+this.quaternion.getY(),quaternion.getZ()+this.quaternion.getZ(),
-                quaternion.getW());
-
+    public void setHudDegree(float degree){
+        this.change = degree;
     }
 
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
-        int x = 0;
-        int y = 0;
+
         //贴图的宽度
         float imageWidth = 64;
         //贴图高度
         float imageHeight = 64;
-        float hnew=0;
-        float wnew=0;
+
         MinecraftClient client = MinecraftClient.getInstance();
         if (client != null) {
-            int width = client.getWindow().getScaledWidth()/2;
-            int height = client.getWindow().getScaledHeight()/2;
+            int width = client.getWindow().getScaledWidth();
+            int height = client.getWindow().getScaledHeight();
 
-            float rs = width / height;
-            float ri = imageWidth / imageHeight;
-
-
-            if (rs > ri) {
-                wnew = width;
-                hnew = height;
-            } else {
-                wnew = width;
-                hnew = height;
-            }
-            x = Math.round((height - hnew) / 2F);
-            y = Math.round((width - wnew) / 2F);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, VIEWFINDER);
 
             if(KeyInputHandler.ISPRESS_R == true){
-                matrixStack.push();
                 /**
                  * Draws a textured rectangle from a region in a texture.
                  *
@@ -73,10 +58,19 @@ public class MagicSwitchHud implements HudRenderCallback {
                  * @param width the width of the rectangle
                  * @param height the height of the rectangle
                  */
-                matrixStack.multiply(quaternion);
-                DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, Math.round(wnew),
-                                Math.round(wnew), Math.round(wnew), Math.round(wnew));
+
+                matrixStack.push();
+
+                matrixStack.translate(width,0,0);
+
+                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(
+                        ((IEntityDataSaver)client.getInstance().player).getPersistentData().getFloat("switch")));
+
+                DrawableHelper.drawTexture(matrixStack, -64, -64, 0, 0,
+                        128,128,128,128);
+
                 matrixStack.pop();
+
                     }else {
 
             }

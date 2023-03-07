@@ -1,4 +1,4 @@
-package com.flylx.wand_mod;
+package com.flylx.wand_mod.render;
 
 import com.flylx.wand_mod.client.BasicMagicModel;
 import com.flylx.wand_mod.entity.BasicMagic;
@@ -13,8 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
-public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic>
-{
+public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
 
     public BasicMagicRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new BasicMagicModel());

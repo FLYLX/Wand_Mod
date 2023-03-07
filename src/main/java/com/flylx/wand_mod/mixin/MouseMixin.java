@@ -17,7 +17,7 @@ public class MouseMixin {
     @Inject(at = {@At("RETURN")}, method = {"onMouseScroll(JDD)V"})
     private void onOnMouseScroll(long long_1, double double_1, double double_2, CallbackInfo ci) {
         if(KeyInputHandler.ISPRESS_R){
-            magicSwitchHud.setQuaternion(Vec3f.POSITIVE_Z.getRadialQuaternion((float) double_2/100));
+            magicSwitchHud.setHudDegree((float) double_2*5f);
 
         }
     }

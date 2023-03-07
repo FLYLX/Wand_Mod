@@ -1,5 +1,6 @@
-package com.flylx.wand_mod.entity;
+package com.flylx.wand_mod.render;
 
+import com.flylx.wand_mod.entity.WandTableEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LecternBlock;
 import net.minecraft.client.MinecraftClient;

@@ -8,6 +8,6 @@ public class TestData {
         NbtCompound nbtCompound = player.getPersistentData();
         nbtCompound.putInt("new",1);
         return 0;
-    }
 
+    }
 }

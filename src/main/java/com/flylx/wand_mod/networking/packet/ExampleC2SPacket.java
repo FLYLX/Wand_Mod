@@ -22,6 +22,7 @@ public class ExampleC2SPacket {
 
         EntityType.COW.spawn((ServerWorld) player.world, null,null, player, player.getBlockPos(), SpawnReason.TRIGGERED, true,
                 false);
+
         TestData.addata((IEntityDataSaver) player,1);
 
 
