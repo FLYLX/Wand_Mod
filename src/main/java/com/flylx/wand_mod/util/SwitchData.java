@@ -6,9 +6,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
+
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.apache.logging.log4j.LogManager;
+
 
 public class SwitchData {
     public static float changeSwitch(IEntityDataSaver player,float degree){
@@ -25,10 +25,9 @@ public class SwitchData {
         MagicSwitchHud.change = 0;
         syncThirst(indegree, (ServerPlayerEntity) player);
 
-
-
         return degree;
     }
+
     public static void syncThirst(float degree, ServerPlayerEntity player) {
 
         PacketByteBuf buffer = PacketByteBufs.create();

@@ -30,7 +30,6 @@ public abstract class ModEntityDataSaverMixin implements IEntityDataSaver {
 
         if(persistentData!=null){
             nbt.put("wand_mod.mod_data",persistentData);
-            LogManager.getLogger().info(("written"));
         }
 
 
@@ -40,8 +39,6 @@ public abstract class ModEntityDataSaverMixin implements IEntityDataSaver {
     protected void injectReadNbtMethod(NbtCompound nbt, CallbackInfo info){
         if(nbt.contains("wand_mod.mod_data")){
             persistentData = nbt.getCompound("wand_mod.mod_data");
-            LogManager.getLogger().info(("read"));
-            LogManager.getLogger().info(nbt.getCompound("wand_mod.mod_data").getFloat("switch"));
         }
     }
 }

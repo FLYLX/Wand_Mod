@@ -1,16 +1,14 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.screen.MagicScreen;
+import com.flylx.wand_mod.event.SwitchMagic;
+import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import com.flylx.wand_mod.util.IEntityDataSaver;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.BookEditScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +21,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -77,19 +76,18 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
                     e.printStackTrace();
                 }
                 PlayerEntity playerentity = (PlayerEntity) user;
+
                 BasicMagic basicMagic = new BasicMagic(world, playerentity);
 
-                basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0.0F, 1.0F * 2.0F,
-                        1.0F);
+                basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
+                        0F);
                 basicMagic.setDamage(5);
                 basicMagic.age = 30;
                 basicMagic.hasNoGravity();
 
-
-                world.spawnEntity(basicMagic);
-
                 stack.damage(1, playerentity, p -> p.sendToolBreakStatus(playerentity.getActiveHand()));
 
+                world.spawnEntity(basicMagic);
             }
         });
         t.start();
@@ -102,6 +100,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     @Override
 
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+
         super.inventoryTick(stack, world, entity, slot, selected);
         final int id = GeckoLibUtil.getIDFromStack(stack);
         final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);

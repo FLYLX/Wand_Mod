@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.client;
 
 
+import com.flylx.wand_mod.event.ClientPlayerTickHandler;
 import com.flylx.wand_mod.render.AnimatedItemRenderer;
 import com.flylx.wand_mod.render.BasicMagicRenderer;
 
@@ -18,9 +19,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
@@ -43,5 +47,6 @@ public class Wand_modClient implements ClientModInitializer {
 
         ModMessages.registerS2CPackets();
 
+        ClientTickEvents.START_WORLD_TICK.register(new ClientPlayerTickHandler());
     }
 }

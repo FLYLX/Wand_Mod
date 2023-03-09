@@ -9,12 +9,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
-import org.apache.logging.log4j.LogManager;
+
 
 public class MagicSwitchHud implements HudRenderCallback {
     private static final Identifier VIEWFINDER = new Identifier(Wand_mod.ModID, "textures/hud/switch_menu.png");

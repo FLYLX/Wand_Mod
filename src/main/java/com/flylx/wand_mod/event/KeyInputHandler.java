@@ -23,13 +23,18 @@ public class KeyInputHandler {
 
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
             if(switch_magic_key.isPressed()){
                 //创建数据包并发送
 //                ClientPlayNetworking.send(ModMessages.EXAMPLE_ID, PacketByteBufs.create());
-                ClientPlayNetworking.send(ModMessages.SWITCH_MAGIC,PacketByteBufs.create());
+
+
+
                 ISPRESS_R = true;
             }else {
+
                 ISPRESS_R = false;
+
             }
         });
 

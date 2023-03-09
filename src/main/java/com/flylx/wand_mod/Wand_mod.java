@@ -1,11 +1,13 @@
 package com.flylx.wand_mod;
 
 
+import com.flylx.wand_mod.event.ServerPlayerTickHandler;
 import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
 import com.flylx.wand_mod.item.modItemRegistry;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.screen.ScreenHandlerType;
@@ -26,5 +28,9 @@ public class Wand_mod implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
         ModMessages.registerC2SPackets();
+
+        ServerTickEvents.START_SERVER_TICK.register(new ServerPlayerTickHandler());
+
+
     }
 }

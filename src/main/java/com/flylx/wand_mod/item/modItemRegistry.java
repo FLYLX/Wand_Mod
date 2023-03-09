@@ -21,7 +21,8 @@ public class modItemRegistry {
 
     public static final Item WAND_TABLE =
             registerItem("wand_table", new BlockItem(modBlockRegistry.WAND_TABLE,
-                    new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+                    new FabricItemSettings().group(ItemGroup.DECORATIONS))
+            );
 
     public static Item registerItem(String name,Item item){
         return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),item);
