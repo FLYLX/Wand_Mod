@@ -1,12 +1,7 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.event.SwitchMagic;
-import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
-import com.flylx.wand_mod.util.IEntityDataSaver;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
@@ -21,7 +16,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -67,32 +61,39 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(470);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                PlayerEntity playerentity = (PlayerEntity) user;
-
-                BasicMagic basicMagic = new BasicMagic(world, playerentity);
-
-                basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
-                        0F);
-                basicMagic.setDamage(5);
-                basicMagic.age = 30;
-                basicMagic.hasNoGravity();
-
-                stack.damage(1, playerentity, p -> p.sendToolBreakStatus(playerentity.getActiveHand()));
-
-                world.spawnEntity(basicMagic);
-            }
-        });
-        t.start();
-
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
+        if (!world.isClient) {
+            //waiting for movement done
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(470);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    PlayerEntity playerentity = (PlayerEntity) user;
+
+                    BasicMagic basicMagic = new BasicMagic(world, playerentity);
+
+                    basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
+                            0F);
+
+                    basicMagic.setDamage(5);
+
+                    basicMagic.age = 30;
+
+                    basicMagic.hasNoGravity();
+
+                    stack.damage(1, playerentity, p -> p.sendToolBreakStatus(playerentity.getActiveHand()));
+
+                    world.spawnEntity(basicMagic);
+                }
+            });
+            t.start();
+
+        }
+
 
     }
 

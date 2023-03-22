@@ -1,4 +1,4 @@
-package com.flylx.wand_mod.client;
+package com.flylx.wand_mod.model;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.item.animated_base_wand;

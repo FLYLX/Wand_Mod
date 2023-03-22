@@ -3,25 +3,25 @@
 	"animations": {
 		"spin": {
 			"loop": true,
-			"animation_length": 1,
+			"animation_length": 2,
 			"bones": {
-				"bone2": {
+				"main": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
 						},
-						"1.0": {
-							"vector": [360, 0, 0]
+						"2.0": {
+							"vector": [-1440, 0, 0]
 						}
 					}
 				},
-				"bone": {
+				"tail": {
 					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
 						},
-						"1.0": {
-							"vector": [-360, 0, 0]
+						"2.0": {
+							"vector": [-1080, 0, 0]
 						}
 					}
 				}

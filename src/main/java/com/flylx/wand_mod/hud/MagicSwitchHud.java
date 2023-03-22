@@ -11,6 +11,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
+import org.apache.logging.log4j.LogManager;
 
 
 public class MagicSwitchHud implements HudRenderCallback {
@@ -66,6 +67,7 @@ public class MagicSwitchHud implements HudRenderCallback {
                 DrawableHelper.drawTexture(matrixStack, -64, -64, 0, 0,
                         128,128,128,128);
 
+                LogManager.getLogger().info(((IEntityDataSaver)client.getInstance().player).getPersistentData().getFloat("switch"));
                 matrixStack.pop();
 
                     }else {

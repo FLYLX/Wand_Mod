@@ -1,4 +1,4 @@
-package com.flylx.wand_mod.client;
+package com.flylx.wand_mod.model;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.entity.BasicMagic;
@@ -13,7 +13,8 @@ public class BasicMagicModel extends AnimatedGeoModel<BasicMagic> {
 
     @Override
     public Identifier getTextureResource(BasicMagic object) {
-        return new Identifier(Wand_mod.ModID,"textures/item/basic_magic.png");
+            return new Identifier(Wand_mod.ModID, "textures/item/basic_magic.png");
+
     }
 
     @Override
