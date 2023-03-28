@@ -6,6 +6,7 @@ import com.flylx.wand_mod.render.AnimatedItemRenderer;
 import com.flylx.wand_mod.render.BasicMagicRenderer;
 
 import com.flylx.wand_mod.Wand_mod;
+import com.flylx.wand_mod.render.MaigcAreaRenderer;
 import com.flylx.wand_mod.render.WandTableEntityRenderer;
 import com.flylx.wand_mod.entity.modEntityRegistry;
 import com.flylx.wand_mod.event.KeyInputHandler;
@@ -20,7 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -39,6 +40,9 @@ public class Wand_modClient implements ClientModInitializer {
         GeoItemRenderer.registerItemRenderer(modItemRegistry.BASE_WAND,new AnimatedItemRenderer());
         EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
+
+        EntityRendererRegistry.register(modEntityRegistry.MAGIC_AREA,(ctx) -> new MaigcAreaRenderer(ctx));
+
         HandledScreens.register(Wand_mod.MAGIC_SCREEN_HANDLER, MagicScreen::new);
 
         KeyInputHandler.register();

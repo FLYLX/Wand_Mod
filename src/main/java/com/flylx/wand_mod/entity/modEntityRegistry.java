@@ -1,24 +1,15 @@
 package com.flylx.wand_mod.entity;
 
 import com.flylx.wand_mod.Wand_mod;
-import com.flylx.wand_mod.block.WandTableBlock;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.data.client.TexturedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import software.bernie.example.registry.EntityRegistryBuilder;
-
-import java.util.List;
 
 
 public class modEntityRegistry {
@@ -31,6 +22,9 @@ public class modEntityRegistry {
                 FabricBlockEntityTypeBuilder.create(WandTableEntity::new,modBlockRegistry.WAND_TABLE).build());
 
 
+     public static final EntityType<MagicAreaCloud> MAGIC_AREA = buildEntity(MagicAreaCloud::new,MagicAreaCloud.class
+             ,6.0f, 0.5f,SpawnGroup.MISC);
+
     public static <T extends Entity> EntityType<T> buildEntity(EntityType.EntityFactory<T> entity, Class<T> entityClass,
                                                                float width, float height, SpawnGroup group) {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -39,5 +33,9 @@ public class modEntityRegistry {
                     .category(group).dimensions(EntityDimensions.changing(width, height)).build();
         }
         return null;
+    }
+
+    private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
+        return Registry.register(Registry.ENTITY_TYPE, id, type.build(id));
     }
 }

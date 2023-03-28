@@ -79,8 +79,6 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
                     basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
                             0F);
 
-                    basicMagic.setDamage(5);
-
                     basicMagic.age = 30;
 
                     basicMagic.hasNoGravity();

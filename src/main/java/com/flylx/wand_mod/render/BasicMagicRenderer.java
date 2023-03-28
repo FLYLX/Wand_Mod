@@ -15,8 +15,10 @@ import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
 
+
     public BasicMagicRenderer(EntityRendererFactory.Context ctx) {
         super(ctx, new BasicMagicModel());
+
     }
 
     @Override
@@ -33,51 +35,14 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
             animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_LAVA, true,animatable.getParticleX(0.5D),
                     animatable.getY(),
                     animatable.getParticleZ(0.5D),animatable.getVelocity().x,animatable.getVelocity().y ,animatable.getVelocity().z );
-//            animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_LAVA,
-//                    animatable.getParticleX(0.5)+Math.cos((animatable.world.getTime()+partialTick)/8),
-//                    animatable.getY()+Math.sin((animatable.world.getTime()+partialTick)/8),
-//                    animatable.getZ(),
-//                    animatable.getVelocity().x,animatable.getVelocity().y,animatable.getVelocity().z);
-            if (!animatable.isExist){
-                for(int q = 0;q<5;q++) {
-                    for (int i = 0; i < 360; i = i + 10) {
 
-                        animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_LAVA, animatable.getParticleX(0.0D) + Math.sin(i)*q,
-                                animatable.getY(),
-                                animatable.getParticleZ(0.0D) + Math.cos(i)*q, Math.sin(i),
-                                0, Math.cos(i));
-
-                    }
-                }
-                animatable.setVelocity(0,0,0);
-
-            }
 
             }else if(animatable.degree>=60&&animatable.degree<120){
             animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_WATER, true,animatable.getParticleX(0.5D),
                     animatable.getY(),
                     animatable.getParticleZ(0.5D),
                     animatable.getVelocity().x,animatable.getVelocity().y ,animatable.getVelocity().z );
-            if (!animatable.isExist) {
-                for (int q = 0; q < 5; q++) {
-                    for (int i = 0; i < 360; i = i + 10) {
-                        animatable.world.addParticle(ParticleTypes.DRIPPING_WATER, animatable.getParticleX(0.0D) + Math.sin(i)*q,
-                                animatable.getY(),
-                                animatable.getParticleZ(0.0D) + Math.cos(i)*q, Math.sin(i),
-                                0, Math.cos(i));
-                    }
-                }
-                animatable.setVelocity(0,0,0);
-
             }
-
-            }
-//            animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_WATER,
-//                    animatable.getParticleX(0.5)+Math.cos((animatable.world.getTime()+partialTick)/8),
-//                    animatable.getY()+Math.sin((animatable.world.getTime()+partialTick)/8),
-//                    animatable.getParticleZ(0.5),
-//                    animatable.getVelocity().x,animatable.getVelocity().y,animatable.getVelocity().z);
-//        }
 
         return RenderLayer.getEntityTranslucent(getTextureResource(animatable));
     }

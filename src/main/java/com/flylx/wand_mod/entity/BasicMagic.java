@@ -2,6 +2,7 @@ package com.flylx.wand_mod.entity;
 
 
 import com.flylx.wand_mod.util.IEntityDataSaver;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 
@@ -9,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -44,7 +46,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.List;
 
 
 public class BasicMagic extends PersistentProjectileEntity implements IAnimatable, ISyncable {
@@ -65,21 +66,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public BasicMagic(World world,LivingEntity owner){
         super(modEntityRegistry.BASIC_MAGIC, owner, world);
         this.shooter = owner;
-
-
     }
-
-    public BasicMagic(EntityType<? extends BasicMagic> type, double x, double y, double z, World world) {
-        super(type, x, y, z, world);
-    }
-
-    public BasicMagic(EntityType<? extends BasicMagic> type, LivingEntity owner, World world) {
-        super(type, owner, world);
-    }
-
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-
         return PlayState.CONTINUE;
     }
 
@@ -131,55 +120,31 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        LogManager.getLogger().info("entity hit");
-        if (!this.world.isClient) {
-            doDamage();
-            SleepAndDie(100);
-            if(entityHitResult.getEntity() instanceof LivingEntity) {
-                onHit((LivingEntity) entityHitResult.getEntity());
-            }
-//            this.remove(Entity.RemovalReason.DISCARDED);
+        super.onEntityHit(entityHitResult);
+        if (this.world.isClient) {
+            return;
         }
-
-
+        this.discard();
     }
 
 
     @Override
     protected void onCollision(HitResult hitResult) {
-        HitResult.Type type = hitResult.getType();
-        if (type == HitResult.Type.ENTITY) {
-            isExist = false;
-            this.onEntityHit((EntityHitResult)hitResult);
-            this.world.emitGameEvent(GameEvent.PROJECTILE_LAND, hitResult.getPos(), GameEvent.Emitter.of(this, null));
-//            BlockHitResult blockHitResult = new BlockHitResult(hitResult.getPos(),null,
-//                    new BlockPos(hitResult.getPos()),true);
-//            this.onBlockHit(blockHitResult);
-//            this.world.emitGameEvent(GameEvent.PROJECTILE_LAND, hitResult.getPos(), GameEvent.Emitter.of(this,
-//                    this.world.getBlockState(new BlockPos(hitResult.getPos()))));
-        } else if (type == HitResult.Type.BLOCK) {
-            isExist = false;
-            BlockHitResult blockHitResult = (BlockHitResult)hitResult;
-            this.onBlockHit(blockHitResult);
-            BlockPos blockPos = blockHitResult.getBlockPos();
-            this.world.emitGameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Emitter.of(this, this.world.getBlockState(blockPos)));
+        super.onCollision(hitResult);
+        if (this.world.isClient) {
+            return;
         }
 
     }
 
     @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
-
-        LogManager.getLogger().info("block hit");
-        if (!this.world.isClient) {
-
-              doDamage();
-              SleepAndDie(100);
-//            this.remove(Entity.RemovalReason.DISCARDED);
+        super.onBlockHit(blockHitResult);
+        if (this.world.isClient) {
+            return;
         }
-
-        this.setSound(SoundEvents.ENTITY_GENERIC_EXPLODE);
-
+        doDamage();
+        this.discard();
     }
 
     @Override
@@ -217,18 +182,6 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }
     }
 
-    public void explosionMagic(){
-        this.world.createExplosion(this, this.getX(), this.getBodyY(0.0625D), this.getZ(), 0.0F,
-                Explosion.DestructionType.NONE);
-        this.world.setBlockState(new BlockPos(this.getPos()), Blocks.FIRE.getDefaultState());
-
-    }
-
-
-    public void frozeMagic() {
-        this.world.setBlockState(new BlockPos(this.getPos()), Blocks.WATER.getDefaultState());
-
-    }
 
 
 
@@ -245,20 +198,30 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         super.readNbt(nbt);
     }
 
-    public void SleepAndDie(int time){
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(time);
-                    discard();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+
+//magic type
+    public void explosionMagic(){
+        MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
+        magicAreaCloud.setRadius(6.0f);
+        magicAreaCloud.setRadiusGrowth(-0.05f);
+        Entity entity = this.getOwner();
+        if (entity instanceof LivingEntity) {
+            magicAreaCloud.setOwner((LivingEntity) entity);
+        }
+        this.world.spawnEntity(magicAreaCloud);
+        LogManager.getLogger().info("done");
+        this.world.setBlockState(new BlockPos(this.getPos()), Blocks.FIRE.getDefaultState());
 
     }
 
+
+    public void frozeMagic() {
+        this.world.setBlockState(new BlockPos(this.getPos()), Blocks.WATER.getDefaultState());
+    }
+
+    public void poisonMagic(){
+
+
+
+    }
 }
