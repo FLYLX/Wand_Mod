@@ -35,7 +35,5 @@ public class modEntityRegistry {
         return null;
     }
 
-    private static <T extends Entity> EntityType<T> register(String id, EntityType.Builder<T> type) {
-        return Registry.register(Registry.ENTITY_TYPE, id, type.build(id));
-    }
+
 }

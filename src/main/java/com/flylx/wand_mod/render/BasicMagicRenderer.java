@@ -42,7 +42,16 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
                     animatable.getY(),
                     animatable.getParticleZ(0.5D),
                     animatable.getVelocity().x,animatable.getVelocity().y ,animatable.getVelocity().z );
-            }
+            }else if(animatable.degree>=120&&animatable.degree<180){
+            int m = 0x00FF22;
+            double n = (float) (m >> 16 & 0xFF) / 255.0f;
+            double o = (float) (m >> 8 & 0xFF) / 255.0f;
+            double p = (float) (m & 0xFF) / 255.0f;
+            animatable.world.addParticle(ParticleTypes.ENTITY_EFFECT, true,animatable.getParticleX(0.5D),
+                    animatable.getY(),
+                    animatable.getParticleZ(0.5D),
+                    n,o,p );
+        }
 
         return RenderLayer.getEntityTranslucent(getTextureResource(animatable));
     }

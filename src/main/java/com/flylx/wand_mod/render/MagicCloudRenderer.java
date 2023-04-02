@@ -7,8 +7,8 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class MaigcAreaRenderer extends EntityRenderer<MagicAreaCloud> {
-    public MaigcAreaRenderer(EntityRendererFactory.Context ctx) {
+public class MagicCloudRenderer extends EntityRenderer<MagicAreaCloud> {
+    public MagicCloudRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);
 
     }
@@ -21,6 +21,5 @@ public class MaigcAreaRenderer extends EntityRenderer<MagicAreaCloud> {
     @Override
     public void render(MagicAreaCloud entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
-
     }
 }

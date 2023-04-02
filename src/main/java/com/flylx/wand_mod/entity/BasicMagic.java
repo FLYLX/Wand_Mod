@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.entity;
 
 
+
 import com.flylx.wand_mod.util.IEntityDataSaver;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -12,6 +13,8 @@ import net.minecraft.entity.LivingEntity;
 
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -98,8 +101,6 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     @Override
     public void tick() {
-        LogManager.getLogger().info(isExist);
-        LogManager.getLogger().info(this.getVelocity().x+"   "+this.getVelocity().y+"   "+this.getVelocity().z);
         if(degree >360.0F) {
             degree = ((IEntityDataSaver) MinecraftClient.getInstance().player).getPersistentData().getFloat("switch");
         }
@@ -158,12 +159,14 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     public void doDamage() {
         if(degree>=0&&degree<60) {
-            LogManager.getLogger().info("explosion");
             explosionMagic();
+
 
         }else if (degree>=60&&degree<120){
             frozeMagic();
 
+        }else if(degree>=120&&degree<180){
+            poisonMagic();
         }
 
 
@@ -179,6 +182,14 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }else if (degree>=60&&degree<120){
             target.setFrozenTicks(2000);
             target.damage(DamageSource.FREEZE,5);
+        }else if(degree>=120&&degree<180){
+            StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.POISON);
+
+            statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
+                    2000, 20,
+                    statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
+            target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
+
         }
     }
 
@@ -204,24 +215,44 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
         magicAreaCloud.setRadius(6.0f);
         magicAreaCloud.setRadiusGrowth(-0.05f);
+        magicAreaCloud.setDegree(degree);
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
             magicAreaCloud.setOwner((LivingEntity) entity);
         }
         this.world.spawnEntity(magicAreaCloud);
         LogManager.getLogger().info("done");
-        this.world.setBlockState(new BlockPos(this.getPos()), Blocks.FIRE.getDefaultState());
-
+        if(this.world.getBlockState(this.getBlockPos()).equals(Blocks.AIR.getDefaultState())) {
+            this.world.setBlockState(new BlockPos(this.getPos()), Blocks.FIRE.getDefaultState());
+        }
     }
 
 
     public void frozeMagic() {
-        this.world.setBlockState(new BlockPos(this.getPos()), Blocks.WATER.getDefaultState());
+        MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
+        magicAreaCloud.setRadius(6.0f);
+        magicAreaCloud.setRadiusGrowth(-0.05f);
+        magicAreaCloud.setDegree(degree);
+        Entity entity = this.getOwner();
+        if (entity instanceof LivingEntity) {
+            magicAreaCloud.setOwner((LivingEntity) entity);
+        }
+        this.world.spawnEntity(magicAreaCloud);
+        if(this.world.getBlockState(this.getBlockPos()).equals(Blocks.AIR.getDefaultState())) {
+
+        }
     }
 
     public void poisonMagic(){
-
-
+        MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
+        magicAreaCloud.setRadius(6.0f);
+        magicAreaCloud.setRadiusGrowth(-0.05f);
+        magicAreaCloud.setDegree(degree);
+        Entity entity = this.getOwner();
+        if (entity instanceof LivingEntity) {
+            magicAreaCloud.setOwner((LivingEntity) entity);
+        }
+        this.world.spawnEntity(magicAreaCloud);
 
     }
 }

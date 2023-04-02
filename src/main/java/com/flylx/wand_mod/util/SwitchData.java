@@ -16,7 +16,7 @@ public class SwitchData {
         float indegree = nbt.getFloat("switch");
         if(indegree+degree>360f){
             indegree = indegree+degree-360f;
-        }else if(indegree+degree<-360) {
+        }else if(indegree+degree<0) {
             indegree = indegree+degree+360f;
         }else{
             indegree += degree;
