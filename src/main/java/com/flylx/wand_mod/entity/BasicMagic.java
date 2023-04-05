@@ -53,7 +53,6 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class BasicMagic extends PersistentProjectileEntity implements IAnimatable, ISyncable {
 
-    public volatile boolean isExist = true;
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private LivingEntity shooter;
     public float degree = 1000.0F;

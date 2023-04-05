@@ -2,12 +2,9 @@ package com.flylx.wand_mod.client;
 
 
 import com.flylx.wand_mod.event.ClientPlayerTickHandler;
-import com.flylx.wand_mod.render.AnimatedItemRenderer;
-import com.flylx.wand_mod.render.BasicMagicRenderer;
+import com.flylx.wand_mod.render.*;
 
 import com.flylx.wand_mod.Wand_mod;
-import com.flylx.wand_mod.render.MagicCloudRenderer;
-import com.flylx.wand_mod.render.WandTableEntityRenderer;
 import com.flylx.wand_mod.entity.modEntityRegistry;
 import com.flylx.wand_mod.event.KeyInputHandler;
 import com.flylx.wand_mod.hud.MagicSwitchHud;
@@ -36,9 +33,11 @@ public class Wand_modClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        GeoItemRenderer.registerItemRenderer(modItemRegistry.BASE_WAND,new AnimatedItemRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.BASE_WAND,new BaseWandRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.FLAME_SCROLL,new FlameScrollRenderer());
         EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
+
 
         EntityRendererRegistry.register(modEntityRegistry.MAGIC_AREA,(ctx) -> new MagicCloudRenderer(ctx));
 

@@ -16,6 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -40,7 +41,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     public animated_base_wand(Settings settings) {
         super(settings.maxDamage(201));
         GeckoLibNetwork.registerSyncable(this);
-        MinecraftClient.getInstance().getClass();
+//        MinecraftClient.getInstance().getClass();
 
     }
     private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
