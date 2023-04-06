@@ -13,6 +13,9 @@ import net.minecraft.entity.LivingEntity;
 
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +25,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 
 
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -55,10 +59,14 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private LivingEntity shooter;
-    public float degree = 1000.0F;
+
     public static final int ANIM_OPEN = 1;
     public static final String controllerName = "controller";
     AnimationController<BasicMagic> controller = new AnimationController(this,controllerName , 1,this::predicate);
+    private  static final TrackedData<Float> DEGREE = DataTracker.registerData(BasicMagic.class,
+            TrackedDataHandlerRegistry.FLOAT);
+
+
 
     public BasicMagic(EntityType<? extends BasicMagic> entityType, World world) {
         super(entityType, world);
@@ -74,6 +82,25 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         return PlayState.CONTINUE;
     }
 
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.getDataTracker().startTracking(DEGREE,
+                Float.valueOf(((IEntityDataSaver) MinecraftClient.getInstance().player).getPersistentData().getFloat(
+                        "switch")));
+    }
+
+
+
+    public void setDegree(float degree) {
+        if (!this.world.isClient) {
+            this.getDataTracker().set(DEGREE, Float.valueOf(degree));
+        }
+    }
+
+    public float getDegree() {
+        return this.getDataTracker().get(DEGREE).floatValue();
+    }
 
 
     @Override
@@ -100,9 +127,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     @Override
     public void tick() {
-        if(degree >360.0F) {
-            degree = ((IEntityDataSaver) MinecraftClient.getInstance().player).getPersistentData().getFloat("switch");
-        }
+        LogManager.getLogger().info(getDegree());
 
         if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z
                 ,2))<0.3F) {
@@ -157,14 +182,14 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     }
 
     public void doDamage() {
-        if(degree>=0&&degree<60) {
+        if(getDegree()>=0&&getDegree()<60) {
             explosionMagic();
 
 
-        }else if (degree>=60&&degree<120){
+        }else if (getDegree()>=60&&getDegree()<120){
             frozeMagic();
 
-        }else if(degree>=120&&degree<180){
+        }else if(getDegree()>=120&&getDegree()<180){
             poisonMagic();
         }
 
@@ -175,13 +200,13 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     protected void onHit(LivingEntity target) {
         super.onHit(target);
         LogManager.getLogger().info("target:"+target);
-        if(degree>=0&&degree<60) {
+        if(getDegree()>=0&&getDegree()<60) {
             target.setFireTicks(2000);
             target.damage(DamageSource.ON_FIRE,5);
-        }else if (degree>=60&&degree<120){
+        }else if (getDegree()>=60&&getDegree()<120){
             target.setFrozenTicks(2000);
             target.damage(DamageSource.FREEZE,5);
-        }else if(degree>=120&&degree<180){
+        }else if(getDegree()>=120&&getDegree()<180){
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.POISON);
 
             statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
@@ -198,13 +223,16 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-        nbt.putFloat("magicType", degree);
+
+        nbt.putFloat("Radius", this.getDegree());
+
         return super.writeNbt(nbt);
     }
 
     @Override
     public void readNbt(NbtCompound nbt) {
-        degree = nbt.getFloat("magicType");
+        this.setDegree(nbt.getFloat("Degree"));
+
         super.readNbt(nbt);
     }
 
@@ -214,7 +242,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
         magicAreaCloud.setRadius(6.0f);
         magicAreaCloud.setRadiusGrowth(-0.05f);
-        magicAreaCloud.setDegree(degree);
+        magicAreaCloud.setDegree(getDegree());
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
             magicAreaCloud.setOwner((LivingEntity) entity);
@@ -231,7 +259,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
         magicAreaCloud.setRadius(6.0f);
         magicAreaCloud.setRadiusGrowth(-0.05f);
-        magicAreaCloud.setDegree(degree);
+        magicAreaCloud.setDegree(getDegree());
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
             magicAreaCloud.setOwner((LivingEntity) entity);
@@ -246,7 +274,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
         magicAreaCloud.setRadius(6.0f);
         magicAreaCloud.setRadiusGrowth(-0.05f);
-        magicAreaCloud.setDegree(degree);
+        magicAreaCloud.setDegree(getDegree());
         Entity entity = this.getOwner();
         if (entity instanceof LivingEntity) {
             magicAreaCloud.setOwner((LivingEntity) entity);

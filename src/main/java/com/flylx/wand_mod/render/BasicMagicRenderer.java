@@ -31,18 +31,18 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
                                      @Nullable VertexConsumerProvider bufferSource,
                                      @Nullable VertexConsumer buffer, int packedLight, Identifier texture) {
 
-        if(animatable.degree>=0&&animatable.degree<60){
+        if(animatable.getDegree()>=0&&animatable.getDegree()<60){
             animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_LAVA, true,animatable.getParticleX(0.5D),
                     animatable.getY(),
                     animatable.getParticleZ(0.5D),animatable.getVelocity().x,animatable.getVelocity().y ,animatable.getVelocity().z );
 
 
-            }else if(animatable.degree>=60&&animatable.degree<120){
+            }else if(animatable.getDegree()>=60&&animatable.getDegree()<120){
             animatable.world.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_WATER, true,animatable.getParticleX(0.5D),
                     animatable.getY(),
                     animatable.getParticleZ(0.5D),
                     animatable.getVelocity().x,animatable.getVelocity().y ,animatable.getVelocity().z );
-            }else if(animatable.degree>=120&&animatable.degree<180){
+            }else if(animatable.getDegree()>=120&&animatable.getDegree()<180){
             int m = 0x00FF22;
             double n = (float) (m >> 16 & 0xFF) / 255.0f;
             double o = (float) (m >> 8 & 0xFF) / 255.0f;
