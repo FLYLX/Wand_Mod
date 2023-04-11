@@ -31,14 +31,14 @@ import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class FlameScroll extends Item implements IAnimatable, ISyncable {
+public class FrozeScroll extends Item implements IAnimatable, ISyncable {
 
     public static final String controllerName = "controller";
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
 
-    public FlameScroll(Settings settings) {
+    public FrozeScroll(Settings settings) {
         super(settings);
         GeckoLibNetwork.registerSyncable(this);
     }
@@ -73,26 +73,25 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        LogManager.getLogger().info("exist");
         if (!world.isClient()) {
             final int id = GeckoLibUtil.getIDFromStack(stack);
             final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-        if(MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
-            PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
+            if(MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+                PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
 
-            BasicMagic basicMagic = new BasicMagic(world, playerentity);
+                BasicMagic basicMagic = new BasicMagic(world, playerentity);
 
-            basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
-                    0F);
+                basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
+                        0F);
 
-            basicMagic.age = 30;
+                basicMagic.age = 30;
 
-            basicMagic.hasNoGravity();
-            basicMagic.setDegree(30);
-            stack.decrement(1);
-            world.spawnEntity(basicMagic);
+                basicMagic.hasNoGravity();
+                basicMagic.setDegree(30);
+                stack.decrement(1);
+                world.spawnEntity(basicMagic);
 
-        }
+            }
         }
 
 
@@ -101,7 +100,6 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-
         ItemStack itemStack = user.getStackInHand(hand);
         if (!world.isClient()) {
             if(user.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)) {

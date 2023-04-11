@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.mixin;
 
 import com.flylx.wand_mod.event.KeyInputHandler;
+import com.flylx.wand_mod.event.LeftClick;
 import com.flylx.wand_mod.hud.MagicSwitchHud;
 import com.flylx.wand_mod.item.FlameScroll;
 import net.minecraft.client.Mouse;
@@ -31,9 +32,9 @@ public abstract class MouseMixin {
     @Inject(at = {@At("RETURN")}, method = {"onMouseButton"})
     private void onOnMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
         if(this.wasLeftButtonClicked()){
-            FlameScroll.LEFT_CLICK = true;
+            LeftClick.isClick = true;
         }else{
-            FlameScroll.LEFT_CLICK = false;
+            LeftClick.isClick = false;
         }
     }
 

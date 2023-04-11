@@ -7,7 +7,9 @@
     "MagicScreenMixin",
     "ModEntityDataSaverMixin",
     "PlayerInventoryMixin",
-    "MouseMixin"
+    "MouseMixin",
+    "PlayerEntityMixin",
+    "ItemEntityMixin"
   ],
   "client": [
   ],

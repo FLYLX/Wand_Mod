@@ -4,13 +4,18 @@ package com.flylx.wand_mod.event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.apache.logging.log4j.LogManager;
 
 public class ServerPlayerTickHandler implements ServerTickEvents.StartTick{
+
     @Override
     public void onStartTick(MinecraftServer server) {
-        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+//        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+//
+//        }
 
-        }
     }
+
+
 }
 

@@ -18,4 +18,5 @@ public class PlayerInventoryMixin {
             ci.cancel();
         }
     }
+
 }

@@ -1,23 +1,24 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.event.LeftClick;
+import com.flylx.wand_mod.mixin.MouseMixin;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.loader.impl.util.log.Log;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.Hopper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -31,14 +32,22 @@ import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class FlameScroll extends Item implements IAnimatable, ISyncable {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class EmptyScroll extends Item implements IAnimatable, ISyncable {
+
+//    public static final VoxelShape INSIDE_SHAPE = Block.createCuboidShape(2.0, 11.0, 2.0, 14.0, 16.0, 14.0);
+    public static final VoxelShape ABOVE_SHAPE = Block.createCuboidShape(0.0, 16.0, 0.0, 16.0, 32.0, 16.0);
+    public static final VoxelShape CHECK_SHAPE = VoxelShapes.union(ABOVE_SHAPE);
+
 
     public static final String controllerName = "controller";
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public static boolean LEFT_CLICK = false;
 
-
-    public FlameScroll(Settings settings) {
+    public EmptyScroll(Settings settings) {
         super(settings);
         GeckoLibNetwork.registerSyncable(this);
     }
@@ -68,31 +77,30 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
         }
     }
 
-
-
-
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        LogManager.getLogger().info("exist");
         if (!world.isClient()) {
             final int id = GeckoLibUtil.getIDFromStack(stack);
             final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-        if(MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
-            PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
+            if(MinecraftClient.getInstance().player!=null
+                    &&MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)
+                    &&controller.getAnimationState()== AnimationState.Running&&LEFT_CLICK) {
 
-            BasicMagic basicMagic = new BasicMagic(world, playerentity);
+                PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
 
-            basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
-                    0F);
+                BasicMagic basicMagic = new BasicMagic(world, playerentity);
 
-            basicMagic.age = 30;
+                basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
+                        0F);
 
-            basicMagic.hasNoGravity();
-            basicMagic.setDegree(30);
-            stack.decrement(1);
-            world.spawnEntity(basicMagic);
+                basicMagic.age = 30;
 
-        }
+                basicMagic.hasNoGravity();
+                basicMagic.setDegree(30);
+                stack.decrement(1);
+                world.spawnEntity(basicMagic);
+
+            }
         }
 
 
@@ -101,6 +109,8 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemEntity itemEntity = new ItemEntity(EntityType.ITEM,world);
+
 
         ItemStack itemStack = user.getStackInHand(hand);
         if (!world.isClient()) {
@@ -120,4 +130,13 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
 
         return TypedActionResult.consume(itemStack);
     }
+
+    public static List<ItemEntity> getInputItemEntities(World world, Hopper hopper) {
+        return CHECK_SHAPE.getBoundingBoxes().stream().flatMap(
+                box -> world.getEntitiesByClass(ItemEntity.class,
+                        box.offset( - 0.5, hopper.getHopperY() - 0.5,
+                                hopper.getHopperZ() - 0.5),
+                        EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
+    }
+
 }

@@ -3,6 +3,7 @@ package com.flylx.wand_mod;
 
 import com.flylx.wand_mod.entity.MagicAreaCloud;
 import com.flylx.wand_mod.event.ServerPlayerTickHandler;
+import com.flylx.wand_mod.mixin.PlayerEntityMixin;
 import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
 import com.flylx.wand_mod.item.modItemRegistry;
@@ -33,6 +34,7 @@ public class Wand_mod implements ModInitializer {
         ModMessages.registerC2SPackets();
 
         ServerTickEvents.START_SERVER_TICK.register(new ServerPlayerTickHandler());
+
 
     }
 }
