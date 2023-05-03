@@ -77,7 +77,9 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
         if (!world.isClient()) {
             final int id = GeckoLibUtil.getIDFromStack(stack);
             final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-        if(MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+        if(MinecraftClient.getInstance().player!=null&&
+                MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&
+                controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
             PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
 
             BasicMagic basicMagic = new BasicMagic(world, playerentity);
@@ -106,8 +108,8 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
         if (!world.isClient()) {
             if(user.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)) {
 
-                user.setCurrentHand(hand);
-                final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(hand), (ServerWorld) world);
+                user.setCurrentHand(Hand.OFF_HAND);
+                final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(Hand.OFF_HAND), (ServerWorld) world);
                 GeckoLibNetwork.syncAnimation(user, this, id, ANIM_OPEN);
                 for (PlayerEntity otherPlayer : PlayerLookup.tracking(user)) {
 

@@ -37,6 +37,7 @@ public class Wand_modClient implements ClientModInitializer {
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FLAME_SCROLL,new FlameScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.EMPTY_SCROLL,new EmptyScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FROZE_SCROLL,new FrozeScrollRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.POISON_SCROLL,new PoisonScrollRenderer());
         EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
 

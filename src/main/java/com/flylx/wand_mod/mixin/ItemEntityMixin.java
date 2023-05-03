@@ -1,11 +1,15 @@
 package com.flylx.wand_mod.mixin;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import com.flylx.wand_mod.item.modItemRegistry;
 import net.minecraft.item.Items;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -36,8 +40,24 @@ public abstract class ItemEntityMixin {
     protected void ontick(CallbackInfo cir){
         if(!((ItemEntity)(Object)this).world.isClient) {
             if (this.getStack().isOf(modItemRegistry.EMPTY_SCROLL)) {
-                //resolve this
-                checkItem((ItemEntity) (Object) this);
+                if(((ItemEntity) (Object) this).world.getBlockState(new BlockPos(((ItemEntity) (Object) this).getPos())).isOf(Blocks.ICE)){
+                    ((ItemEntity) (Object) this).world.spawnEntity(new ItemEntity(((ItemEntity)(Object)this).world,
+                            ((ItemEntity)(Object)this).getX(), ((ItemEntity)(Object)this).getY(),
+                            ((ItemEntity)(Object)this).getZ(),modItemRegistry.FROZE_SCROLL.getDefaultStack()));
+                    ((ItemEntity) (Object) this).world.setBlockState(new BlockPos(((ItemEntity) (Object) this).getPos()),Blocks.AIR.getDefaultState());
+                    ((ItemEntity)(Object)this).discard();
+
+                }else if(((ItemEntity) (Object) this).world.getBlockState(new BlockPos(((ItemEntity) (Object) this).getPos())).isOf(Blocks.FIRE)){
+                    ((ItemEntity) (Object) this).world.spawnEntity(new ItemEntity(((ItemEntity)(Object)this).world,
+                            ((ItemEntity)(Object)this).getX(), ((ItemEntity)(Object)this).getY(),
+                            ((ItemEntity)(Object)this).getZ(),modItemRegistry.FLAME_SCROLL.getDefaultStack()));
+                    ((ItemEntity) (Object) this).world.setBlockState(new BlockPos(((ItemEntity) (Object) this).getPos()),Blocks.AIR.getDefaultState());
+                    ((ItemEntity)(Object)this).discard();
+
+                }
+                checkItem(((ItemEntity) (Object) this));
+
+
             }
         }
     }
@@ -45,12 +65,18 @@ public abstract class ItemEntityMixin {
     public void checkItem(ItemEntity itemEntity){
 
         for (ItemEntity itemEntity1 : checkItemEntities(((ItemEntity)(Object)this).world, itemEntity)) {
-            if(itemEntity1.getStack().isOf(Items.WATER_BUCKET)){
-                ((ItemEntity) (Object) this).world.spawnEntity(new ItemEntity(((ItemEntity)(Object)this).world,
-                        ((ItemEntity)(Object)this).getX(), ((ItemEntity)(Object)this).getY(),
-                        ((ItemEntity)(Object)this).getZ(),modItemRegistry.FROZE_SCROLL.getDefaultStack()));
-                ((ItemEntity) (Object) this).discard();
-                itemEntity1.discard();
+            if(itemEntity1.getStack().isOf(Items.LINGERING_POTION)){
+                LogManager.getLogger().info("is Lingering potion");
+                LogManager.getLogger().info(itemEntity1);
+                if(PotionUtil.getPotion(itemEntity1.getStack().getNbt()).equals(Potions.STRONG_POISON)) {
+                    LogManager.getLogger().info("is potion");
+                    ((ItemEntity) (Object) this).world.spawnEntity(new ItemEntity(((ItemEntity) (Object) this).world,
+                            ((ItemEntity) (Object) this).getX(), ((ItemEntity) (Object) this).getY(),
+                            ((ItemEntity) (Object) this).getZ(), modItemRegistry.POISON_SCROLL.getDefaultStack()));
+
+                    itemEntity1.discard();
+                    ((ItemEntity) (Object) this).discard();
+                }
             }
         }
 

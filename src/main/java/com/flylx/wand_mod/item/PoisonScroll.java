@@ -1,24 +1,23 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.mixin.MouseMixin;
+import com.flylx.wand_mod.event.LeftClick;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.Hopper;
+import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Mouse;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -32,22 +31,14 @@ import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class EmptyScroll extends Item implements IAnimatable, ISyncable {
-
-//    public static final VoxelShape INSIDE_SHAPE = Block.createCuboidShape(2.0, 11.0, 2.0, 14.0, 16.0, 14.0);
-    public static final VoxelShape ABOVE_SHAPE = Block.createCuboidShape(0.0, 16.0, 0.0, 16.0, 32.0, 16.0);
-    public static final VoxelShape CHECK_SHAPE = VoxelShapes.union(ABOVE_SHAPE);
-
+public class PoisonScroll extends Item implements IAnimatable, ISyncable {
 
     public static final String controllerName = "controller";
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
-    public static boolean LEFT_CLICK = false;
 
-    public EmptyScroll(Settings settings) {
+
+    public PoisonScroll(Settings settings) {
         super(settings);
         GeckoLibNetwork.registerSyncable(this);
     }
@@ -77,10 +68,32 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
         }
     }
 
+
+
+
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (!world.isClient()) {
+            final int id = GeckoLibUtil.getIDFromStack(stack);
+            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+            if(MinecraftClient.getInstance().player!=null&&
+                    MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.POISON_SCROLL)&&
+                    controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+                PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
 
+                BasicMagic basicMagic = new BasicMagic(world, playerentity);
+
+                basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
+                        0F);
+
+                basicMagic.age = 30;
+
+                basicMagic.hasNoGravity();
+                basicMagic.setDegree(150);
+                stack.decrement(1);
+                world.spawnEntity(basicMagic);
+
+            }
         }
 
 
@@ -89,12 +102,9 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemEntity itemEntity = new ItemEntity(EntityType.ITEM,world);
-
-
         ItemStack itemStack = user.getStackInHand(hand);
         if (!world.isClient()) {
-            if(user.getOffHandStack().isOf(modItemRegistry.EMPTY_SCROLL)) {
+            if(user.getOffHandStack().isOf(modItemRegistry.POISON_SCROLL)) {
 
                 user.setCurrentHand(Hand.OFF_HAND);
                 final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(Hand.OFF_HAND), (ServerWorld) world);
@@ -110,13 +120,4 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
 
         return TypedActionResult.consume(itemStack);
     }
-
-    public static List<ItemEntity> getInputItemEntities(World world, Hopper hopper) {
-        return CHECK_SHAPE.getBoundingBoxes().stream().flatMap(
-                box -> world.getEntitiesByClass(ItemEntity.class,
-                        box.offset( - 0.5, hopper.getHopperY() - 0.5,
-                                hopper.getHopperZ() - 0.5),
-                        EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
-    }
-
 }

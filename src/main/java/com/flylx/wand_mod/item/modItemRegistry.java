@@ -23,7 +23,8 @@ public class modItemRegistry {
             new FlameScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
     public static final FrozeScroll FROZE_SCROLL = (FrozeScroll) registerItem("froze_scroll",
             new FrozeScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
-
+    public static final PoisonScroll POISON_SCROLL = (PoisonScroll) registerItem("poison_scroll",
+            new PoisonScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",

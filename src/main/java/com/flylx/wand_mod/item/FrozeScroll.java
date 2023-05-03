@@ -76,7 +76,9 @@ public class FrozeScroll extends Item implements IAnimatable, ISyncable {
         if (!world.isClient()) {
             final int id = GeckoLibUtil.getIDFromStack(stack);
             final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-            if(MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+            if(MinecraftClient.getInstance().player!=null&&
+                    MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FROZE_SCROLL)&&
+                    controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
                 PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
 
                 BasicMagic basicMagic = new BasicMagic(world, playerentity);
@@ -87,7 +89,7 @@ public class FrozeScroll extends Item implements IAnimatable, ISyncable {
                 basicMagic.age = 30;
 
                 basicMagic.hasNoGravity();
-                basicMagic.setDegree(30);
+                basicMagic.setDegree(90);
                 stack.decrement(1);
                 world.spawnEntity(basicMagic);
 
@@ -102,10 +104,10 @@ public class FrozeScroll extends Item implements IAnimatable, ISyncable {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         if (!world.isClient()) {
-            if(user.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)) {
+            if(user.getOffHandStack().isOf(modItemRegistry.FROZE_SCROLL)) {
 
-                user.setCurrentHand(hand);
-                final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(hand), (ServerWorld) world);
+                user.setCurrentHand(Hand.OFF_HAND);
+                final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(Hand.OFF_HAND), (ServerWorld) world);
                 GeckoLibNetwork.syncAnimation(user, this, id, ANIM_OPEN);
                 for (PlayerEntity otherPlayer : PlayerLookup.tracking(user)) {
 
