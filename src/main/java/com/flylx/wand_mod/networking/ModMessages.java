@@ -24,6 +24,6 @@ public class ModMessages {
     public static void registerS2CPackets(){
         ClientPlayNetworking.registerGlobalReceiver(SWITCH_SYNC_ID, SycnSwitchS2CPacket::receive);
 
-    }
 
+    }
 }

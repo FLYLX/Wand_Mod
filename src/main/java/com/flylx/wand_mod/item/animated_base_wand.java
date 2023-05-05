@@ -92,9 +92,8 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
             t.start();
 
         }
-
-
     }
+
 
 
     @Override
@@ -103,10 +102,13 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
 
         super.inventoryTick(stack, world, entity, slot, selected);
         final int id = GeckoLibUtil.getIDFromStack(stack);
-        final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+        final AnimationController<animated_base_wand> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+
         if(controller.getAnimationState()==AnimationState.Stopped) {
             controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("base_wand",ILoopType.EDefaultLoopTypes.LOOP));
+            //写了会有bug
+            //controller.setAnimation(new AnimationBuilder().addAnimation("base_wand",ILoopType.EDefaultLoopTypes
+            // .LOOP));
         }
 
     }
@@ -162,9 +164,8 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     @Override
     public void onAnimationSync(int id, int state) {
 
-        final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
         if (state == ANIM_OPEN) {
-
+            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("magic",
                     ILoopType.EDefaultLoopTypes.PLAY_ONCE));

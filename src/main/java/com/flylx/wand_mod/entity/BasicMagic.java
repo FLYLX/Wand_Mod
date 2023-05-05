@@ -66,6 +66,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     private  static final TrackedData<Float> DEGREE = DataTracker.registerData(BasicMagic.class,
             TrackedDataHandlerRegistry.FLOAT);
 
+    private float Degree;
 
 
     public BasicMagic(EntityType<? extends BasicMagic> entityType, World world) {
@@ -76,6 +77,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public BasicMagic(World world,LivingEntity owner){
         super(modEntityRegistry.BASIC_MAGIC, owner, world);
         this.shooter = owner;
+        Degree = ((IEntityDataSaver) owner).getPersistentData().getFloat(
+                "switch");
+        this.getDataTracker().set(DEGREE,Degree);
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -86,8 +90,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     protected void initDataTracker() {
         super.initDataTracker();
         this.getDataTracker().startTracking(DEGREE,
-                Float.valueOf(((IEntityDataSaver) MinecraftClient.getInstance().player).getPersistentData().getFloat(
-                        "switch")));
+               Degree);
     }
 
 
@@ -224,7 +227,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
 
-        nbt.putFloat("Radius", this.getDegree());
+        nbt.putFloat("Degree", this.getDegree());
 
         return super.writeNbt(nbt);
     }

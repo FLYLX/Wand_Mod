@@ -1,6 +1,7 @@
 package com.flylx.wand_mod;
 
 
+import com.flylx.wand_mod.block.modBlockRegistry;
 import com.flylx.wand_mod.entity.MagicAreaCloud;
 import com.flylx.wand_mod.event.ServerPlayerTickHandler;
 import com.flylx.wand_mod.mixin.PlayerEntityMixin;
@@ -30,11 +31,14 @@ public class Wand_mod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
         ModMessages.registerC2SPackets();
 
         ServerTickEvents.START_SERVER_TICK.register(new ServerPlayerTickHandler());
-
+        new modItemRegistry();
+        new modEntityRegistry();
+        new modBlockRegistry();
 
     }
 }

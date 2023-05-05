@@ -11,21 +11,24 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 
 public class SwitchData {
-    public static float changeSwitch(IEntityDataSaver player,float degree){
+    public static void changeSwitch(IEntityDataSaver player,PacketByteBuf buf){
+        float degree = buf.readFloat();
         NbtCompound nbt = player.getPersistentData();
-        float indegree = nbt.getFloat("switch");
-        if(indegree+degree>360f){
-            indegree = indegree+degree-360f;
-        }else if(indegree+degree<0) {
-            indegree = indegree+degree+360f;
-        }else{
-            indegree += degree;
-        }
-        nbt.putFloat("switch",indegree);
-        MagicSwitchHud.change = 0;
-        syncThirst(indegree, (ServerPlayerEntity) player);
 
-        return degree;
+//        float indegree = nbt.getFloat("switch");
+//        if(indegree+degree>360f){
+//            indegree = indegree+degree-360f;
+//        }else if(indegree+degree<0) {
+//            indegree = indegree+degree+360f;
+//        }else{
+//            indegree += degree;
+//        }
+        if(degree<=360.0f) {
+            nbt.putFloat("switch", degree);
+//        MagicSwitchHud.change = 0;
+        }
+        syncThirst(nbt.getFloat("switch"), (ServerPlayerEntity) player);
+
     }
 
     public static void syncThirst(float degree, ServerPlayerEntity player) {

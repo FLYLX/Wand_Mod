@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.PacketByteBuf;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.glfw.GLFW;
 
@@ -31,6 +32,10 @@ public class KeyInputHandler {
 
 
                 ISPRESS_R = true;
+                PacketByteBuf bufs = PacketByteBufs.create();
+                bufs.writeFloat(1000.0f);
+                ClientPlayNetworking.send(ModMessages.SWITCH_MAGIC, bufs);
+
             }else {
 
                 ISPRESS_R = false;

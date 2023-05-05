@@ -13,7 +13,9 @@ public class SwitchC2SPacket {
     public static void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender){
 
-        SwitchData.changeSwitch((IEntityDataSaver) player, MagicSwitchHud.change);
+            SwitchData.changeSwitch((IEntityDataSaver) player,buf);
+
+
 
     }
 

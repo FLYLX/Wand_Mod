@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
-
+import net.minecraft.network.PacketByteBuf;
 
 
 public class ClientPlayerTickHandler implements ClientTickEvents.StartWorldTick {
@@ -16,7 +16,7 @@ public class ClientPlayerTickHandler implements ClientTickEvents.StartWorldTick 
     public void onStartTick(ClientWorld world) {
         //每tick同步一次switch数据
         //可以通过判定player来确认客户端是否进入游戏
-        ClientPlayNetworking.send(ModMessages.SWITCH_MAGIC, PacketByteBufs.create());
+
 
     }
 }

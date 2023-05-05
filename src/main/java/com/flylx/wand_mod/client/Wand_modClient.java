@@ -32,7 +32,6 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 public class Wand_modClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-
         GeoItemRenderer.registerItemRenderer(modItemRegistry.BASE_WAND,new BaseWandRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FLAME_SCROLL,new FlameScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.EMPTY_SCROLL,new EmptyScrollRenderer());

@@ -77,10 +77,10 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
         if (!world.isClient()) {
             final int id = GeckoLibUtil.getIDFromStack(stack);
             final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-        if(MinecraftClient.getInstance().player!=null&&
-                MinecraftClient.getInstance().player.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&
+        if(world.getClosestPlayer(entity,0.2)!=null&&
+                world.getClosestPlayer(entity,0.2).getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&
                 controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
-            PlayerEntity playerentity = (PlayerEntity) MinecraftClient.getInstance().player;
+            PlayerEntity playerentity = (PlayerEntity) world.getClosestPlayer(entity,0.2);
 
             BasicMagic basicMagic = new BasicMagic(world, playerentity);
 
