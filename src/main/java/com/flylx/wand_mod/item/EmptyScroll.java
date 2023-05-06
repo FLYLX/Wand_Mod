@@ -9,6 +9,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -43,7 +46,7 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
 
 
     public static final String controllerName = "controller";
-    public static final int ANIM_OPEN = 1;
+    public static final int ANIM_OPEN = 0;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
     public static boolean LEFT_CLICK = false;
 
@@ -51,6 +54,7 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
         super(settings);
         GeckoLibNetwork.registerSyncable(this);
     }
+
 
     @Override
     public void registerControllers(AnimationData animationData) {
@@ -89,7 +93,7 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemEntity itemEntity = new ItemEntity(EntityType.ITEM,world);
+//        ItemEntity itemEntity = new ItemEntity(EntityType.ITEM,world);
 
 
         ItemStack itemStack = user.getStackInHand(hand);

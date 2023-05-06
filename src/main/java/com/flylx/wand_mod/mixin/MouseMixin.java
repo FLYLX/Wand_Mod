@@ -24,6 +24,7 @@ public abstract class MouseMixin {
     private void onOnMouseScroll(long long_1, double double_1, double double_2, CallbackInfo ci) {
 
         if(KeyInputHandler.ISPRESS_R){
+
             magicSwitchHud.setHudDegree((float) double_2*5f);
 
         }
@@ -33,6 +34,7 @@ public abstract class MouseMixin {
     private void onOnMouseButton(long window, int button, int action, int mods, CallbackInfo ci) {
         if(this.wasLeftButtonClicked()){
             LeftClick.isClick = true;
+
         }else{
             LeftClick.isClick = false;
         }

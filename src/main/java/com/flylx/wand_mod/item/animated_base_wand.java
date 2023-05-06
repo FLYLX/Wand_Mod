@@ -34,7 +34,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 public class animated_base_wand extends Item implements  IAnimatable, ISyncable {
 
 
-    public static final String controllerName = "controller";
+    public static final String controllerName = "base_controller";
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 

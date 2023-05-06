@@ -7,6 +7,9 @@ import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
@@ -31,12 +34,13 @@ import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class FlameScroll extends Item implements IAnimatable, ISyncable {
+public class FlameScroll extends Item implements  IAnimatable, ISyncable {
 
-    public static final String controllerName = "controller";
-    public static final int ANIM_OPEN = 1;
+    public static final String controllerName = "controller1";
+    public static final int ANIM_OPEN = 0;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
+    public long now_time,remain_time;
 
     public FlameScroll(Settings settings) {
         super(settings);
@@ -60,11 +64,13 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public void onAnimationSync(int id, int state) {
-        final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
         if (state == ANIM_OPEN) {
+            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("open",
                     ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+
         }
     }
 
@@ -73,13 +79,16 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        LogManager.getLogger().info("exist");
+
+
         if (!world.isClient()) {
-            final int id = GeckoLibUtil.getIDFromStack(stack);
-            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-        if(world.getClosestPlayer(entity,0.2)!=null&&
+            remain_time = world.getTime()-now_time;
+            if(remain_time >30){
+                return;
+            }
+            if(world.getClosestPlayer(entity,0.2)!=null&&
                 world.getClosestPlayer(entity,0.2).getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&
-                controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+                    world.getClosestPlayer(entity,0.2).handSwinging) {
             PlayerEntity playerentity = (PlayerEntity) world.getClosestPlayer(entity,0.2);
 
             BasicMagic basicMagic = new BasicMagic(world, playerentity);
@@ -105,16 +114,17 @@ public class FlameScroll extends Item implements IAnimatable, ISyncable {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
         ItemStack itemStack = user.getStackInHand(hand);
+        user.setCurrentHand(Hand.OFF_HAND);
         if (!world.isClient()) {
             if(user.getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)) {
-
-                user.setCurrentHand(Hand.OFF_HAND);
                 final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(Hand.OFF_HAND), (ServerWorld) world);
+                LogManager.getLogger().info("use:"+id);
                 GeckoLibNetwork.syncAnimation(user, this, id, ANIM_OPEN);
                 for (PlayerEntity otherPlayer : PlayerLookup.tracking(user)) {
 
                     GeckoLibNetwork.syncAnimation(otherPlayer, this, id, ANIM_OPEN);
                 }
+                now_time = world.getTime();
 
             }
 

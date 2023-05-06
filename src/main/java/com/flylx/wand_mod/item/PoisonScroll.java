@@ -33,9 +33,11 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class PoisonScroll extends Item implements IAnimatable, ISyncable {
 
-    public static final String controllerName = "controller";
+    public static final String controllerName = "controller3";
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+
+    public long now_time,remain_time;
 
 
     public PoisonScroll(Settings settings) {
@@ -74,11 +76,14 @@ public class PoisonScroll extends Item implements IAnimatable, ISyncable {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (!world.isClient()) {
-            final int id = GeckoLibUtil.getIDFromStack(stack);
-            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+
+            remain_time = world.getTime()-now_time;
+            if(remain_time >30){
+                return;
+            }
             if(world.getClosestPlayer(entity,0.2)!=null&&
                     world.getClosestPlayer(entity,0.2).getOffHandStack().isOf(modItemRegistry.POISON_SCROLL)&&
-                    controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+                    world.getClosestPlayer(entity,0.2).handSwinging) {
                 PlayerEntity playerentity = (PlayerEntity) world.getClosestPlayer(entity,0.2);
 
                 BasicMagic basicMagic = new BasicMagic(world, playerentity);
@@ -113,7 +118,7 @@ public class PoisonScroll extends Item implements IAnimatable, ISyncable {
 
                     GeckoLibNetwork.syncAnimation(otherPlayer, this, id, ANIM_OPEN);
                 }
-
+                now_time = world.getTime();
             }
 
         }

@@ -33,10 +33,11 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class FrozeScroll extends Item implements IAnimatable, ISyncable {
 
-    public static final String controllerName = "controller";
+    public static final String controllerName = "controller2";
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
+    public long now_time,remain_time;
 
     public FrozeScroll(Settings settings) {
         super(settings);
@@ -74,11 +75,15 @@ public class FrozeScroll extends Item implements IAnimatable, ISyncable {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         if (!world.isClient()) {
-            final int id = GeckoLibUtil.getIDFromStack(stack);
-            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+
+            remain_time = world.getTime()-now_time;
+            if(remain_time >30){
+                return;
+            }
+
             if(world.getClosestPlayer(entity,0.2)!=null&&
                     world.getClosestPlayer(entity,0.2).getOffHandStack().isOf(modItemRegistry.FROZE_SCROLL)&&
-                    controller.getAnimationState()== AnimationState.Running&& LeftClick.isClick) {
+                    world.getClosestPlayer(entity,0.2).handSwinging) {
                 PlayerEntity playerentity = (PlayerEntity) world.getClosestPlayer(entity,0.2);
 
                 BasicMagic basicMagic = new BasicMagic(world, playerentity);
@@ -113,6 +118,7 @@ public class FrozeScroll extends Item implements IAnimatable, ISyncable {
 
                     GeckoLibNetwork.syncAnimation(otherPlayer, this, id, ANIM_OPEN);
                 }
+                now_time = world.getTime();
 
             }
 
