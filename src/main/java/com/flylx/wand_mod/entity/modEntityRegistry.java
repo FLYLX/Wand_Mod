@@ -27,12 +27,12 @@ public class modEntityRegistry {
 
     public static <T extends Entity> EntityType<T> buildEntity(EntityType.EntityFactory<T> entity, Class<T> entityClass,
                                                                float width, float height, SpawnGroup group) {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+
             String name = entityClass.getSimpleName().toLowerCase();
             return EntityRegistryBuilder.<T>createBuilder(new Identifier(Wand_mod.ModID, name)).entity(entity)
                     .category(group).dimensions(EntityDimensions.changing(width, height)).build();
-        }
-        return null;
+
+
     }
 
 

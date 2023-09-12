@@ -2,7 +2,9 @@ package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
+import com.flylx.wand_mod.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -38,6 +40,10 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     public static final int ANIM_OPEN = 1;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
+
+    public long MAX = Long.MAX_VALUE;
+    public long remain_time;
+    public long now_time = MAX;
     public animated_base_wand(Settings settings) {
         super(settings.maxDamage(201));
         GeckoLibNetwork.registerSyncable(this);
@@ -64,16 +70,33 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
         if (!world.isClient) {
-            //waiting for movement done
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(470);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    PlayerEntity playerentity = (PlayerEntity) user;
+
+        }
+    }
+
+
+
+    @Override
+
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+//        final int id = GeckoLibUtil.getIDFromStack(stack);
+//        final AnimationController<animated_base_wand> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
+//            controller.markNeedsReload();
+            //写了会有bug
+            //controller.setAnimation(new AnimationBuilder().addAnimation("base_wand",ILoopType.EDefaultLoopTypes
+            // .LOOP));
+
+        if(!world.isClient){
+            remain_time = world.getTime()-now_time;
+
+            if(remain_time >9){
+                if(entity instanceof  PlayerEntity) {
+                    LogManager.getLogger().info("yes" + remain_time);
+
+                    PlayerEntity playerentity = (PlayerEntity) entity;
 
                     BasicMagic basicMagic = new BasicMagic(world, playerentity);
 
@@ -87,28 +110,11 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
                     stack.damage(1, playerentity, p -> p.sendToolBreakStatus(playerentity.getActiveHand()));
 
                     world.spawnEntity(basicMagic);
+
+                    now_time = MAX;
                 }
-            });
-            t.start();
 
-        }
-    }
-
-
-
-    @Override
-
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-
-        super.inventoryTick(stack, world, entity, slot, selected);
-        final int id = GeckoLibUtil.getIDFromStack(stack);
-        final AnimationController<animated_base_wand> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
-
-        if(controller.getAnimationState()==AnimationState.Stopped) {
-            controller.markNeedsReload();
-            //写了会有bug
-            //controller.setAnimation(new AnimationBuilder().addAnimation("base_wand",ILoopType.EDefaultLoopTypes
-            // .LOOP));
+            }
         }
 
     }
@@ -151,6 +157,8 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
             for (PlayerEntity otherPlayer : PlayerLookup.tracking(user)) {
                 GeckoLibNetwork.syncAnimation(otherPlayer, this, id, ANIM_OPEN);
             }
+            now_time = world.getTime();
+
         }
         return TypedActionResult.consume(itemStack);
 

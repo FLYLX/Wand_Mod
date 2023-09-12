@@ -194,6 +194,8 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
         }else if(getDegree()>=120&&getDegree()<180){
             poisonMagic();
+        }if(getDegree()>=180&&getDegree()<240){
+            heartMagic();
         }
 
 
@@ -204,13 +206,25 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         super.onHit(target);
         LogManager.getLogger().info("target:"+target);
         if(getDegree()>=0&&getDegree()<60) {
+            //fire
             target.setFireTicks(2000);
             target.damage(DamageSource.ON_FIRE,5);
         }else if (getDegree()>=60&&getDegree()<120){
+            //ice
             target.setFrozenTicks(2000);
             target.damage(DamageSource.FREEZE,5);
         }else if(getDegree()>=120&&getDegree()<180){
+            //poison
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.POISON);
+
+            statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
+                    2000, 20,
+                    statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
+            target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
+
+        }else if(getDegree()>=180&&getDegree()<240){
+            //heart
+            StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
 
             statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
                     2000, 20,
@@ -219,8 +233,6 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
         }
     }
-
-
 
 
 
@@ -274,6 +286,18 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     }
 
     public void poisonMagic(){
+        MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
+        magicAreaCloud.setRadius(6.0f);
+        magicAreaCloud.setRadiusGrowth(-0.05f);
+        magicAreaCloud.setDegree(getDegree());
+        Entity entity = this.getOwner();
+        if (entity instanceof LivingEntity) {
+            magicAreaCloud.setOwner((LivingEntity) entity);
+        }
+        this.world.spawnEntity(magicAreaCloud);
+
+    }
+    public void heartMagic(){
         MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
         magicAreaCloud.setRadius(6.0f);
         magicAreaCloud.setRadiusGrowth(-0.05f);

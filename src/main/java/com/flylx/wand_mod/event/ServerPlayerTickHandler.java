@@ -17,9 +17,11 @@ public class ServerPlayerTickHandler implements ServerTickEvents.StartTick{
     @Override
     public void onStartTick(MinecraftServer server) {
         for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-//            PacketByteBuf buffer = PacketByteBufs.create();
-//            buffer.writeFloat(((IEntityDataSaver)player).getPersistentData().getFloat("switch"));
-//            ServerPlayNetworking.send(player,ModMessages.SWITCH_SYNC_ID, buffer);
+
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeFloat(((IEntityDataSaver)player).getPersistentData().getFloat("switch"));
+            ServerPlayNetworking.send(player,ModMessages.SWITCH_SYNC_ID, buffer);
+
         }
 
     }

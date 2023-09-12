@@ -32,9 +32,6 @@ public class KeyInputHandler {
 
 
                 ISPRESS_R = true;
-                PacketByteBuf bufs = PacketByteBufs.create();
-                bufs.writeFloat(1000.0f);
-                ClientPlayNetworking.send(ModMessages.SWITCH_MAGIC, bufs);
 
             }else {
 

@@ -10,7 +10,6 @@ import net.minecraft.util.Identifier;
 public class MagicCloudRenderer extends EntityRenderer<MagicAreaCloud> {
     public MagicCloudRenderer(EntityRendererFactory.Context ctx) {
         super(ctx);
-
     }
 
     @Override

@@ -127,6 +127,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 //                }
 //            }
 
+            //fire
 
                 double d;
                 double e;
@@ -156,6 +157,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
             }
         }else  if(this.getDegree()>=60&&this.getDegree()<120) {
+            //ice
                 double d;
                 double e;
                 double l;
@@ -186,6 +188,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
         }else  if(this.getDegree()>=120&&this.getDegree()<180) {
 
+            //poison
                 double d;
                 double e;
                 double l;
@@ -205,6 +208,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                             getZ() + l, n, o, p);
 
             }
+                //给玩家效果
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
             for (LivingEntity livingEntity : list) {
 
@@ -217,8 +221,39 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
             }
 
 
+        }else if(this.getDegree()>=180&&this.getDegree()<240) {
+
+            //heart
+            double d;
+            double e;
+            double l;
+            for (int i = 0; i < getRadius(); i++) {
+                n = (0.5 - this.random.nextDouble()) * 0.15;
+                o = 0.01f;
+                p = (0.5 - this.random.nextDouble()) * 0.15;
+                d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
+                e = this.random.nextDouble()-this.random.nextDouble();
+
+                l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
+                this.world.addImportantParticle(ParticleTypes.HEART,
+                        getX() + d,
+                        getY() + e,
+                        getZ() + l, n, o, p);
+
+            }
+            List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
+
+            for (LivingEntity livingEntity : list) {
+                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
+                statusEffectInstance.getEffectType()
+                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
+
+            }
+
         }
-        
+
+
+        //逐渐减少范围
         this.setRadius(this.getRadius() + this.getRadiusGrowth());
         if(this.getRadius()<0.5f){
             discard();

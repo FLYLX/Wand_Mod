@@ -4,7 +4,6 @@
   "package": "com.flylx.wand_mod.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MagicScreenMixin",
     "ModEntityDataSaverMixin",
     "PlayerInventoryMixin",
     "MouseMixin",

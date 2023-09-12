@@ -23,7 +23,7 @@ public class SwitchData {
 //        }else{
 //            indegree += degree;
 //        }
-        if(degree<=360.0f) {
+        if(degree<=360.0f&&degree>=0) {
             nbt.putFloat("switch", degree);
 //        MagicSwitchHud.change = 0;
         }

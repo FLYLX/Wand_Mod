@@ -5,17 +5,23 @@ import com.flylx.wand_mod.block.WandTableBlock;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ArmorMaterials;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-
+import software.bernie.example.item.GeckoArmorItem;
+import software.bernie.example.registry.RegistryUtils;
 
 
 public class modItemRegistry {
 
+    public static final ScrollBeltItem SCROLL_BELT_ITEM = (ScrollBeltItem) registerItem("scroll_belt",
+            new ScrollBeltItem(ArmorMaterials.DIAMOND, EquipmentSlot.CHEST,
+                    new Item.Settings().group(ItemGroup.COMBAT)));
 
     public static final EmptyScroll EMPTY_SCROLL = (EmptyScroll) registerItem("empty_scroll",
             new EmptyScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));

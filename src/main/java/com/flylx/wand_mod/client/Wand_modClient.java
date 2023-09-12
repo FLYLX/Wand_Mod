@@ -25,6 +25,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
+import software.bernie.example.client.renderer.armor.GeckoArmorRenderer;
+import software.bernie.example.registry.ItemRegistry;
+import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 
@@ -32,15 +35,18 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 public class Wand_modClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+
+        GeoArmorRenderer.registerArmorRenderer(new ScrollBeltRenderer(), modItemRegistry.SCROLL_BELT_ITEM);
+
+
         GeoItemRenderer.registerItemRenderer(modItemRegistry.BASE_WAND,new BaseWandRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FLAME_SCROLL,new FlameScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.EMPTY_SCROLL,new EmptyScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FROZE_SCROLL,new FrozeScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.POISON_SCROLL,new PoisonScrollRenderer());
-        EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
 
-
+        EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         EntityRendererRegistry.register(modEntityRegistry.MAGIC_AREA,(ctx) -> new MagicCloudRenderer(ctx));
 
         HandledScreens.register(Wand_mod.MAGIC_SCREEN_HANDLER, MagicScreen::new);
