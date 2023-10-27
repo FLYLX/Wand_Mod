@@ -18,10 +18,12 @@ public class ModMessages {
 
     public static void registerC2SPackets(){
 //        ServerPlayNetworking.registerGlobalReceiver(EXAMPLE_ID, ExampleC2SPacket::receive);
+        //客户端发送服务器的魔法切换数据
         ServerPlayNetworking.registerGlobalReceiver(SWITCH_MAGIC, SwitchC2SPacket::receive);
 
     }
     public static void registerS2CPackets(){
+        //服务器发送客户端的魔法切换数据
         ClientPlayNetworking.registerGlobalReceiver(SWITCH_SYNC_ID, SycnSwitchS2CPacket::receive);
 
 

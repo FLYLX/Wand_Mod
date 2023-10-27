@@ -15,8 +15,6 @@ public class SwitchC2SPacket {
 
             SwitchData.changeSwitch((IEntityDataSaver) player,buf);
 
-
-
     }
 
 }

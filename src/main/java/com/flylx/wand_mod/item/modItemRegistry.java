@@ -21,24 +21,24 @@ public class modItemRegistry {
 
     public static final ScrollBeltItem SCROLL_BELT_ITEM = (ScrollBeltItem) registerItem("scroll_belt",
             new ScrollBeltItem(ArmorMaterials.DIAMOND, EquipmentSlot.CHEST,
-                    new Item.Settings().group(ItemGroup.COMBAT)));
+                    new Item.Settings().group(ModItemGroup.WAND_MAGIC)));
 
     public static final EmptyScroll EMPTY_SCROLL = (EmptyScroll) registerItem("empty_scroll",
-            new EmptyScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
+            new EmptyScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final FlameScroll FLAME_SCROLL = (FlameScroll) registerItem("flame_scroll",
-            new FlameScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
+            new FlameScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final FrozeScroll FROZE_SCROLL = (FrozeScroll) registerItem("froze_scroll",
-            new FrozeScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
+            new FrozeScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final PoisonScroll POISON_SCROLL = (PoisonScroll) registerItem("poison_scroll",
-            new PoisonScroll(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
+            new PoisonScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",
-            new animated_base_wand(new FabricItemSettings().group(ItemGroup.COMBAT).maxCount(1)));
+            new animated_base_wand(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
 
     public static final Item WAND_TABLE =
             registerItem("wand_table", new BlockItem(modBlockRegistry.WAND_TABLE,
-                    new FabricItemSettings().group(ItemGroup.DECORATIONS))
+                    new FabricItemSettings().group(ModItemGroup.WAND_MAGIC))
             );
 
     public static Item registerItem(String name,Item item){

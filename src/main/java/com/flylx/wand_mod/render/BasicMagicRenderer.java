@@ -53,7 +53,7 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
                     animatable.getY(),
                     animatable.getParticleZ(0.5D),
                     n,o,p );
-        }else if(animatable.getDegree()>=180&&animatable.getDegree()<270&&!MinecraftClient.getInstance().isPaused()){
+        }else if(animatable.getDegree()>=180&&animatable.getDegree()<240&&!MinecraftClient.getInstance().isPaused()){
             int m = 0xFF0000;
             double n = (float) (m >> 16 & 0xFF) / 255.0f;
             double o = (float) (m >> 8 & 0xFF) / 255.0f;

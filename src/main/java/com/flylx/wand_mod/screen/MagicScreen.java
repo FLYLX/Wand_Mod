@@ -36,10 +36,8 @@ public class MagicScreen extends HandledScreen<MagicScreenHandler> {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
-
     }
 
     @Override

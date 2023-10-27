@@ -31,18 +31,9 @@ public class PlayerEntityMixin {
     protected void ondropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership,
                             CallbackInfoReturnable<ItemEntity> cir) {
 
-
-
-
     }
     @Inject(at = {@At("RETURN")},
             method = {"tick()V"})
     protected void ontick(CallbackInfo cir) {
-
-
     }
-
-
-
-
 }

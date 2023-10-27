@@ -29,8 +29,6 @@ public class KeyInputHandler {
                 //创建数据包并发送
 //                ClientPlayNetworking.send(ModMessages.EXAMPLE_ID, PacketByteBufs.create());
 
-
-
                 ISPRESS_R = true;
 
             }else {
@@ -39,10 +37,6 @@ public class KeyInputHandler {
 
             }
         });
-
-
-
-
 
     }
     public static void register(){

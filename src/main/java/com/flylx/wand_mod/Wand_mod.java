@@ -10,11 +10,16 @@ import com.flylx.wand_mod.screen.MagicScreenHandler;
 import com.flylx.wand_mod.item.modItemRegistry;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.impl.item.group.ItemGroupExtensions;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -32,7 +37,9 @@ public class Wand_mod implements ModInitializer {
     @Override
     public void onInitialize() {
 
+
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
+
         ModMessages.registerC2SPackets();
 
         ServerTickEvents.START_SERVER_TICK.register(new ServerPlayerTickHandler());
@@ -41,4 +48,5 @@ public class Wand_mod implements ModInitializer {
         new modBlockRegistry();
 
     }
+
 }

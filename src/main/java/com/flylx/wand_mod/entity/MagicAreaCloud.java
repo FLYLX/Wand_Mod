@@ -147,12 +147,14 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
             }
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
+            float damage = this.getDegree()/10;
 
             for (LivingEntity livingEntity : list) {
                 livingEntity.setFireTicks(200);
-                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
-                statusEffectInstance.getEffectType()
-                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
+//                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
+//                statusEffectInstance.getEffectType()
+//                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
+                livingEntity.damage(DamageSource.GENERIC,damage);
 
 
             }
@@ -176,12 +178,13 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
             }
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
-
+            float damage = (this.getDegree()-60)/10;
             for (LivingEntity livingEntity : list) {
                 livingEntity.setFrozenTicks(200);
-                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
-                statusEffectInstance.getEffectType()
-                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
+//                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
+//                statusEffectInstance.getEffectType()
+//                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),damage);
+                livingEntity.damage(DamageSource.GENERIC,damage);
 
             }
 
@@ -208,6 +211,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                             getZ() + l, n, o, p);
 
             }
+            float damage = (this.getDegree()-120)/10;
                 //给玩家效果
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
             for (LivingEntity livingEntity : list) {
@@ -215,9 +219,10 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.POISON);
 
                 statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
-                        200, 20,
+                        200, (int) damage,
                         statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
                 livingEntity.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
+                livingEntity.damage(DamageSource.GENERIC,damage);
             }
 
 
@@ -242,11 +247,12 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
             }
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
+            float damage = (this.getDegree()-180)/100;
 
             for (LivingEntity livingEntity : list) {
                 StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
                 statusEffectInstance.getEffectType()
-                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
+                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),damage);
 
             }
 

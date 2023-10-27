@@ -89,8 +89,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
-        this.getDataTracker().startTracking(DEGREE,
-               Degree);
+        this.getDataTracker().startTracking(DEGREE, Degree);
     }
 
 
@@ -104,7 +103,6 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public float getDegree() {
         return this.getDataTracker().get(DEGREE).floatValue();
     }
-
 
     @Override
     public boolean hasNoGravity() {
@@ -123,20 +121,15 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     @Override
     public void registerControllers(AnimationData animationData) {
-
         animationData.addAnimationController(controller);
-
     }
 
     @Override
     public void tick() {
         LogManager.getLogger().info(getDegree());
-
-        if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z
-                ,2))<0.3F) {
+        if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z,2))<0.3F) {
             this.discard();
         }
-
         super.tick();
     }
 
@@ -234,13 +227,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }
     }
 
-
-
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
-
         nbt.putFloat("Degree", this.getDegree());
-
         return super.writeNbt(nbt);
     }
 
