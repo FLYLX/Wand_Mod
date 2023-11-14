@@ -2,6 +2,8 @@ package com.flylx.wand_mod.client;
 
 
 import com.flylx.wand_mod.event.ClientPlayerTickHandler;
+import com.flylx.wand_mod.particle.MagicShieldParticle;
+import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.render.*;
 
 import com.flylx.wand_mod.Wand_mod;
@@ -17,8 +19,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -35,27 +39,50 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 public class Wand_modClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        //armor
         GeoArmorRenderer.registerArmorRenderer(new ScrollBeltRenderer(), modItemRegistry.SCROLL_BELT_ITEM);
 
+
+        //item
         GeoItemRenderer.registerItemRenderer(modItemRegistry.BASE_WAND,new BaseWandRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FLAME_SCROLL,new FlameScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.EMPTY_SCROLL,new EmptyScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FROZE_SCROLL,new FrozeScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.POISON_SCROLL,new PoisonScrollRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.MAGIC_SHIELD,new MagicShieldRenderer());
+
+        //block
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
 
+
+
+        //render
         EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         EntityRendererRegistry.register(modEntityRegistry.MAGIC_AREA,(ctx) -> new MagicCloudRenderer(ctx));
+        EntityRendererRegistry.register(modEntityRegistry.MAGIC_SHIELD,(ctx) -> new MagicShieldEffectRenderer(ctx));
 
+
+        //screen
         HandledScreens.register(Wand_mod.MAGIC_SCREEN_HANDLER, MagicScreen::new);
 
+        //particle
+        ParticleFactoryRegistry.getInstance().register(modParticleRegistry.MAGICSHIELD_PARTICLE,
+                MagicShieldParticle.Factary::new);
+
+
+        //keybind
         KeyInputHandler.register();
 
+        //hud
         HudRenderCallback.EVENT.register(new MagicSwitchHud());
 
+        //s2c c2s packets
         ModMessages.registerS2CPackets();
 
+        //listener
         ClientTickEvents.START_WORLD_TICK.register(new ClientPlayerTickHandler());
+
+
 
     }
 }

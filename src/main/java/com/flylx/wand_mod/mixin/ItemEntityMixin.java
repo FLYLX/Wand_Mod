@@ -55,13 +55,13 @@ public abstract class ItemEntityMixin {
                     ((ItemEntity)(Object)this).discard();
 
                 }
+                //示例stream查找代码
                 checkItem(((ItemEntity) (Object) this));
-
-
             }
         }
     }
 
+    //示例stream查找代码
     public void checkItem(ItemEntity itemEntity){
 
         for (ItemEntity itemEntity1 : checkItemEntities(((ItemEntity)(Object)this).world, itemEntity)) {
@@ -85,6 +85,7 @@ public abstract class ItemEntityMixin {
 
     private static List<ItemEntity> checkItemEntities(World world, ItemEntity itemEntity) {
 
+        //示例stream查找代码
         return ABOVE_SHAPE.getBoundingBoxes().stream().flatMap(new Function<Box, Stream<? extends ItemEntity>>() {
             @Override
             public Stream<? extends ItemEntity> apply(Box box) {

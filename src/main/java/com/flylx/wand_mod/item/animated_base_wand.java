@@ -55,6 +55,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     }
 
 
+
     @Override
     public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
         if (user instanceof PlayerEntity) {

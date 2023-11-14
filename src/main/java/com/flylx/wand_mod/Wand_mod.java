@@ -6,6 +6,7 @@ import com.flylx.wand_mod.entity.MagicAreaCloud;
 import com.flylx.wand_mod.event.ServerPlayerTickHandler;
 import com.flylx.wand_mod.mixin.PlayerEntityMixin;
 import com.flylx.wand_mod.networking.ModMessages;
+import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
 import com.flylx.wand_mod.item.modItemRegistry;
 
@@ -37,16 +38,17 @@ public class Wand_mod implements ModInitializer {
     @Override
     public void onInitialize() {
 
-
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
 
         ModMessages.registerC2SPackets();
 
         ServerTickEvents.START_SERVER_TICK.register(new ServerPlayerTickHandler());
+
+        //提前注册进游戏，不写在这里会导致有些东西没注册进去
         new modItemRegistry();
         new modEntityRegistry();
         new modBlockRegistry();
+        modParticleRegistry.registerParticles();
 
     }
-
 }

@@ -2,6 +2,7 @@ package com.flylx.wand_mod.entity;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.block.modBlockRegistry;
+import com.flylx.wand_mod.item.MagicShield;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,16 +15,25 @@ import software.bernie.example.registry.EntityRegistryBuilder;
 
 public class modEntityRegistry {
 
+    //entity
     public static EntityType<BasicMagic> BASIC_MAGIC = buildEntity(BasicMagic::new, BasicMagic.class, 0.5F,
             0.5F, SpawnGroup.MISC);
 
+    public static final EntityType<MagicAreaCloud> MAGIC_AREA = buildEntity(MagicAreaCloud::new,MagicAreaCloud.class
+            ,6.0f, 0.5f,SpawnGroup.MISC);
+
+    public static final EntityType<MagicShieldEffect> MAGIC_SHIELD = buildEntity(MagicShieldEffect::new,
+            MagicShieldEffect.class
+            ,6.0f, 0.5f,SpawnGroup.MISC);
+
+
+    //blockentity
      public static BlockEntityType WAND_TABLE = Registry.register(Registry.BLOCK_ENTITY_TYPE,
              new Identifier(Wand_mod.ModID, "wand_table_entity"),
                 FabricBlockEntityTypeBuilder.create(WandTableEntity::new,modBlockRegistry.WAND_TABLE).build());
 
 
-     public static final EntityType<MagicAreaCloud> MAGIC_AREA = buildEntity(MagicAreaCloud::new,MagicAreaCloud.class
-             ,6.0f, 0.5f,SpawnGroup.MISC);
+
 
     public static <T extends Entity> EntityType<T> buildEntity(EntityType.EntityFactory<T> entity, Class<T> entityClass,
                                                                float width, float height, SpawnGroup group) {

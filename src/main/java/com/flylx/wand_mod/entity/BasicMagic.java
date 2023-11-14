@@ -63,11 +63,10 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public static final int ANIM_OPEN = 1;
     public static final String controllerName = "controller";
     AnimationController<BasicMagic> controller = new AnimationController(this,controllerName , 1,this::predicate);
-    private  static final TrackedData<Float> DEGREE = DataTracker.registerData(BasicMagic.class,
+    private static final TrackedData<Float> DEGREE = DataTracker.registerData(BasicMagic.class,
             TrackedDataHandlerRegistry.FLOAT);
 
     private float Degree;
-
 
     public BasicMagic(EntityType<? extends BasicMagic> entityType, World world) {
         super(entityType, world);

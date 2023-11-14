@@ -35,6 +35,9 @@ public class modItemRegistry {
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",
             new animated_base_wand(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+    public static final MagicShield MAGIC_SHIELD = (MagicShield) registerItem("magic_shield",
+            new MagicShield(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+
 
     public static final Item WAND_TABLE =
             registerItem("wand_table", new BlockItem(modBlockRegistry.WAND_TABLE,

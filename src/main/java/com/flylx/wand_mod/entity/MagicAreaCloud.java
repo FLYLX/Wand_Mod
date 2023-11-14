@@ -255,9 +255,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                         .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),damage);
 
             }
-
         }
-
 
         //逐渐减少范围
         this.setRadius(this.getRadius() + this.getRadiusGrowth());
