@@ -37,15 +37,16 @@ public class MagicShield extends Item implements IAnimatable, ISyncable {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
 
-        if (!world.isClient()) {
+        if (!world.isClient) {
             final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(hand), (ServerWorld) world);
-
             GeckoLibNetwork.syncAnimation(user, this, id, ANIM_OPEN);
-
-            MagicShieldEffect magicShieldEffect = new MagicShieldEffect(world,user.prevX,user.prevY,user.prevZ);
-            magicShieldEffect.setRadius(2.0f);
-            magicShieldEffect.setRadiusGrowth(-0.5f);
+        }
+        if (!world.isClient) {
+            MagicShieldEffect magicShieldEffect = new MagicShieldEffect(world, user.prevX, user.prevY, user.prevZ);
+            magicShieldEffect.setRadius(1.5f);
+            magicShieldEffect.setRadiusGrowth(-1f);
             magicShieldEffect.setOwner(user);
+            magicShieldEffect.setRestart(2);
             world.spawnEntity(magicShieldEffect);
         }
         return TypedActionResult.consume(itemStack);

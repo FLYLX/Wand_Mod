@@ -13,7 +13,7 @@ public class MagicShieldParticle extends SpriteBillboardParticle {
         super(level,xCoord,yCoord,zCoord,xd,yd,zd);
 
 
-        this.velocityMultiplier = 0.6f;
+        this.velocityMultiplier = 1f;
         this.x = xd;
         this.y = yd;
         this.z = zd;
@@ -27,6 +27,7 @@ public class MagicShieldParticle extends SpriteBillboardParticle {
 
     @Override
     public void tick() {
+
         super.tick();
     }
 

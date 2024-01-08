@@ -1,19 +1,31 @@
 package com.flylx.wand_mod.entity;
 
+import com.flylx.wand_mod.particle.modParticleRegistry;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
+import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
@@ -35,9 +47,12 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
     private LivingEntity owner;
     @Nullable
     private UUID ownerUuid;
+    private final ObjectArrayList<BlockPos> affectedBlocks = new ObjectArrayList();
+    private int restart ;
+    private double parameter,parameter1,cumsum=0;
 
-    private int restart = 3;
 
+    Vec3d velocity;
 
     public MagicShieldEffect(EntityType<? extends AreaEffectCloudEntity> entityType, World world) {
         super(entityType, world);
@@ -66,7 +81,7 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 
     @Override
     protected void initDataTracker() {
-        this.getDataTracker().startTracking(RADIUS, Float.valueOf(0.5f));
+        this.getDataTracker().startTracking(RADIUS, Float.valueOf(0.0f));
     }
 
     @Override
@@ -90,6 +105,8 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
         if (nbt.containsUuid("Owner")) {
             this.ownerUuid = nbt.getUuid("Owner");
         }
+        this.setRestart(this.getRestart());
+
     }
 
     @Override
@@ -102,6 +119,14 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
         this.radiusGrowth = radiusGrowth;
     }
 
+    public int getRestart(){
+        return  this.restart;
+    }
+
+    public void setRestart(int restart){
+        this.restart = restart;
+    }
+
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
         nbt.putFloat("RadiusPerTick", this.radiusGrowth);
@@ -109,6 +134,7 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
         if (this.ownerUuid != null) {
             nbt.putUuid("Owner", this.ownerUuid);
         }
+        nbt.putInt("restart",this.getRestart());
     }
 
     @Override
@@ -137,36 +163,78 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
     public void tick() {
         //逐渐减少范围
 
-        List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
+            List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
+            List<ItemEntity> list1 = this.world.getNonSpectatingEntities(ItemEntity.class, this.getBoundingBox());
 
+            for (LivingEntity livingEntity : list) {
+                    if (!world.isClient) {
+                        if(!livingEntity.equals(owner)){
+                            livingEntity.takeKnockback(0.2, this.getX() - livingEntity.getX(), this.getZ() - livingEntity.getZ());
+                            livingEntity.setVelocity(livingEntity.getVelocity().add((livingEntity.getX() - this.getX()) / 10,
+                            (livingEntity.getY() - this.getY()) / 10, (livingEntity.getZ() - this.getZ()) / 10));
+                            if(livingEntity instanceof ServerPlayerEntity) {
+                                setVelocity((livingEntity.getX() - this.getX()) / 10,
+                                (livingEntity.getY() - this.getY()) / 10, (livingEntity.getZ() - this.getZ()) / 10);
+                                ((ServerPlayerEntity) livingEntity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(livingEntity.getId(),
+                                        velocity));
+//                                world.addParticle(ParticleTypes.HEART, false,
+//                                livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 0, 0, 0);
+//                                for (int j = 0; j < this.world.getPlayers().size(); ++j) {
+//                                    ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) this.world.getPlayers().get(j);
+//                                    if (!((ServerWorld)(this.world)).sendToPlayerIfNearby(serverPlayerEntity, false, x,
+//                                            y, z,
+//                                            particleS2CPacket)) continue;
+//                                    ++i;
+//                                }
 
-
-        for (LivingEntity livingEntity : list) {
+                            }
+                            ((ServerWorld)(this.world)).spawnParticles(ParticleTypes.HEART,livingEntity.getX(),
+                                    livingEntity.getY(),livingEntity.getZ(),1,0,0,0,1);
+                        }
+                    }
+                if (world.isClient) {
+//                    if(!livingEntity.equals(owner)) {
+//                        world.addParticle(ParticleTypes.HEART, false,
+//                                livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 0, 0, 0);
+//                        LogManager.getLogger().info("RADIUS:"+getRadius());
+//                        LogManager.getLogger().info("im alive");
+//                        LogManager.getLogger().info("ovner:"+owner);
+//                    }
+                }
+            }
+            for (ItemEntity itemEntity : list1) {
 //                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
 //                statusEffectInstance.getEffectType()
 //                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
-            livingEntity.damage(DamageSource.GENERIC,0);
+                    setVelocity((itemEntity.getX()-this.getX())/10,
+                            (itemEntity.getY()-this.getY())/10,(itemEntity.getZ()-this.getZ())/10);
+                    itemEntity.setVelocity(velocity);
 
-        }
 
-        searchBlock();
-
-        this.setRadius(this.getRadius() + this.getRadiusGrowth());
-        if(owner!=null) {
-            setPosition(owner.getX(), owner.getY(), owner.getZ());
-        }
-        if (restart!=0){
-            if(this.getRadius()>32.0f){
-                this.setRadiusGrowth(-0.5f);
-                restart = restart-1;
-            }else if(this.getRadius()<2.0f){
-                this.setRadiusGrowth(0.5f);
-                restart = restart-1;
             }
-        }
-        if(this.getRadius()<0.5f||this.getRadius()>34.0f){
-            discard();
-        }
+            searchBlock();
+
+
+            this.setRadius(this.getRadius() + this.getRadiusGrowth());
+            if (owner != null) {
+                setPosition(owner.getX(), owner.getY(), owner.getZ());
+            }
+            if (restart != 0) {
+                if (this.getRadius() > 16.0f) {
+                    this.setRadiusGrowth(-1f);
+                    restart = restart - 1;
+                } else if (this.getRadius() <= 0.5f) {
+                    this.setRadiusGrowth(1f);
+                    restart = restart - 1;
+                }
+            }
+            if (this.getRadius() <= 0.0f || this.getRadius() > 34.0f) {
+                discard();
+            }
+            if(world.isClient){
+                spawnShieldParticle(world);
+            }
+
     }
 
     @Override
@@ -200,9 +268,60 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
                     BlockEntity blockEntity = blockState.hasBlockEntity() ? world.getBlockEntity(blockPos) : null;
                     Block.dropStacks(blockState, world, blockPos, blockEntity);
                     world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 3);
-
                 }
             }
         }
+    }
+
+    public void setVelocity(Vec3d velocity) {
+        this.velocity = velocity;
+    }
+
+    public void setVelocity(double x, double y, double z) {
+        this.setVelocity(new Vec3d(x, y, z));
+    }
+
+    public void spawnShieldParticle(World world){
+//ParticleEffect parameters, double x, double y, double z, double velocityX, double velocityY, double velocityZ
+        //once every right button
+//        while(count>0){
+//            for(int i = -1;i <= 1;i++){
+//                for(int j = -1; j <= 1;j++){
+//                    for(int k = -1;k <= 1;k++){
+//                        world.addParticle(modParticleRegistry.MAGICSHIELD_PARTICLE,this.getX(),this.getY(),
+//                                this.getZ(),i,j,k);
+//                    }
+//                }
+//            }
+//            count--;
+//        }
+        if(getRadius()>1&&world.getTickOrder()%1==0){
+            LogManager.getLogger().info("radius:"+getRadius());
+            for (double j = 180;j>=-180;j=j-20) {
+                cumsum = cumsum + 0.5;
+                parameter1 = Math.toRadians(j);
+                for (int k = 0; k < 360; k = k + 40) {
+                    parameter = Math.toRadians(k);
+                    LogManager.getLogger().info("consum:"+cumsum);
+                    LogManager.getLogger().info("getRadiusGrowth:"+getRadiusGrowth());
+                    world.addParticle(ParticleTypes.ELECTRIC_SPARK,
+                            this.getX() + cumsum / 5 * Math.sin(parameter+cumsum/100)*Math.cos(parameter1),
+                            this.getY() + cumsum / 10 * Math.sin(parameter1) + 0.5 ,
+                            this.getZ() + cumsum / 5 * Math.cos(parameter+cumsum/100)*Math.cos(parameter1),
+                            0, 0, 0);
+                }
+            }
+            for (double i = 0.4;i>0;i=i-0.2) {
+//                    world.addParticle(ParticleTypes.ENCHANT,
+//                            this.getX() + getRadius() / 10 * Math.sin(getRadius() + i + Math.PI / 2),
+//                            this.getY()+j, this.getZ() + getRadius()/10 * Math.cos(getRadius() + i + Math.PI / 2),
+//                            0, 0, 0);
+//                    world.addParticle(ParticleTypes.ENCHANT,
+//                            this.getX() + getRadius()  * Math.sin(getRadius() + i),
+//                            this.getY()+j, this.getZ() + getRadius() * Math.cos(getRadius() + i),
+//                            0, 0, 0);
+
+                }
+            }
     }
 }

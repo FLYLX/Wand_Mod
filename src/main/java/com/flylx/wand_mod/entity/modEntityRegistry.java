@@ -24,7 +24,7 @@ public class modEntityRegistry {
 
     public static final EntityType<MagicShieldEffect> MAGIC_SHIELD = buildEntity(MagicShieldEffect::new,
             MagicShieldEffect.class
-            ,6.0f, 0.5f,SpawnGroup.MISC);
+            ,0.0f, 0.0f,SpawnGroup.MISC);
 
 
     //blockentity
