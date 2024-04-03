@@ -59,6 +59,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private LivingEntity shooter;
+    public int basicmagicAge;
 
     public static final int ANIM_OPEN = 1;
     public static final String controllerName = "controller";
@@ -71,7 +72,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public BasicMagic(EntityType<? extends BasicMagic> entityType, World world) {
         super(entityType, world);
         this.pickupType = PickupPermission.DISALLOWED;
+        this.basicmagicAge = this.random.nextInt(100000);
     }
+
+    //还没写完，参考鱼钩实体类
+
 
     public BasicMagic(World world,LivingEntity owner){
         super(modEntityRegistry.BASIC_MAGIC, owner, world);
@@ -79,6 +84,26 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         Degree = ((IEntityDataSaver) owner).getPersistentData().getFloat(
                 "switch");
         this.getDataTracker().set(DEGREE,Degree);
+
+        this.setOwner(owner);
+        float f = owner.getPitch();
+        float g = owner.getYaw();
+        float h = MathHelper.cos(-g * ((float)Math.PI / 180) - (float)Math.PI);
+        float i = MathHelper.sin(-g * ((float)Math.PI / 180) - (float)Math.PI);
+        float j = -MathHelper.cos(-f * ((float)Math.PI / 180));
+        float k = MathHelper.sin(-f * ((float)Math.PI / 180));
+        double d = owner.getX() - (double)i * 0.3;
+        double e = owner.getEyeY();
+        double l = owner.getZ() - (double)h * 0.3;
+        this.refreshPositionAndAngles(d, e, l, g, f);
+        Vec3d vec3d = new Vec3d(-i, MathHelper.clamp(-(k / j), -5.0f, 5.0f), -h);
+        double m = vec3d.length();
+        vec3d = vec3d.multiply(0.6 / m + this.random.nextTriangular(0.5, 0.0103365), 0.6 / m + this.random.nextTriangular(0.5, 0.0103365), 0.6 / m + this.random.nextTriangular(0.5, 0.0103365));
+        this.setVelocity(vec3d);
+        this.setYaw((float)(MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875));
+        this.setPitch((float)(MathHelper.atan2(vec3d.y, vec3d.horizontalLength()) * 57.2957763671875));
+        this.prevYaw = this.getYaw();
+        this.prevPitch = this.getPitch();
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -125,10 +150,17 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     @Override
     public void tick() {
+        ++basicmagicAge;
         LogManager.getLogger().info(getDegree());
         if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z,2))<0.3F) {
             this.discard();
         }
+
+        if(getDegree()>=240&&getDegree()<300){
+            hookPlayer((PlayerEntity) getOwner(),this.getWorld(),this);
+
+        }
+
         super.tick();
     }
 
@@ -223,6 +255,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
                     statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
             target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
 
+        }else if(getDegree()>=240&&getDegree()<300){
+            target.setVelocity((this.getOwner().getX()-target.getX())/10,(this.getOwner().getY()-target.getY())/10,
+                    (this.getOwner().getZ()-target.getZ())/10);
         }
     }
 
@@ -257,6 +292,10 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }
     }
 
+    @Override
+    public boolean isSubmergedInWater() {
+        return true;
+    }
 
     public void frozeMagic() {
         MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
@@ -296,5 +335,35 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }
         this.world.spawnEntity(magicAreaCloud);
 
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+    }
+
+
+
+    public void hookPlayer(PlayerEntity player, World world, Entity entity){
+        if(getOwner()!=null) {
+            if (((PlayerEntity) this.getOwner()).handSwinging) {
+                player.setVelocity(player.getVelocity().getX() + (entity.getPos().getX() - player.getPos().getX())/2 ,
+                        player.getVelocity().getY() + (entity.getPos().getY() - player.getPos().getY()) /5,
+                        player.getVelocity().getZ() + (entity.getPos().getZ() - player.getPos().getZ())/2
+
+                );
+                this.discard();
+            }
+        }
+    }
+
+    @Override
+    public float getYaw() {
+        return super.getYaw();
     }
 }

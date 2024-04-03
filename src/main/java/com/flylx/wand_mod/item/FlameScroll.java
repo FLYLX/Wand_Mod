@@ -1,27 +1,16 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.event.LeftClick;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.loader.impl.util.log.Log;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
-import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -86,23 +75,22 @@ public class FlameScroll extends Item implements  IAnimatable, ISyncable {
             if(remain_time >30){
                 return;
             }
-            if(world.getClosestPlayer(entity,0.2)!=null&&
-                world.getClosestPlayer(entity,0.2).getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL)&&
-                    world.getClosestPlayer(entity,0.2).handSwinging) {
-            PlayerEntity playerentity = (PlayerEntity) world.getClosestPlayer(entity,0.2);
+            if (entity instanceof PlayerEntity) {
+                if (((PlayerEntity) entity).getOffHandStack().isOf(modItemRegistry.FLAME_SCROLL) &&
+                        ((PlayerEntity) entity).handSwinging) {
 
-            BasicMagic basicMagic = new BasicMagic(world, playerentity);
+                    BasicMagic basicMagic = new BasicMagic(world, ((PlayerEntity)entity));
 
-            basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
-                    0F);
+                    basicMagic.setVelocity(((PlayerEntity)entity), ((PlayerEntity)entity).getPitch(), ((PlayerEntity)entity).getYaw(), 0F, 1.0F,
+                            0F);
 
-            basicMagic.age = 30;
+                    basicMagic.age = 30;
 
-            basicMagic.hasNoGravity();
-            basicMagic.setDegree(30);
-            stack.decrement(1);
-            world.spawnEntity(basicMagic);
-
+                    basicMagic.hasNoGravity();
+                    basicMagic.setDegree(30);
+                    stack.decrement(1);
+                    world.spawnEntity(basicMagic);
+                }
         }
         }
 

@@ -2,6 +2,8 @@ package com.flylx.wand_mod.entity;
 
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -17,8 +19,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.ExplosionS2CPacket;
-import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -29,10 +29,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.example.block.FertilizerBlock;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -168,6 +168,7 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 
             for (LivingEntity livingEntity : list) {
                     if (!world.isClient) {
+
                         if(!livingEntity.equals(owner)){
                             livingEntity.takeKnockback(0.2, this.getX() - livingEntity.getX(), this.getZ() - livingEntity.getZ());
                             livingEntity.setVelocity(livingEntity.getVelocity().add((livingEntity.getX() - this.getX()) / 10,
@@ -188,11 +189,11 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //                                }
 
                             }
-                            ((ServerWorld)(this.world)).spawnParticles(ParticleTypes.HEART,livingEntity.getX(),
+                            ((ServerWorld)(this.world)).spawnParticles(ParticleTypes.FLASH,livingEntity.getX(),
                                     livingEntity.getY(),livingEntity.getZ(),1,0,0,0,1);
                         }
                     }
-                if (world.isClient) {
+//                if (world.isClient) {
 //                    if(!livingEntity.equals(owner)) {
 //                        world.addParticle(ParticleTypes.HEART, false,
 //                                livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 0, 0, 0);
@@ -200,7 +201,7 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //                        LogManager.getLogger().info("im alive");
 //                        LogManager.getLogger().info("ovner:"+owner);
 //                    }
-                }
+//                }
             }
             for (ItemEntity itemEntity : list1) {
 //                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
@@ -233,7 +234,24 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
             }
             if(world.isClient){
                 spawnShieldParticle(world);
+            }else{
+                //检测脚下方块
+//                BlockPos blockPos = new BlockPos(getOwner().getBlockPos().getX(),getOwner().getBlockPos().getY()-3,
+//                        getOwner().getBlockPos().getZ());
+//                BlockState blockState = world.getBlockState(blockPos);
+//
+
+//                if(blockState.isSolidBlock(world,blockPos)&&getOwner().getVelocity().getY()<0&&getOwner().getPos().getY()-(double) blockPos.getY()<3.1d){
+//                    setVelocity(getOwner().getVelocity().getX(),0.1, getOwner().getVelocity().getZ());
+//                    ((ServerPlayerEntity) getOwner()).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(getOwner().getId(),
+//                            velocity));
+//                }
+                if(getOwner()!=null) {
+                    getOwner().fallDistance = 0.0f;
+                }
             }
+
+
 
     }
 
@@ -297,21 +315,24 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //        }
         if(getRadius()>1&&world.getTickOrder()%1==0){
             LogManager.getLogger().info("radius:"+getRadius());
-            for (double j = 180;j>=-180;j=j-20) {
+            for (double j = 180;j>=-180;j=j-45) {
                 cumsum = cumsum + 0.5;
                 parameter1 = Math.toRadians(j);
-                for (int k = 0; k < 360; k = k + 40) {
+
+                for (int k = 0; k < 360; k = (int) (k + 60)) {
+
                     parameter = Math.toRadians(k);
                     LogManager.getLogger().info("consum:"+cumsum);
                     LogManager.getLogger().info("getRadiusGrowth:"+getRadiusGrowth());
                     world.addParticle(ParticleTypes.ELECTRIC_SPARK,
-                            this.getX() + cumsum / 5 * Math.sin(parameter+cumsum/100)*Math.cos(parameter1),
-                            this.getY() + cumsum / 10 * Math.sin(parameter1) + 0.5 ,
-                            this.getZ() + cumsum / 5 * Math.cos(parameter+cumsum/100)*Math.cos(parameter1),
+                            this.getX() + cumsum / 5 * Math.sin(parameter*random.nextFloat()+cumsum/100)*Math.cos(parameter1),
+                            this.getY() + cumsum / 10 * Math.sin(parameter1) + random.nextFloat()*2 ,
+                            this.getZ() + cumsum / 5 * Math.cos(parameter*random.nextFloat()+cumsum/100)*Math.cos(parameter1),
                             0, 0, 0);
+
                 }
             }
-            for (double i = 0.4;i>0;i=i-0.2) {
+//            for (double i = 0.4;i>0;i=i-0.2) {
 //                    world.addParticle(ParticleTypes.ENCHANT,
 //                            this.getX() + getRadius() / 10 * Math.sin(getRadius() + i + Math.PI / 2),
 //                            this.getY()+j, this.getZ() + getRadius()/10 * Math.cos(getRadius() + i + Math.PI / 2),
@@ -320,8 +341,8 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //                            this.getX() + getRadius()  * Math.sin(getRadius() + i),
 //                            this.getY()+j, this.getZ() + getRadius() * Math.cos(getRadius() + i),
 //                            0, 0, 0);
-
-                }
+//
+//                }
             }
     }
 }

@@ -167,7 +167,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return false;
+        return super.hasGlint(stack);
     }
 
     @Override

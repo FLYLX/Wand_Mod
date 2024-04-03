@@ -1,17 +1,11 @@
 package com.flylx.wand_mod.item;
 
-import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.mixin.MouseMixin;
+
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.Hopper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +16,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -86,7 +79,6 @@ public class EmptyScroll extends Item implements IAnimatable, ISyncable {
         if (!world.isClient()) {
 
         }
-
 
         super.inventoryTick(stack, world, entity, slot, selected);
     }

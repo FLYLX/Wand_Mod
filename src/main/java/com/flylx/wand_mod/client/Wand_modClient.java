@@ -2,6 +2,7 @@ package com.flylx.wand_mod.client;
 
 
 import com.flylx.wand_mod.event.ClientPlayerTickHandler;
+import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.particle.MagicShieldParticle;
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.render.*;
@@ -29,6 +30,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 
+import net.minecraft.client.render.entity.EntityRenderers;
+import net.minecraft.client.render.entity.IronGolemEntityRenderer;
+import net.minecraft.entity.EntityType;
 import software.bernie.example.client.renderer.armor.GeckoArmorRenderer;
 import software.bernie.example.registry.ItemRegistry;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
@@ -49,7 +53,14 @@ public class Wand_modClient implements ClientModInitializer {
         GeoItemRenderer.registerItemRenderer(modItemRegistry.EMPTY_SCROLL,new EmptyScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.FROZE_SCROLL,new FrozeScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.POISON_SCROLL,new PoisonScrollRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.CURE_SCROLL,new CureScrollRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.CLAW_SCROLL,new ClawScrollRenderer());
+
+
+
         GeoItemRenderer.registerItemRenderer(modItemRegistry.MAGIC_SHIELD,new MagicShieldRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.WAND_CORE,new WandCoreRenderer());
+
 
         //block
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
@@ -60,6 +71,9 @@ public class Wand_modClient implements ClientModInitializer {
         EntityRendererRegistry.register(modEntityRegistry.BASIC_MAGIC,(ctx) -> new BasicMagicRenderer(ctx));
         EntityRendererRegistry.register(modEntityRegistry.MAGIC_AREA,(ctx) -> new MagicCloudRenderer(ctx));
         EntityRendererRegistry.register(modEntityRegistry.MAGIC_SHIELD,(ctx) -> new MagicShieldEffectRenderer(ctx));
+
+        EntityRendererRegistry.register(modMobRegistry.MAGIC_GOLEM_ENTITY,(ctx)->new MagicGolemEntityRenderer(ctx));
+
 
 
         //screen

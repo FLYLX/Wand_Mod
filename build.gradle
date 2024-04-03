@@ -35,6 +35,37 @@ processResources {
     }
 }
 
+def dataOutput = "src/main/generated"
+
+
+loom {
+
+    // ... （已经存在的内容）
+
+    runs {
+        // 这会添加一个运行数据生成 API 的新 gradle 任务："gradlew runDatagen"
+        datagen {
+            server()
+
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file(dataOutput)}"
+
+            runDir "build/datagen"
+        }
+    }
+}
+//数据生成
+sourceSets {
+    main {
+        resources {
+            srcDirs += dataOutput
+        }
+    }
+}
+
+
+
 def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -81,3 +112,4 @@ publishing {
         // retrieving dependencies.
     }
 }
+

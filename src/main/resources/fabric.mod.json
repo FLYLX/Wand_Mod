@@ -17,6 +17,9 @@
     ],
     "main": [
       "com.flylx.wand_mod.Wand_mod"
+    ],
+    "fabric-datagen": [
+      "com.flylx.wand_mod.dataGeneration.DataGeneration"
     ]
   },
   "mixins": [

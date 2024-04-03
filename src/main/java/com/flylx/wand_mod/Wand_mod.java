@@ -5,6 +5,7 @@ import com.flylx.wand_mod.block.modBlockRegistry;
 import com.flylx.wand_mod.entity.MagicAreaCloud;
 import com.flylx.wand_mod.event.ServerPlayerTickHandler;
 import com.flylx.wand_mod.mixin.PlayerEntityMixin;
+import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
@@ -48,6 +49,9 @@ public class Wand_mod implements ModInitializer {
         new modItemRegistry();
         new modEntityRegistry();
         new modBlockRegistry();
+        new modMobRegistry();
+
+        modMobRegistry.registryAttribute();
         modParticleRegistry.registerParticles();
 
     }

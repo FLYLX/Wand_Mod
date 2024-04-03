@@ -6,7 +6,6 @@
   "mixins": [
     "ModEntityDataSaverMixin",
     "PlayerInventoryMixin",
-    "MouseMixin",
     "PlayerEntityMixin",
     "ItemEntityMixin"
   ],

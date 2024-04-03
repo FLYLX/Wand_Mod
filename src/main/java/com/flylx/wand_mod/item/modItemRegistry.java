@@ -31,13 +31,19 @@ public class modItemRegistry {
             new FrozeScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final PoisonScroll POISON_SCROLL = (PoisonScroll) registerItem("poison_scroll",
             new PoisonScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+    public static final CureScroll CURE_SCROLL = (CureScroll) registerItem("cure_scroll",
+            new CureScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+    public static final ClawScroll CLAW_SCROLL = (ClawScroll) registerItem("claw_scroll",
+            new ClawScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",
             new animated_base_wand(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final MagicShield MAGIC_SHIELD = (MagicShield) registerItem("magic_shield",
             new MagicShield(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
-
+    public static final WandCore WAND_CORE = (WandCore) registerItem("wand_core",
+            new WandCore(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
 
     public static final Item WAND_TABLE =
             registerItem("wand_table", new BlockItem(modBlockRegistry.WAND_TABLE,

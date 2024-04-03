@@ -1,5 +1,30 @@
 {
   "textures": [
-    "wand_mod:magic_shield"
+    "wand_mod:sga_a",
+    "wand_mod:sga_b",
+    "wand_mod:sga_c",
+    "wand_mod:sga_d",
+    "wand_mod:sga_e",
+    "wand_mod:sga_f",
+    "wand_mod:sga_g",
+    "wand_mod:sga_h",
+    "wand_mod:sga_i",
+    "wand_mod:sga_j",
+    "wand_mod:sga_k",
+    "wand_mod:sga_l",
+    "wand_mod:sga_m",
+    "wand_mod:sga_n",
+    "wand_mod:sga_o",
+    "wand_mod:sga_p",
+    "wand_mod:sga_q",
+    "wand_mod:sga_r",
+    "wand_mod:sga_s",
+    "wand_mod:sga_t",
+    "wand_mod:sga_u",
+    "wand_mod:sga_v",
+    "wand_mod:sga_w",
+    "wand_mod:sga_x",
+    "wand_mod:sga_y",
+    "wand_mod:sga_z"
   ]
 }

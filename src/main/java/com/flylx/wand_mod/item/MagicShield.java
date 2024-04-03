@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.MagicShieldEffect;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,20 +37,26 @@ public class MagicShield extends Item implements IAnimatable, ISyncable {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-
+        user.addVelocity(0,1.4,0);
         if (!world.isClient) {
             final int id = GeckoLibUtil.guaranteeIDForStack(user.getStackInHand(hand), (ServerWorld) world);
             GeckoLibNetwork.syncAnimation(user, this, id, ANIM_OPEN);
-        }
-        if (!world.isClient) {
+            //spawn magicShieldEffect
             MagicShieldEffect magicShieldEffect = new MagicShieldEffect(world, user.prevX, user.prevY, user.prevZ);
             magicShieldEffect.setRadius(1.5f);
             magicShieldEffect.setRadiusGrowth(-1f);
             magicShieldEffect.setOwner(user);
             magicShieldEffect.setRestart(2);
             world.spawnEntity(magicShieldEffect);
+
         }
         return TypedActionResult.consume(itemStack);
+
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
 
     }
 
@@ -69,8 +76,10 @@ public class MagicShield extends Item implements IAnimatable, ISyncable {
             final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, controllerName);
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("spin",
-                    ILoopType.EDefaultLoopTypes.LOOP));
+                    ILoopType.EDefaultLoopTypes.PLAY_ONCE));
 
         }
     }
+
+
 }
