@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "wand_mod:block/magic_ore"
+    }
+  }
+}

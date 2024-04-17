@@ -1,20 +1,13 @@
 package com.flylx.wand_mod.entity;
 
-import com.flylx.wand_mod.particle.modParticleRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
-import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.entity.*;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -32,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 
@@ -165,10 +157,11 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
             List<ItemEntity> list1 = this.world.getNonSpectatingEntities(ItemEntity.class, this.getBoundingBox());
+            List<PersistentProjectileEntity> list2 =
+                    this.world.getNonSpectatingEntities(PersistentProjectileEntity.class, this.getBoundingBox());
 
             for (LivingEntity livingEntity : list) {
                     if (!world.isClient) {
-
                         if(!livingEntity.equals(owner)){
                             livingEntity.takeKnockback(0.2, this.getX() - livingEntity.getX(), this.getZ() - livingEntity.getZ());
                             livingEntity.setVelocity(livingEntity.getVelocity().add((livingEntity.getX() - this.getX()) / 10,
@@ -187,7 +180,6 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //                                            particleS2CPacket)) continue;
 //                                    ++i;
 //                                }
-
                             }
                             ((ServerWorld)(this.world)).spawnParticles(ParticleTypes.FLASH,livingEntity.getX(),
                                     livingEntity.getY(),livingEntity.getZ(),1,0,0,0,1);
@@ -213,6 +205,13 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 
 
             }
+
+            for(PersistentProjectileEntity persistentProjectileEntity:list2){
+                setVelocity((persistentProjectileEntity.getX()-this.getX())/10,
+                        (persistentProjectileEntity.getY()-this.getY())/10,(persistentProjectileEntity.getZ()-this.getZ())/10);
+                persistentProjectileEntity.setVelocity(velocity);
+            }
+
             searchBlock();
 
 

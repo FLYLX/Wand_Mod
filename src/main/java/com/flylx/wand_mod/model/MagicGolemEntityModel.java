@@ -2,10 +2,7 @@ package com.flylx.wand_mod.model;
 
 import com.flylx.wand_mod.mob.MagicGolemEntity;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.IronGolemEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
 
 public class MagicGolemEntityModel extends IronGolemEntityModel<MagicGolemEntity> {
 
@@ -32,4 +29,6 @@ public class MagicGolemEntityModel extends IronGolemEntityModel<MagicGolemEntity
     public ModelPart getRightArm() {
         return super.getRightArm();
     }
+
+
 }

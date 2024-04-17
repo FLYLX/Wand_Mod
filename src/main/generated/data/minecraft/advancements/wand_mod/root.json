@@ -1,0 +1,37 @@
+{
+  "criteria": {
+    "got_dirt": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:dirt"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "text": "现在做了一个 3x3 ！"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:dirt"
+    },
+    "show_toast": true,
+    "title": {
+      "text": "你的第一个泥土方块！"
+    }
+  },
+  "requirements": [
+    [
+      "got_dirt"
+    ]
+  ]
+}

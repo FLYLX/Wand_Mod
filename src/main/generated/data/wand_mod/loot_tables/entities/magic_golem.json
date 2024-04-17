@@ -1,4 +1,4 @@
-
+{
   "type": "minecraft:entity",
   "pools": [
     {
@@ -22,10 +22,14 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "wand_mod:cure_scroll"
+          "name": "wand_mod:flame_scroll"
         }
       ],
-      "rolls": 5.0
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 3.0,
+        "min": 1.0
+      }
     }
   ]
 }

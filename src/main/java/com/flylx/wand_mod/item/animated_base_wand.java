@@ -2,10 +2,7 @@ package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
-import com.flylx.wand_mod.util.IEntityDataSaver;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.loader.impl.util.log.Log;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,8 +15,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -28,7 +23,6 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
 import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
@@ -95,7 +89,6 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
 
             if(remain_time >9){
                 if(entity instanceof  PlayerEntity) {
-                    LogManager.getLogger().info("yes" + remain_time);
 
                     PlayerEntity playerentity = (PlayerEntity) entity;
 

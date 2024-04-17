@@ -2,25 +2,22 @@ package com.flylx.wand_mod.render;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.mob.MagicGolemEntity;
+import com.flylx.wand_mod.mob.MagicGolemTypes;
 import com.flylx.wand_mod.model.MagicGolemEntityModel;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.feature.IronGolemCrackFeatureRenderer;
-import net.minecraft.client.render.entity.feature.IronGolemFlowerFeatureRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.IronGolemEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.Random;
 
 public class MagicGolemEntityRenderer extends MobEntityRenderer<MagicGolemEntity, MagicGolemEntityModel> {
-    private static final Identifier TEXTURE = new Identifier(Wand_mod.ModID,"textures/mob/magic_golem.png");
-
+    private static final Identifier FIRE = new Identifier(Wand_mod.ModID,"textures/mob/fire_golem.png");
+    private static final Identifier FROZE = new Identifier(Wand_mod.ModID,"textures/mob/froze_golem.png");
+    private static final Identifier POISON = new Identifier(Wand_mod.ModID,"textures/mob/poison_golem.png");
+    private static final Identifier END = new Identifier(Wand_mod.ModID,"textures/mob/end_golem.png");
 
     public MagicGolemEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new MagicGolemEntityModel(context.getPart(EntityModelLayers.IRON_GOLEM)), 0.7f);
@@ -29,7 +26,17 @@ public class MagicGolemEntityRenderer extends MobEntityRenderer<MagicGolemEntity
 
     @Override
     public Identifier getTexture(MagicGolemEntity entity) {
-        return TEXTURE;
+        if(entity.getMagicGolemTypes() == MagicGolemTypes.FIRE) {
+            return FIRE;
+        }else if(entity.getMagicGolemTypes() == MagicGolemTypes.FROZE){
+            return FROZE;
+        }else if(entity.getMagicGolemTypes() == MagicGolemTypes.POISON){
+            return POISON;
+        }else if(entity.getMagicGolemTypes() == MagicGolemTypes.END){
+            return END;
+        }else{
+            return FIRE;
+        }
     }
 
 

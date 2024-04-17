@@ -1,20 +1,31 @@
 {
-  "type": "minecraft:block",
+  "type": "minecraft:entity",
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wand_mod:wand_table"
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{golem_types:\"fire\"}"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "wand_mod:cure_scroll"
         }
       ],
-      "rolls": 1.0
+      "rolls": 5.0
     }
   ]
 }

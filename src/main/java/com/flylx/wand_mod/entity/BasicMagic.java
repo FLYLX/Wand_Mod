@@ -2,46 +2,34 @@ package com.flylx.wand_mod.entity;
 
 
 
+import com.flylx.wand_mod.mob.MagicGolemEntity;
+import com.flylx.wand_mod.mob.MagicGolemTypes;
+import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.util.IEntityDataSaver;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-
-
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-
-
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
 import org.apache.logging.log4j.LogManager;
-
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -81,8 +69,12 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public BasicMagic(World world,LivingEntity owner){
         super(modEntityRegistry.BASIC_MAGIC, owner, world);
         this.shooter = owner;
-        Degree = ((IEntityDataSaver) owner).getPersistentData().getFloat(
-                "switch");
+        if(owner instanceof PlayerEntity) {
+            Degree = ((IEntityDataSaver) owner).getPersistentData().getFloat(
+                    "switch");
+        }else{
+            Degree = 0;
+        }
         this.getDataTracker().set(DEGREE,Degree);
 
         this.setOwner(owner);
@@ -157,8 +149,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }
 
         if(getDegree()>=240&&getDegree()<300){
-            hookPlayer((PlayerEntity) getOwner(),this.getWorld(),this);
-
+            if(getOwner() instanceof  PlayerEntity) {
+                hookPlayer((PlayerEntity) getOwner(), this.getWorld(), this);
+            }
         }
 
         super.tick();
@@ -210,9 +203,8 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     public void doDamage() {
         if(getDegree()>=0&&getDegree()<60) {
+
             explosionMagic();
-
-
         }else if (getDegree()>=60&&getDegree()<120){
             frozeMagic();
 
@@ -225,18 +217,32 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     }
 
+    public void change_golem(LivingEntity target,MagicGolemTypes magicGolemTypes){
+        if(target instanceof IronGolemEntity&&!(target instanceof MagicGolemEntity)){
+            MagicGolemEntity magicGolemEntity = modMobRegistry.MAGIC_GOLEM_ENTITY.create(world);
+            magicGolemEntity.setMagicGolemTypes(magicGolemTypes);
+            magicGolemEntity.setHealth(target.getHealth());
+            magicGolemEntity.setPosition(target.getPos());
+            world.spawnEntity(magicGolemEntity);
+            target.discard();
+        }
+    }
+
     @Override
     protected void onHit(LivingEntity target) {
         super.onHit(target);
-        LogManager.getLogger().info("target:"+target);
         if(getDegree()>=0&&getDegree()<60) {
             //fire
             target.setFireTicks(2000);
             target.damage(DamageSource.ON_FIRE,5);
+            change_golem(target,MagicGolemTypes.FIRE);
+
         }else if (getDegree()>=60&&getDegree()<120){
             //ice
             target.setFrozenTicks(2000);
             target.damage(DamageSource.FREEZE,5);
+            change_golem(target,MagicGolemTypes.FROZE);
+
         }else if(getDegree()>=120&&getDegree()<180){
             //poison
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.POISON);
@@ -245,7 +251,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
                     2000, 20,
                     statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
             target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
-
+            change_golem(target,MagicGolemTypes.POISON);
         }else if(getDegree()>=180&&getDegree()<240){
             //heart
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
@@ -256,8 +262,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
             target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
 
         }else if(getDegree()>=240&&getDegree()<300){
-            target.setVelocity((this.getOwner().getX()-target.getX())/10,(this.getOwner().getY()-target.getY())/10,
-                    (this.getOwner().getZ()-target.getZ())/10);
+            target.setVelocity((this.getOwner().getX()-target.getX())/5,(this.getOwner().getY()-target.getY())/5,
+                    (this.getOwner().getZ()-target.getZ())/5);
+            change_golem(target,MagicGolemTypes.END);
         }
     }
 
@@ -286,7 +293,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
             magicAreaCloud.setOwner((LivingEntity) entity);
         }
         this.world.spawnEntity(magicAreaCloud);
-        LogManager.getLogger().info("done");
+
         if(this.world.getBlockState(this.getBlockPos()).equals(Blocks.AIR.getDefaultState())) {
             this.world.setBlockState(new BlockPos(this.getPos()), Blocks.FIRE.getDefaultState());
         }
@@ -355,7 +362,6 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
                 player.setVelocity(player.getVelocity().getX() + (entity.getPos().getX() - player.getPos().getX())/2 ,
                         player.getVelocity().getY() + (entity.getPos().getY() - player.getPos().getY()) /5,
                         player.getVelocity().getZ() + (entity.getPos().getZ() - player.getPos().getZ())/2
-
                 );
                 this.discard();
             }

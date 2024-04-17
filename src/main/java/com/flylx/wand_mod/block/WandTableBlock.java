@@ -8,57 +8,117 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
-
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class WandTableBlock extends Block implements BlockEntityProvider {
 
-        private static final Map<Item, Boolean> CONTENT_TO_POTTED = new HashMap<>(){
+public class WandTableBlock extends HorizontalFacingBlock implements BlockEntityProvider {
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+    private static final Map<Item, Boolean> CONTENT_TO_POTTED = new HashMap<>(){
         {
             put(modItemRegistry.BASE_WAND,false);
         }
     };
 
-    public VoxelShape makeShape(){
-        VoxelShape shape = VoxelShapes.empty();
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625, 0.03125, 0.46875, 0.6875, 0.96875, 0.609375));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625, 0.03125, 0.609375, 0.6875, 0.15625, 0.703125));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625, 0.03125, 0.703125, 0.6875, 0.96875, 0.84375));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625, 0.84375, 0.609375, 0.6875, 0.96875, 0.703125));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.484375, 0, 0.4375, 0.5625, 1, 0.875));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.31515292510187054, 4.415709791914368e-17, 0.01833372724981097, 0.44015292510187054, 0.9999999999999999, 0.04958372724981097));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.31515292510187054, 4.415709791914368e-17, 0.4245837272498111, 0.44015292510187054, 0.9999999999999999, 0.4558337272498111));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.31515292510187054, 0.96875, 0.04958372724981097, 0.44015292510187054, 0.9999999999999999, 0.4245837272498111));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.31515292510187054, 4.415709791914368e-17, 0.04958372724981097, 0.44015292510187054, 0.03125000000000004, 0.4245837272498111));
-        shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.28390292510187054, 4.415709791914368e-17, 0.01833372724981097, 0.31515292510187054, 0.9999999999999999, 0.4558337272498111));
-
-        return shape;
-    }
-
     public WandTableBlock(Settings settings) {
         super(settings);
+        setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    public VoxelShape makeShape(Direction dir){
+        VoxelShape shape = VoxelShapes.empty();
+
+        switch(dir) {
+            case NORTH:
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4609375000000001, 0.03125, 0.3203124999999999, 0.6015625000000001, 0.96875, 0.4453124999999999));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.6953125, 0.03125, 0.3203124999999999, 0.8359375, 0.96875, 0.4453124999999999));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4296875000000001, 0, 0.4453124999999999, 0.8671875, 1, 0.5234374999999999));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.125, 0, 0.4453125, 0.15625, 1, 0.5703125));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.53125, 0, 0.4453125, 0.5625, 1, 0.5703125));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.125, 0, 0.5703125, 0.5625, 1, 0.6015625));
+
+                return shape;
+            case SOUTH:
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.3984374999999999, 0.03125, 0.5546875000000001, 0.5390624999999999, 0.96875, 0.6796875000000001));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.1640625, 0.03125, 0.5546875000000001, 0.3046875, 0.96875, 0.6796875000000001));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.1328125, 0, 0.4765625000000001, 0.5703124999999999, 1, 0.5546875000000001));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.84375, 0, 0.4296875, 0.875, 1, 0.5546875));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4375, 0, 0.4296875, 0.46875, 1, 0.5546875));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4375, 0, 0.3984375, 0.875, 1, 0.4296875));
+
+
+                return shape;
+            case EAST:
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625, 0.03125, 0.46875, 0.6875, 0.96875, 0.609375));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625, 0.03125, 0.703125, 0.6875, 0.96875, 0.84375));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.484375, 0, 0.4375, 0.5625, 1, 0.875));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4374999999999999, 0, 0.1328124999999999, 0.5624999999999999, 1, 0.1640624999999999));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4374999999999999, 0, 0.5390624999999999, 0.5624999999999999, 1, 0.5703124999999999));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4062499999999999, 0, 0.1328124999999999, 0.4374999999999999, 1, 0.5703124999999999));
+
+                return shape;
+            case WEST:
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.3125, 0.03125, 0.390625, 0.4375, 0.96875, 0.53125));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.3125, 0.03125, 0.15625, 0.4375, 0.96875, 0.296875));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4375, 0, 0.125, 0.515625, 1, 0.5625));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4375000000000001, 0, 0.8359375000000001, 0.5625000000000001, 1, 0.8671875000000001));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.4375000000000001, 0, 0.4296875000000001, 0.5625000000000001, 1, 0.4609375000000001));
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0.5625000000000001, 0, 0.4296875000000001, 0.5937500000000001, 1, 0.8671875000000001));
+
+
+                return shape;
+            default:
+                return VoxelShapes.fullCube();
+        }
+
 
     }
 
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+
+        return (BlockState)state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return super.mirror(state, mirror);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return super.getPlacementState(ctx).with(FACING, ctx.getPlayerFacing().getOpposite());
+    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return makeShape();
+
+        Direction dir = state.get(FACING);
+        return makeShape(dir);
     }
 
     @Override

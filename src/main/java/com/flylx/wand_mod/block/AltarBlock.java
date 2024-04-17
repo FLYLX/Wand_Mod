@@ -1,2 +1,10 @@
-package com.flylx.wand_mod.block;public class AltarBlock {
+package com.flylx.wand_mod.block;
+
+import net.minecraft.block.Block;
+
+public class AltarBlock extends Block {
+    public AltarBlock(Settings settings) {
+        super(settings);
+    }
+    
 }

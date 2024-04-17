@@ -1,20 +1,14 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.Wand_mod;
-import com.flylx.wand_mod.block.WandTableBlock;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterials;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import software.bernie.example.item.GeckoArmorItem;
-import software.bernie.example.registry.RegistryUtils;
 
 
 public class modItemRegistry {
@@ -35,7 +29,8 @@ public class modItemRegistry {
             new CureScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final ClawScroll CLAW_SCROLL = (ClawScroll) registerItem("claw_scroll",
             new ClawScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
-
+    public static final MagicDust MAGIC_DUST = (MagicDust) registerItem("magic_dust",
+            new MagicDust(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",
@@ -49,6 +44,8 @@ public class modItemRegistry {
             registerItem("wand_table", new BlockItem(modBlockRegistry.WAND_TABLE,
                     new FabricItemSettings().group(ModItemGroup.WAND_MAGIC))
             );
+    public static final Item MAGIC_ORE = registerItem("magic_ore",new BlockItem(modBlockRegistry.MAGIC_ORE,
+            new FabricItemSettings().group(ModItemGroup.WAND_MAGIC)));
 
     public static Item registerItem(String name,Item item){
         return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),item);
