@@ -15,6 +15,9 @@ public class modBlockRegistry {
     public static final Block WAND_TABLE = registerblock("wand_table",
             new WandTableBlock(AbstractBlock.Settings.of(Material.STONE).strength(4.0F)));
 
+    public static final Block ALTAR_BLOCK = registerblock("altar_block",
+            new AltarBlock(AbstractBlock.Settings.of(Material.WOOD).strength(4.0F)));
+
     public static final Block MAGIC_ORE = registerblock("magic_ore",
             new MagicOreBlock(AbstractBlock.Settings.of(Material.STONE).requiresTool().ticksRandomly().
                     luminance(modBlockRegistry.createLightLevelFromLitBlockState(32)).strength(5.0f, 6.0f)));

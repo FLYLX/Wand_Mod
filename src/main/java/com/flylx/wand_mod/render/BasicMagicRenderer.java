@@ -11,14 +11,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
@@ -94,11 +92,11 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
         }else if(animatable.getDegree()>=240&&animatable.getDegree()<300&&!MinecraftClient.getInstance().isPaused()){
 
 
-            if(animatable.getOwner() instanceof PlayerEntity) {
+
                 hook_render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
                 //鱼钩那样的特效
 
-            }
+
         }
 
 
@@ -117,7 +115,7 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
         double p;
         double o;
 
-        LivingEntity playerEntity = (PlayerEntity) basicMagic.getOwner();
+        LivingEntity playerEntity = (LivingEntity) basicMagic.getOwner();
         if (playerEntity == null) {
             return;
         }
@@ -296,9 +294,7 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
             last_y = basicMagic.getY()+g;
             last_z = basicMagic.getZ()+h;
             matrixStack.translate(p, q, r);
-            LogManager.getLogger().info("YYY:"+basicMagic.getPos().y);
-            renderCrystalBeam(-p, -q, -r, g1, basicMagic.basicmagicAge, matrixStack, vertexConsumerProvider,
-                    i1);
+            renderCrystalBeam(-p, -q, -r, g1, basicMagic.basicmagicAge, matrixStack, vertexConsumerProvider, i1);
 
 //            float l = (float)(basicMagic.getX() - MathHelper.lerp((double)g, basicMagic.getOwner().prevX, basicMagic.getOwner().getX()));
 //            float m = (float)(basicMagic.getY() - MathHelper.lerp((double)g, basicMagic.getOwner().prevY, basicMagic.getOwner().getY()));

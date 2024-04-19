@@ -151,7 +151,7 @@ public class MagicGolemEntity extends IronGolemEntity implements Angerable {
                 this.world.spawnEntity(basicMagic);
                 break;
             case END:
-                basicMagic.setDegree(195);
+                basicMagic.setDegree(255);
                 this.world.spawnEntity(basicMagic);
                 break;
         }

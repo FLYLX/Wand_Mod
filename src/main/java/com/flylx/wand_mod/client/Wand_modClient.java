@@ -1,40 +1,27 @@
 package com.flylx.wand_mod.client;
 
 
-import com.flylx.wand_mod.event.ClientPlayerTickHandler;
-import com.flylx.wand_mod.mob.modMobRegistry;
-import com.flylx.wand_mod.particle.MagicShieldParticle;
-import com.flylx.wand_mod.particle.modParticleRegistry;
-import com.flylx.wand_mod.render.*;
-
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.entity.modEntityRegistry;
+import com.flylx.wand_mod.event.ClientPlayerTickHandler;
 import com.flylx.wand_mod.event.KeyInputHandler;
 import com.flylx.wand_mod.hud.MagicSwitchHud;
 import com.flylx.wand_mod.item.modItemRegistry;
-
+import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.networking.ModMessages;
+import com.flylx.wand_mod.particle.MagicShieldParticle;
+import com.flylx.wand_mod.particle.modParticleRegistry;
+import com.flylx.wand_mod.render.*;
 import com.flylx.wand_mod.screen.MagicScreen;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-
-import net.minecraft.client.render.entity.EntityRenderers;
-import net.minecraft.client.render.entity.IronGolemEntityRenderer;
-import net.minecraft.entity.EntityType;
-import software.bernie.example.client.renderer.armor.GeckoArmorRenderer;
-import software.bernie.example.registry.ItemRegistry;
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
@@ -64,6 +51,7 @@ public class Wand_modClient implements ClientModInitializer {
 
         //block
         BlockEntityRendererFactories.register(modEntityRegistry.WAND_TABLE, WandTableEntityRenderer::new);
+        BlockEntityRendererFactories.register(modEntityRegistry.ALTAR, AltarRenderer::new);
 
 
 

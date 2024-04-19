@@ -154,7 +154,6 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
     @Override
     public void tick() {
         //逐渐减少范围
-
             List<LivingEntity> list = this.world.getNonSpectatingEntities(LivingEntity.class, this.getBoundingBox());
             List<ItemEntity> list1 = this.world.getNonSpectatingEntities(ItemEntity.class, this.getBoundingBox());
             List<PersistentProjectileEntity> list2 =

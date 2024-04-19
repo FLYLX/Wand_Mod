@@ -2,12 +2,12 @@ package com.flylx.wand_mod.entity;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.block.modBlockRegistry;
-import com.flylx.wand_mod.item.MagicShield;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import software.bernie.example.registry.EntityRegistryBuilder;
@@ -31,7 +31,9 @@ public class modEntityRegistry {
      public static BlockEntityType WAND_TABLE = Registry.register(Registry.BLOCK_ENTITY_TYPE,
              new Identifier(Wand_mod.ModID, "wand_table_entity"),
                 FabricBlockEntityTypeBuilder.create(WandTableEntity::new,modBlockRegistry.WAND_TABLE).build());
-
+    public static BlockEntityType ALTAR = Registry.register(Registry.BLOCK_ENTITY_TYPE,
+            new Identifier(Wand_mod.ModID, "altar_entity"),
+            FabricBlockEntityTypeBuilder.create(AltarEntity::new,modBlockRegistry.ALTAR_BLOCK).build());
 
 
 

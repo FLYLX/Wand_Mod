@@ -30,7 +30,7 @@ public class modItemRegistry {
     public static final ClawScroll CLAW_SCROLL = (ClawScroll) registerItem("claw_scroll",
             new ClawScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final MagicDust MAGIC_DUST = (MagicDust) registerItem("magic_dust",
-            new MagicDust(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+            new MagicDust(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(64)));
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",
@@ -46,12 +46,15 @@ public class modItemRegistry {
             );
     public static final Item MAGIC_ORE = registerItem("magic_ore",new BlockItem(modBlockRegistry.MAGIC_ORE,
             new FabricItemSettings().group(ModItemGroup.WAND_MAGIC)));
+    public static final Item ALTAR_BLOCK = registerItem("altar_block",new BlockItem(modBlockRegistry.ALTAR_BLOCK,
+            new FabricItemSettings().group(ModItemGroup.WAND_MAGIC)));
+
 
     public static Item registerItem(String name,Item item){
         return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),item);
     }
 
-    public static Item registerItem(String name,BlockItem blockItemitem){
-        return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),blockItemitem);
+    public static Item registerItem(String name,BlockItem blockitem){
+        return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),blockitem);
     }
 }

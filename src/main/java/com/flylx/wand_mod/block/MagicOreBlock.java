@@ -101,7 +101,7 @@ public class MagicOreBlock extends Block {
         }
     }
 
-    private static void spawnParticles(World world, BlockPos pos) {
+    public static void spawnParticles(World world, BlockPos pos) {
         Random random = world.random;
 
         int randomValue = random.nextInt(16777216); // 生成一个0~16777215的随机整数
