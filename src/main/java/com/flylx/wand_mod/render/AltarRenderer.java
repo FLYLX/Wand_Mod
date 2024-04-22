@@ -13,8 +13,7 @@ public class AltarRenderer implements BlockEntityRenderer<AltarEntity> {
 
 
 
-    public AltarRenderer(BlockEntityRendererFactory.Context ctx) {
-    }
+    public AltarRenderer(BlockEntityRendererFactory.Context ctx) {}
 
     @Override
     public void render(AltarEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers,
@@ -29,7 +28,7 @@ public class AltarRenderer implements BlockEntityRenderer<AltarEntity> {
         matrices.translate(0.5f, 0.55f, 0.55f);
         matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90));
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-9));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(9));
         matrices.scale(0.6f, 0.6f, 0.6f);
 
         MinecraftClient.getInstance().getItemRenderer().renderItem(entity.getContent(), ModelTransformation.Mode.GUI,
