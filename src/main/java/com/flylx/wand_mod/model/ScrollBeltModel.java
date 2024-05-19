@@ -1,7 +1,7 @@
 package com.flylx.wand_mod.model;
 
 import com.flylx.wand_mod.Wand_mod;
-import com.flylx.wand_mod.item.ScrollBeltItem;
+import com.flylx.wand_mod.armor.ScrollBeltItem;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

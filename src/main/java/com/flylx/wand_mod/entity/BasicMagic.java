@@ -22,6 +22,8 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -48,6 +50,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private LivingEntity shooter;
     public int basicmagicAge;
+    private ItemStack ownerItem;
 
     public static final int ANIM_OPEN = 1;
     public static final String controllerName = "controller";
@@ -108,7 +111,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         this.getDataTracker().startTracking(DEGREE, Degree);
     }
 
-
+    public void setOwnerItem(ItemStack ownerItem) {
+        this.ownerItem = ownerItem;
+    }
 
     public void setDegree(float degree) {
         if (!this.world.isClient) {
@@ -145,6 +150,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         ++basicmagicAge;
         LogManager.getLogger().info(getDegree());
         if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z,2))<0.3F) {
+            if(ownerItem!=null) {
+                NbtCompound nbtCompound = new NbtCompound();
+                nbtCompound.putBoolean("content",false);
+                ownerItem.setNbt(nbtCompound);
+            }
             this.discard();
         }
 
@@ -169,6 +179,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         if (this.world.isClient) {
             return;
         }
+        if(ownerItem!=null) {
+            NbtCompound nbtCompound = new NbtCompound();
+            nbtCompound.putBoolean("content",false);
+            ownerItem.setNbt(nbtCompound);
+        }
         this.discard();
     }
 
@@ -179,7 +194,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         if (this.world.isClient) {
             return;
         }
-
+//        if(ownerItem!=null) {
+//            NbtCompound nbtCompound = new NbtCompound();
+//            nbtCompound.putBoolean("content",false);
+//            ownerItem.setNbt(nbtCompound);
+//        }
     }
 
     @Override
@@ -189,6 +208,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
             return;
         }
         doDamage();
+        if(ownerItem!=null) {
+            NbtCompound nbtCompound = new NbtCompound();
+            nbtCompound.putBoolean("content",false);
+            ownerItem.setNbt(nbtCompound);
+        }
         this.discard();
     }
 
@@ -213,9 +237,9 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         }if(getDegree()>=180&&getDegree()<240){
             heartMagic();
         }
-
-
     }
+
+
 
     public void change_golem(LivingEntity target,MagicGolemTypes magicGolemTypes){
         if(target instanceof IronGolemEntity&&!(target instanceof MagicGolemEntity)){
@@ -231,6 +255,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     @Override
     protected void onHit(LivingEntity target) {
         super.onHit(target);
+
         if(getDegree()>=0&&getDegree()<60) {
             //fire
             target.setFireTicks(2000);
@@ -262,9 +287,22 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
             target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
 
         }else if(getDegree()>=240&&getDegree()<300){
-            target.setVelocity((this.getOwner().getX()-target.getX())/5,(this.getOwner().getY()-target.getY())/5,
-                    (this.getOwner().getZ()-target.getZ())/5);
-            change_golem(target,MagicGolemTypes.END);
+            if(!world.isClient) {
+                if (target instanceof ServerPlayerEntity) {
+                    Vec3d vec3d = new Vec3d((this.getOwner().getX() - target.getX()) / 3,
+                            (this.getOwner().getY() - target.getY()) / 3,
+                            (this.getOwner().getZ() - target.getZ()) / 3);
+                    ((ServerPlayerEntity) target).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(target.getId(), vec3d));
+                } else {
+                    target.setVelocity((this.getOwner().getX() - target.getX()) / 3,
+                            (this.getOwner().getY() - target.getY()) / 3,
+                            (this.getOwner().getZ() - target.getZ()) / 3);
+                }
+
+                change_golem(target,MagicGolemTypes.END);
+                ownerItem.decrement(1);
+            }
+
         }
     }
 
@@ -363,6 +401,10 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
                         player.getVelocity().getY() + (entity.getPos().getY() - player.getPos().getY()) /5,
                         player.getVelocity().getZ() + (entity.getPos().getZ() - player.getPos().getZ())/2
                 );
+                if(ownerItem != null){
+                    ownerItem.decrement(1);
+                }
+
                 this.discard();
             }
         }

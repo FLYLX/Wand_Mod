@@ -1,24 +1,16 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.event.LeftClick;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.loader.impl.util.log.Log;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.Mouse;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -95,7 +87,7 @@ public class PoisonScroll extends Item implements IAnimatable, ISyncable {
 
                 basicMagic.hasNoGravity();
                 basicMagic.setDegree(150);
-                stack.decrement(1);
+                ((PlayerEntity) entity).getInventory().setStack(PlayerInventory.OFF_HAND_SLOT,ItemStack.EMPTY);
                 world.spawnEntity(basicMagic);
 
             }

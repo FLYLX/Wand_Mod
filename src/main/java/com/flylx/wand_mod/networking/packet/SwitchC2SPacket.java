@@ -1,6 +1,5 @@
 package com.flylx.wand_mod.networking.packet;
 
-import com.flylx.wand_mod.hud.MagicSwitchHud;
 import com.flylx.wand_mod.util.IEntityDataSaver;
 import com.flylx.wand_mod.util.SwitchData;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -14,7 +13,6 @@ public class SwitchC2SPacket {
                                PacketByteBuf buf, PacketSender responseSender){
 
             SwitchData.changeSwitch((IEntityDataSaver) player,buf);
-
     }
 
 }

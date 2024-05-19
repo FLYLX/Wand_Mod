@@ -1,32 +1,38 @@
 package com.flylx.wand_mod.screen;
 
 import com.flylx.wand_mod.Wand_mod;
+import com.flylx.wand_mod.armor.ScrollBeltInventory;
+import com.flylx.wand_mod.armor.ScrollBeltSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-
+import net.minecraft.util.collection.DefaultedList;
 
 
 public class MagicScreenHandler extends ScreenHandler {
     private final Inventory inventory;
-    private final PropertyDelegate propertyDelegate;
+
     public MagicScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(9),new ArrayPropertyDelegate(9));
+        this(syncId, playerInventory,getInventory(playerInventory.getArmorStack(2)));
     }
 
-    public MagicScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory,PropertyDelegate delegate) {
+    public static ScrollBeltInventory getInventory(ItemStack itemStack){
+        DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
+        ScrollBeltInventory scrollBeltInventory = new ScrollBeltInventory(itemStack);
+        Inventories.readNbt(itemStack.getNbt(),inventory1);
+        scrollBeltInventory.setInventory(inventory1);
+        return scrollBeltInventory;
+    }
+
+    public MagicScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(Wand_mod.MAGIC_SCREEN_HANDLER, syncId);
         checkSize(inventory, 9);
         this.inventory = inventory;
-        this.propertyDelegate = delegate;
 
         //some inventories do custom logic when a player opens it.
         inventory.onOpen(playerInventory.player);
@@ -37,7 +43,7 @@ public class MagicScreenHandler extends ScreenHandler {
         //Our inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 3; ++l) {
-                this.addSlot(new Slot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
+                this.addSlot(new ScrollBeltSlot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
             }
         }
         //The player inventory
@@ -54,7 +60,13 @@ public class MagicScreenHandler extends ScreenHandler {
 
 
     @Override
+    public boolean canInsertIntoSlot(ItemStack stack, Slot slot) {
+        return stack.getItem().canBeNested();
+    }
+
+    @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
+
             ItemStack newStack = ItemStack.EMPTY;
             Slot slot = this.slots.get(index);
             if (slot != null && slot.hasStack()) {
@@ -83,8 +95,13 @@ public class MagicScreenHandler extends ScreenHandler {
         return this.inventory.canPlayerUse(player);
     }
 
+
+
+
     @Override
     public ScreenHandlerType<?> getType() {
         return super.getType();
     }
+
+
 }

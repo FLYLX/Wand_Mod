@@ -1,20 +1,18 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.entity.BasicMagic;
-import com.flylx.wand_mod.screen.MagicScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -36,8 +34,8 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
 
 
     public long MAX = Long.MAX_VALUE;
-    public long remain_time;
-    public long now_time = MAX;
+
+
     public animated_base_wand(Settings settings) {
         super(settings.maxDamage(201));
         GeckoLibNetwork.registerSyncable(this);
@@ -64,12 +62,31 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
-        if (!world.isClient) {
+        if(!world.isClient){
+            int i = this.getMaxUseTime(stack) - remainingUseTicks;
+            if (i >= 9.0f) {
+                if(user instanceof  PlayerEntity) {
 
+                    PlayerEntity playerentity = (PlayerEntity) user;
+
+                    LogManager.getLogger().info(playerentity);
+
+                    BasicMagic basicMagic = new BasicMagic(world, playerentity);
+
+                    basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
+                            0F);
+
+                    basicMagic.age = 30;
+
+                    basicMagic.hasNoGravity();
+
+                    stack.damage(1, playerentity, p -> p.sendToolBreakStatus(playerentity.getActiveHand()));
+
+                    world.spawnEntity(basicMagic);
+            }
+        }
         }
     }
-
-
 
     @Override
 
@@ -84,39 +101,14 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
             //controller.setAnimation(new AnimationBuilder().addAnimation("base_wand",ILoopType.EDefaultLoopTypes
             // .LOOP));
 
-        if(!world.isClient){
-            remain_time = world.getTime()-now_time;
 
-            if(remain_time >9){
-                if(entity instanceof  PlayerEntity) {
-
-                    PlayerEntity playerentity = (PlayerEntity) entity;
-
-                    BasicMagic basicMagic = new BasicMagic(world, playerentity);
-
-                    basicMagic.setVelocity(playerentity, playerentity.getPitch(), playerentity.getYaw(), 0F, 1.0F,
-                            0F);
-
-                    basicMagic.age = 30;
-
-                    basicMagic.hasNoGravity();
-
-                    stack.damage(1, playerentity, p -> p.sendToolBreakStatus(playerentity.getActiveHand()));
-
-                    world.spawnEntity(basicMagic);
-
-                    now_time = MAX;
-                }
-
-            }
-        }
 
     }
-    private NamedScreenHandlerFactory createScreenHandlerFactory(ItemStack stack) {
-        return new SimpleNamedScreenHandlerFactory((syncId, inventory, player) -> {
-            return new MagicScreenHandler(syncId, inventory);
-        }, stack.getName());
-    }
+//    private NamedScreenHandlerFactory createScreenHandlerFactory(ItemStack stack) {
+//        return new SimpleNamedScreenHandlerFactory((syncId, inventory, player) -> {
+//            return new MagicScreenHandler(syncId, inventory);
+//        }, stack.getName());
+//    }
 
     @Override
     public void registerControllers(AnimationData animationData) {
@@ -151,12 +143,13 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
             for (PlayerEntity otherPlayer : PlayerLookup.tracking(user)) {
                 GeckoLibNetwork.syncAnimation(otherPlayer, this, id, ANIM_OPEN);
             }
-            now_time = world.getTime();
 
         }
         return TypedActionResult.consume(itemStack);
 
     }
+
+
 
     @Override
     public boolean hasGlint(ItemStack stack) {

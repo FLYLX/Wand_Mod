@@ -4,6 +4,7 @@ import com.flylx.wand_mod.entity.BasicMagic;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -86,7 +87,7 @@ public class FrozeScroll extends Item implements IAnimatable, ISyncable {
 
                     basicMagic.hasNoGravity();
                     basicMagic.setDegree(90);
-                    stack.decrement(1);
+                    ((PlayerEntity) entity).getInventory().setStack(PlayerInventory.OFF_HAND_SLOT,ItemStack.EMPTY);
                     world.spawnEntity(basicMagic);
 
                 }

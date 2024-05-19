@@ -59,5 +59,7 @@ public class Wand_mod implements ModInitializer {
         modMobRegistry.registryAttribute();
         modParticleRegistry.registerParticles();
 
+
+
     }
 }

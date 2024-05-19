@@ -15,8 +15,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.block.BlockStatePredicate;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -37,7 +40,7 @@ public class MagicDust extends Item {
     BlockPos blockPos;
     int spawn_age = 0;
     int break_age = 0;
-    Item dropItem;
+    Item dropItem ;
 
     public MagicDust(Settings settings) {
 
@@ -56,23 +59,41 @@ public class MagicDust extends Item {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
         super.inventoryTick(stack, world, entity, slot, selected);
+        if(!world.isClient){
             if (state == 1) {
                 spawn_age++;
-                world.addParticle(modParticleRegistry.MAGICSHIELD_PARTICLE,
-                        (double)blockPos.getX()+0.5+ MathHelper.sin(spawn_age/10)/spawn_age*100,
-                        (double)blockPos.getY()+(double)spawn_age/100+1,
-                        (double)blockPos.getZ()+0.5+ MathHelper.cos(spawn_age/10)/spawn_age*100,0,0,0);
-                if(spawn_age==275){
-                            world.addParticle(ParticleTypes.FLASH, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
-                                    blockPos.getZ() + 0.5f, 0, 0, 0);
+                for (ServerPlayerEntity player : ((ServerWorld)world).getPlayers()) {
+                    player.networkHandler.sendPacket(new ParticleS2CPacket(modParticleRegistry.MAGICSHIELD_PARTICLE,true,
+                            (double)blockPos.getX()+0.5+ MathHelper.sin(spawn_age/10)/spawn_age*100,
+                            (double)blockPos.getY()+(double)spawn_age/100+1,
+                            (double)blockPos.getZ()+0.5+ MathHelper.cos(spawn_age/10)/spawn_age*100,0,0,0,0,0
+                            ));
+                    player.networkHandler.sendPacket(new ParticleS2CPacket(modParticleRegistry.MAGICSHIELD_PARTICLE,true,
+                            (double)blockPos.getX()+0.5+ MathHelper.cos(spawn_age/10)/spawn_age*100,
+                            (double)blockPos.getY()+(double)spawn_age/100+1,
+                            (double)blockPos.getZ()+0.5+ MathHelper.sin(spawn_age/10)/spawn_age*100,0,0,0,0,0
+                    ));
+                    if(spawn_age==275){
+                        player.networkHandler.sendPacket(new ParticleS2CPacket(ParticleTypes.FLASH,true,
+                                blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
+                                blockPos.getZ() + 0.5f,0,0,0,0,0
+                        ));
+                    }
                 }
 
+            }
                 if(spawn_age>280){
                     if(!world.isClient) {
                         if (dropItem != null) {
-                            world.spawnEntity(new ItemEntity(world, blockPos.getX()+0.5f, blockPos.getY() + 3.5f,
-                                    blockPos.getZ()+0.5f,
-                                    dropItem.getDefaultStack()));
+                            if(dropItem == Items.STRING) {
+                                world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
+                                        blockPos.getZ() + 0.5f,
+                                        new ItemStack(dropItem,64)));
+                            }else{
+                                world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
+                                        blockPos.getZ() + 0.5f,
+                                        dropItem.getDefaultStack()));
+                            }
                             dropItem = null;
                         }
                     }
@@ -94,6 +115,9 @@ public class MagicDust extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
+        if(state == 1){
+            return ActionResult.FAIL;
+        }
 
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
@@ -102,6 +126,7 @@ public class MagicDust extends Item {
         if(world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)) {
             check_spawn(blockPos, world);
         }
+
         if (blockState.getBlock() instanceof DyedCarpetBlock) {
             BlockPos blockPos1 = new BlockPos(blockPos.getX(), blockPos.getY() - 1,
                     blockPos.getZ());
@@ -139,13 +164,10 @@ public class MagicDust extends Item {
 //            for (int j = (-1)*blockPatternList.get(i+blockPatternList.size()/2).getWidth()/2; j < this.blockPatternList.get(i+blockPatternList.size()/2).getWidth()/2 +1; ++j) {
             for (int j = 0; j < this.blockPatternList.get(i+blockPatternList.size()/2).getWidth(); ++j) {
                     CachedBlockPosition cachedBlockPosition = result.translate(j, 0, 0);
-                    if(cachedBlockPosition.getBlockState() == modBlockRegistry.ALTAR_BLOCK.getDefaultState()){
                         if(cachedBlockPosition.getBlockEntity() instanceof AltarEntity){
                             AltarEntity altarEntity = (AltarEntity) cachedBlockPosition.getBlockEntity();
                             if(!altarEntity.getContent().isOf(Items.AIR)){
                                 items.add(altarEntity.getContent().getItem());
-
-                        }
                     }
                 }
                 }
@@ -165,6 +187,7 @@ public class MagicDust extends Item {
 
 //        LogManager.getLogger().info(items.equals(firstKey));
 //        LogManager.getLogger().info((items.get(1)).equals(((Item)firstKey.get(1))));
+
         if(getSpawnMap().get(items) != null){
             this.dropItem = getSpawnMap().get(items);
 
@@ -177,17 +200,42 @@ public class MagicDust extends Item {
     }
 
     private Map<List<Item>,Item> getSpawnMap(){
-        List<Item> list = new ArrayList<>();
+        //合成表
+
         Item[][] itemStacks = {
-                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL,
-                        modItemRegistry.FROZE_SCROLL},
-                {},
-                {},
+                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
+                        modItemRegistry.CURE_SCROLL,modItemRegistry.POISON_SCROLL,Items.DIAMOND_BLOCK,
+                        Items.EMERALD_BLOCK,Items.CHORUS_FRUIT},
+
+                {Items.STRING},
+                {Items.WHITE_WOOL},
+
+                {modItemRegistry.FLAME_SCROLL},
+                {modItemRegistry.FROZE_SCROLL},
+                {modItemRegistry.POISON_SCROLL},
+                {modItemRegistry.CLAW_SCROLL},
+                {modItemRegistry.CURE_SCROLL},
+
         };
-        Item[] items1 = {modItemRegistry.FROZE_SCROLL};
+        Item[] items1 = {
+                modItemRegistry.MAGIC_ORE,
+
+                Items.COBWEB,
+                Items.STRING,
+
+                modItemRegistry.FROZE_SCROLL,
+                modItemRegistry.POISON_SCROLL,
+                modItemRegistry.CLAW_SCROLL,
+                modItemRegistry.CURE_SCROLL,
+                modItemRegistry.FLAME_SCROLL
+
+        };
+
+
         if(this.spawnMap.isEmpty()){
+
             for(int i = 0;i<items1.length;i++){
-                list.clear();
+                List<Item> list = new ArrayList<>();
                 for(int j = 0;j<itemStacks[i].length;j++){
                     list.add(itemStacks[i][j]);
                 }
@@ -197,10 +245,12 @@ public class MagicDust extends Item {
                         return  o1.hashCode()-o2.hashCode();
                     }
                 });
+
                 this.spawnMap.put(list,items1[i]);
 
             }
         }
+
         return this.spawnMap;
     }
 

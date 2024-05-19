@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.item;
 
 import com.flylx.wand_mod.Wand_mod;
+import com.flylx.wand_mod.armor.ScrollBeltItem;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.EquipmentSlot;

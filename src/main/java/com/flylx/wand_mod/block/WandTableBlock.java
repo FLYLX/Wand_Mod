@@ -6,6 +6,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -24,6 +26,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -32,6 +35,18 @@ import java.util.Map;
 
 public class WandTableBlock extends HorizontalFacingBlock implements BlockEntityProvider {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
+
+    public static final IntProperty ITEM_PROPERTY = IntProperty.of("items", 0, 1024);
+
+    public static final IntProperty HAS_ITEM = ITEM_PROPERTY;
+
+    public static final Map<Item, Integer> content_map = new HashMap<>(){
+        {
+            put(Items.AIR,0);
+            put(modItemRegistry.BASE_WAND,1);
+        }
+    };
+
     private static final Map<Item, Boolean> CONTENT_TO_POTTED = new HashMap<>(){
         {
             put(modItemRegistry.BASE_WAND,false);
@@ -40,12 +55,44 @@ public class WandTableBlock extends HorizontalFacingBlock implements BlockEntity
 
     public WandTableBlock(Settings settings) {
         super(settings);
-        setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
+        setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(HAS_ITEM, 0));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+        builder.add(HAS_ITEM);
+    }
+
+
+    //放置东西
+    private static void putItem(@Nullable PlayerEntity player, World world, BlockPos pos, BlockState state,
+                                ItemStack stack) {
+        Item item = stack.getItem();
+        int render_num = content_map.getOrDefault(item,0);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof WandTableEntity) {
+            WandTableEntity wandTableEntity = (WandTableEntity)blockEntity;
+            wandTableEntity.setContent(item.getDefaultStack());
+            WandTableBlock.setHasItem(world, pos, state, render_num);
+            world.emitGameEvent((Entity)player, GameEvent.BLOCK_CHANGE, pos);
+        }
+    }
+
+    public static boolean putItemIfAbsent(@Nullable PlayerEntity player, World world, BlockPos pos, BlockState state,
+                                       ItemStack stack) {
+        if (state.get(HAS_ITEM) == 0) {
+            if (!world.isClient) {
+
+                WandTableBlock.putItem(player, world, pos, state, stack);
+            }
+            return true;
+        }
+        return false;
+    }
+    //设置状态
+    public static void setHasItem(World world, BlockPos pos, BlockState state, Integer hasItem) {
+        world.setBlockState(pos, (state).with(HAS_ITEM, hasItem), Block.NOTIFY_ALL);
     }
 
     public VoxelShape makeShape(Direction dir){
@@ -138,12 +185,10 @@ public class WandTableBlock extends HorizontalFacingBlock implements BlockEntity
 
             if (bl != bl2) {
                 if (bl2) {
-                    wandTableEntity.setContent(item.getDefaultStack());
-
-
                     if (!player.getAbilities().creativeMode) {
                         itemStack.decrement(1);
                     }
+                    putItemIfAbsent(player,world,pos,state,itemStack);
                 } else {
 
                     ItemStack itemStack2 = wandTableEntity.content;
@@ -152,7 +197,9 @@ public class WandTableBlock extends HorizontalFacingBlock implements BlockEntity
                     } else if (!player.giveItemStack(itemStack2)) {
                         player.dropItem(itemStack2, false);
                     }
-                    wandTableEntity.setContent(Items.AIR.getDefaultStack());
+                    WandTableBlock.setHasItem(world, pos
+                            , state, 0);
+                    wandTableEntity.setContent(ItemStack.EMPTY);
                 }
                 return ActionResult.success(world.isClient);
             } else {

@@ -81,8 +81,10 @@ public class Wand_modClient implements ClientModInitializer {
         //s2c c2s packets
         ModMessages.registerS2CPackets();
 
+
         //listener
         ClientTickEvents.START_WORLD_TICK.register(new ClientPlayerTickHandler());
+
 
 
 

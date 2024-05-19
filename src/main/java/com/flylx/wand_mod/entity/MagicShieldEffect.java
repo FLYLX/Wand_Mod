@@ -320,8 +320,6 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
                 for (int k = 0; k < 360; k = (int) (k + 60)) {
 
                     parameter = Math.toRadians(k);
-                    LogManager.getLogger().info("consum:"+cumsum);
-                    LogManager.getLogger().info("getRadiusGrowth:"+getRadiusGrowth());
                     world.addParticle(ParticleTypes.ELECTRIC_SPARK,
                             this.getX() + cumsum / 5 * Math.sin(parameter*random.nextFloat()+cumsum/100)*Math.cos(parameter1),
                             this.getY() + cumsum / 10 * Math.sin(parameter1) + random.nextFloat()*2 ,

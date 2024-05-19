@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class AltarEntity extends BlockEntity {
 
-
     public ItemStack content = Items.AIR.getDefaultStack();
 
     public AltarEntity(BlockPos pos, BlockState state) {
@@ -21,9 +20,11 @@ public class AltarEntity extends BlockEntity {
 
     }
 
+
     public void setContent(ItemStack itemStack){
         this.content = itemStack;
     }
+
     public ItemStack getContent(){
 
         return this.content;

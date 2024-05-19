@@ -1,6 +1,6 @@
 package com.flylx.wand_mod.render;
 
-import com.flylx.wand_mod.item.ScrollBeltItem;
+import com.flylx.wand_mod.armor.ScrollBeltItem;
 import com.flylx.wand_mod.model.ScrollBeltModel;
 
 import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
