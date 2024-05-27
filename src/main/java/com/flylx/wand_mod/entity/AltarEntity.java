@@ -62,4 +62,6 @@ public class AltarEntity extends BlockEntity {
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
     }
+
+
 }

@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
@@ -73,7 +74,7 @@ public class WandTableBlock extends HorizontalFacingBlock implements BlockEntity
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof WandTableEntity) {
             WandTableEntity wandTableEntity = (WandTableEntity)blockEntity;
-            wandTableEntity.setContent(item.getDefaultStack());
+            wandTableEntity.setContent(stack);
             WandTableBlock.setHasItem(world, pos, state, render_num);
             world.emitGameEvent((Entity)player, GameEvent.BLOCK_CHANGE, pos);
         }
@@ -186,9 +187,12 @@ public class WandTableBlock extends HorizontalFacingBlock implements BlockEntity
             if (bl != bl2) {
                 if (bl2) {
                     if (!player.getAbilities().creativeMode) {
+                        ItemStack stack = itemStack.copy();
+                        putItemIfAbsent(player, world, pos, state, stack);
                         itemStack.decrement(1);
+                    }else {
+                        putItemIfAbsent(player, world, pos, state, itemStack);
                     }
-                    putItemIfAbsent(player,world,pos,state,itemStack);
                 } else {
 
                     ItemStack itemStack2 = wandTableEntity.content;
@@ -234,10 +238,21 @@ public class WandTableBlock extends HorizontalFacingBlock implements BlockEntity
         return BlockEntityProvider.super.getTicker(world, state, type);
     }
 
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        dropContent(world,pos);
+    }
 
-
-
-
-
-
+    private void dropContent( World world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof WandTableEntity) {
+            WandTableEntity wandTableEntity = (WandTableEntity)blockEntity;
+            ItemStack itemStack = wandTableEntity.getContent().copy();
+            ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5 , pos.getY() + 1, (double)pos.getZ() + 0.5, itemStack);
+            itemEntity.setToDefaultPickupDelay();
+            world.spawnEntity(itemEntity);
+            wandTableEntity.setContent(ItemStack.EMPTY);
+        }
+    }
 }

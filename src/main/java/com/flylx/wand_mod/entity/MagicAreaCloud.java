@@ -1,20 +1,24 @@
 package com.flylx.wand_mod.entity;
 
 import com.google.common.collect.Maps;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.enums.Thickness;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
@@ -255,6 +259,31 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                         .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),damage);
 
             }
+        }else if(this.getDegree()>=300&&this.getDegree()<360) {
+            //stone
+            double d;
+            double e;
+            double l;
+            for (int i = 0; i < 1; i++) {
+                n = (0.5 - this.random.nextDouble()) * 0.15;
+                o = 0.01f;
+                p = (0.5 - this.random.nextDouble()) * 0.15;
+                d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
+                e = this.random.nextDouble()-this.random.nextDouble();
+
+                l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
+                BlockPos pos = new BlockPos(
+                        getX() + d,
+                        getY() + e+10,
+                        getZ() + l);
+                if(!world.isClient) {
+                    if(world.getTime()%3 == 0) {
+                        BlockState dripstoneState = Blocks.POINTED_DRIPSTONE.getDefaultState().with(Properties.VERTICAL_DIRECTION, Direction.DOWN);
+                        spawnFallingBlock(dripstoneState, (ServerWorld) world, pos);
+                    }
+                }
+
+            }
         }
 
         //逐渐减少范围
@@ -319,5 +348,39 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
         double f = this.getZ();
         super.calculateDimensions();
         this.setPosition(d, e, f);
+    }
+
+    private static void spawnFallingBlock(BlockState state, ServerWorld world, BlockPos pos) {
+        BlockPos.Mutable mutable = pos.mutableCopy();
+        BlockState blockState = state;
+        while (isPointingDown(blockState)) {
+            FallingBlockEntity fallingBlockEntity = FallingBlockEntity.spawnFromBlock(world, mutable, blockState);
+            fallingBlockEntity.dropItem = false;
+            if (isTip(blockState, true)) {
+                int i = Math.max(1 + pos.getY() - mutable.getY(), 6);
+                float f = 1.0f * (float)i;
+                fallingBlockEntity.setHurtEntities(f, 40);
+                break;
+            }
+            mutable.move(Direction.DOWN);
+            blockState = world.getBlockState(mutable);
+        }
+    }
+
+    private static boolean isPointingDown(BlockState state) {
+        return isPointedDripstoneFacingDirection(state, Direction.DOWN);
+    }
+
+    private static boolean isPointedDripstoneFacingDirection(BlockState state, Direction direction) {
+        return state.isOf(Blocks.POINTED_DRIPSTONE) && state.get(Properties.VERTICAL_DIRECTION) == direction;
+    }
+
+
+    private static boolean isTip(BlockState state, boolean allowMerged) {
+        if (!state.isOf(Blocks.POINTED_DRIPSTONE)) {
+            return false;
+        }
+        Thickness thickness = state.get(Properties.THICKNESS);
+        return thickness == Thickness.TIP || allowMerged && thickness == Thickness.TIP_MERGE;
     }
 }

@@ -42,6 +42,8 @@ public class Wand_modClient implements ClientModInitializer {
         GeoItemRenderer.registerItemRenderer(modItemRegistry.POISON_SCROLL,new PoisonScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.CURE_SCROLL,new CureScrollRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.CLAW_SCROLL,new ClawScrollRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.STONE_SCROLL,new StoneScrollRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.WAND_BOX,new WandBoxRenderer());
 
 
 

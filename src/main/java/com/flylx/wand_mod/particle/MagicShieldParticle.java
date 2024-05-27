@@ -5,8 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.particle.ParticleTypes;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class MagicShieldParticle extends SpriteBillboardParticle {
@@ -20,7 +18,7 @@ public class MagicShieldParticle extends SpriteBillboardParticle {
         this.spriteProvider = spriteSet;
         this.scale *= 0.5;
         this.setSpriteForAge(spriteSet);
-        this.maxAge = 10;
+        this.maxAge = 5;
         this.red = 1f;
         this.green = 1f;
         this.blue = 1f;

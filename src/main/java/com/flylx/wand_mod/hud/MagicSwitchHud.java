@@ -60,9 +60,9 @@ public class MagicSwitchHud implements HudRenderCallback {
                 matrixStack.push();
 
                 matrixStack.translate(width,0,0);
-
+                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-45));
                 matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(
-                        ((IEntityDataSaver)client.getInstance().player).getPersistentData().getFloat("switch")));
+                        -((IEntityDataSaver)client.getInstance().player).getPersistentData().getFloat("switch")));
 
                 DrawableHelper.drawTexture(matrixStack, -64, -64, 0, 0,
                         128,128,128,128);

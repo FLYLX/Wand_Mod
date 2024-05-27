@@ -10,6 +10,7 @@ import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
+import com.flylx.wand_mod.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -30,8 +31,10 @@ public class Wand_mod implements ModInitializer {
     public static final ScreenHandlerType<MagicScreenHandler> MAGIC_SCREEN_HANDLER =
             new ScreenHandlerType<>(MagicScreenHandler::new);
 
+
     @Override
     public void onInitialize() {
+
 
         Registry.register(Registry.SCREEN_HANDLER, new Identifier(ModID,"base_wand"), MAGIC_SCREEN_HANDLER);
 
@@ -44,6 +47,7 @@ public class Wand_mod implements ModInitializer {
         new modEntityRegistry();
         new modBlockRegistry();
         new modMobRegistry();
+        new ModSounds();
 
         //生成矿脉
         Registry.register(BuiltinRegistries.CONFIGURED_FEATURE,

@@ -1,9 +1,11 @@
 package com.flylx.wand_mod.item;
 
+import com.flylx.wand_mod.block.AltarBlock;
 import com.flylx.wand_mod.block.MagicOreBlock;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import com.flylx.wand_mod.entity.AltarEntity;
 import com.flylx.wand_mod.particle.modParticleRegistry;
+import com.flylx.wand_mod.sound.ModSounds;
 import net.minecraft.block.*;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.BlockPatternBuilder;
@@ -20,6 +22,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.block.BlockStatePredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -59,19 +62,23 @@ public class MagicDust extends Item {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
         super.inventoryTick(stack, world, entity, slot, selected);
+        if(spawn_age == 275&&blockPos!=null){
+            world.playSound(null,blockPos, ModSounds.SPAWN_END, SoundCategory.BLOCKS,3f,1f);
+        }
         if(!world.isClient){
             if (state == 1) {
                 spawn_age++;
                 for (ServerPlayerEntity player : ((ServerWorld)world).getPlayers()) {
                     player.networkHandler.sendPacket(new ParticleS2CPacket(modParticleRegistry.MAGICSHIELD_PARTICLE,true,
+                            (double)blockPos.getX()+0.5+ MathHelper.sin(spawn_age/10+(float)Math.PI/2)/spawn_age*100,
+                            (double)blockPos.getY()+(double)spawn_age/100+1,
+                            (double)blockPos.getZ()+0.5+ MathHelper.cos(spawn_age/10+(float)Math.PI/2)/spawn_age*100,
+                            0,0,0,0,0
+                            ));
+                    player.networkHandler.sendPacket(new ParticleS2CPacket(modParticleRegistry.MAGICSHIELD_PARTICLE,true,
                             (double)blockPos.getX()+0.5+ MathHelper.sin(spawn_age/10)/spawn_age*100,
                             (double)blockPos.getY()+(double)spawn_age/100+1,
                             (double)blockPos.getZ()+0.5+ MathHelper.cos(spawn_age/10)/spawn_age*100,0,0,0,0,0
-                            ));
-                    player.networkHandler.sendPacket(new ParticleS2CPacket(modParticleRegistry.MAGICSHIELD_PARTICLE,true,
-                            (double)blockPos.getX()+0.5+ MathHelper.cos(spawn_age/10)/spawn_age*100,
-                            (double)blockPos.getY()+(double)spawn_age/100+1,
-                            (double)blockPos.getZ()+0.5+ MathHelper.sin(spawn_age/10)/spawn_age*100,0,0,0,0,0
                     ));
                     if(spawn_age==275){
                         player.networkHandler.sendPacket(new ParticleS2CPacket(ParticleTypes.FLASH,true,
@@ -83,12 +90,13 @@ public class MagicDust extends Item {
 
             }
                 if(spawn_age>280){
+                    //生成过程
                     if(!world.isClient) {
                         if (dropItem != null) {
-                            if(dropItem == Items.STRING) {
+                            if(dropItem == Items.STRING||dropItem == modItemRegistry.MAGIC_ORE) {
                                 world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
                                         blockPos.getZ() + 0.5f,
-                                        new ItemStack(dropItem,64)));
+                                        new ItemStack(dropItem,16)));
                             }else{
                                 world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
                                         blockPos.getZ() + 0.5f,
@@ -115,16 +123,18 @@ public class MagicDust extends Item {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
+
         if(state == 1){
             return ActionResult.FAIL;
         }
-
+        context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
 
         if(world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)) {
-            check_spawn(blockPos, world);
+            check_spawn(blockPos, world,context);
+
         }
 
         if (blockState.getBlock() instanceof DyedCarpetBlock) {
@@ -147,9 +157,10 @@ public class MagicDust extends Item {
         return ActionResult.FAIL;
 
     }
-    public void check_spawn(BlockPos pos,World world){
-        checkPattern(getAltarPattern(),pos,world);
-
+    public void check_spawn(BlockPos pos,World world, ItemUsageContext context){
+        if(checkPattern(getAltarPattern(),pos,world)){
+            context.getStack().decrement(1);
+        }
     }
 
     private boolean checkPattern(List<BlockPattern> blockPatternList,BlockPos pos,World world){
@@ -167,7 +178,20 @@ public class MagicDust extends Item {
                         if(cachedBlockPosition.getBlockEntity() instanceof AltarEntity){
                             AltarEntity altarEntity = (AltarEntity) cachedBlockPosition.getBlockEntity();
                             if(!altarEntity.getContent().isOf(Items.AIR)){
-                                items.add(altarEntity.getContent().getItem());
+                                if(!world.isClient) {
+                                    for (ServerPlayerEntity player : ((ServerWorld)world).getPlayers()) {
+                                        player.networkHandler.sendPacket(new ParticleS2CPacket(ParticleTypes.SPIT, true,
+                                                altarEntity.getPos().getX()+0.5,
+                                                altarEntity.getPos().getY()+1,
+                                                altarEntity.getPos().getZ()+0.5, 0, 0, 0, 0, 0
+                                        ));
+                                    }
+                                    items.add(altarEntity.getContent().getItem());
+                                    altarEntity.setContent(Items.AIR.getDefaultStack());
+                                    BlockState state1 = world.getBlockState(altarEntity.getPos());
+                                    AltarBlock.setHasItem(world, altarEntity.getPos()
+                                            , state1, 0);
+                                }
                     }
                 }
                 }
@@ -206,6 +230,9 @@ public class MagicDust extends Item {
                 {modItemRegistry.FLAME_SCROLL,modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
                         modItemRegistry.CURE_SCROLL,modItemRegistry.POISON_SCROLL,Items.DIAMOND_BLOCK,
                         Items.EMERALD_BLOCK,Items.CHORUS_FRUIT},
+                {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,Items.TNT,Items.TNT,
+                        Items.NETHER_STAR,Items.DIAMOND_BLOCK,Items.GOLDEN_APPLE,modItemRegistry.MAGIC_ORE},
+                {Items.DARK_OAK_WOOD,modItemRegistry.MAGIC_ORE,Items.GOLDEN_APPLE},
 
                 {Items.STRING},
                 {Items.WHITE_WOOL},
@@ -217,8 +244,11 @@ public class MagicDust extends Item {
                 {modItemRegistry.CURE_SCROLL},
 
         };
+        //生成表
         Item[] items1 = {
                 modItemRegistry.MAGIC_ORE,
+                modItemRegistry.MAGIC_SHIELD,
+                modItemRegistry.WAND_CORE,
 
                 Items.COBWEB,
                 Items.STRING,
@@ -245,9 +275,7 @@ public class MagicDust extends Item {
                         return  o1.hashCode()-o2.hashCode();
                     }
                 });
-
                 this.spawnMap.put(list,items1[i]);
-
             }
         }
 

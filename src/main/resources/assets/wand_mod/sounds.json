@@ -1,0 +1,51 @@
+{
+  "fire": {
+    "subtitle": "subtitles.wand_mod.fire",
+    "sounds": [
+      "wand_mod:fire"
+    ]
+  } ,
+  "froze": {
+    "subtitle": "subtitles.wand_mod.froze",
+    "sounds": [
+      "wand_mod:froze"
+    ]
+  },
+  "poison": {
+    "subtitle": "subtitles.wand_mod.poison",
+    "sounds": [
+      "wand_mod:poison"
+    ]
+  },
+  "cure": {
+    "subtitle": "subtitles.wand_mod.cure",
+    "sounds": [
+      "wand_mod:cure"
+    ]
+  },
+  "swing": {
+    "subtitle": "subtitles.wand_mod.swing",
+    "sounds": [
+      "wand_mod:swing"
+    ]
+  },
+  "hit": {
+    "subtitle": "subtitles.wand_mod.hit",
+    "sounds": [
+      "wand_mod:hit"
+    ]
+  },
+  "spawn": {
+    "subtitle": "subtitles.wand_mod.spawn",
+    "sounds": [
+      "wand_mod:spawn"
+    ]
+  },
+  "spawn_end": {
+    "subtitle": "subtitles.wand_mod.spawn_end",
+    "sounds": [
+      "wand_mod:spawn_end"
+    ]
+  }
+}
+

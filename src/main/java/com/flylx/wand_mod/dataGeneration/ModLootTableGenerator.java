@@ -27,8 +27,9 @@ public class ModLootTableGenerator extends SimpleFabricLootTableProvider {
         //magic_dust
         identifierBuilderBiConsumer.accept(new Identifier(Wand_mod.ModID,"blocks/magic_ore"),
                 BlockLootTableGenerator.drops(modItemRegistry.MAGIC_DUST).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0F,3.0F))));
-
-
+        //altar
+        identifierBuilderBiConsumer.accept(new Identifier(Wand_mod.ModID,"blocks/altar_block"),
+                BlockLootTableGenerator.drops(modBlockRegistry.ALTAR_BLOCK));
 
     }
 

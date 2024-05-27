@@ -48,16 +48,23 @@ public class ModMobLootGenerator extends SimpleFabricLootTableProvider {
         NbtCompound nbtCompound_end = new NbtCompound();
         nbtCompound_froze.putString("golem_types","end");
         NbtPredicate nbtPredicate_end = new NbtPredicate(nbtCompound_end);
+        //stone
+        NbtCompound nbtCompound_stone = new NbtCompound();
+        nbtCompound_froze.putString("golem_types","stone");
+        NbtPredicate nbtPredicate_stone = new NbtPredicate(nbtCompound_stone);
         identifierBuilderBiConsumer.accept(new Identifier(Wand_mod.ModID,"entities/magic_golem"), LootTable.builder()
                 .pool(LootPool.builder().rolls(UniformLootNumberProvider.create(1.0F,3.0f))
-                        .with(ItemEntry.builder(modItemRegistry.POISON_SCROLL).conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS,EntityPredicate.Builder.create().nbt(nbtPredicate_end)))
+                        .with(ItemEntry.builder(modItemRegistry.CLAW_SCROLL).conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS,EntityPredicate.Builder.create().nbt(nbtPredicate_end)))
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
                         .with(ItemEntry.builder(modItemRegistry.POISON_SCROLL).conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS,EntityPredicate.Builder.create().nbt(nbtPredicate_poison)))
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
                         .with(ItemEntry.builder(modItemRegistry.FROZE_SCROLL).conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS,EntityPredicate.Builder.create().nbt(nbtPredicate_froze)))
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                        .with(ItemEntry.builder(modItemRegistry.STONE_SCROLL).conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS,EntityPredicate.Builder.create().nbt(nbtPredicate_stone)))
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
                         .with(ItemEntry.builder(modItemRegistry.FLAME_SCROLL).conditionally(EntityPropertiesLootCondition.builder(LootContext.EntityTarget.THIS,EntityPredicate.Builder.create().nbt(nbtPredicate_fire)))
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F)))))
+
         );
     }
 }

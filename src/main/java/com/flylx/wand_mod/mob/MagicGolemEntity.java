@@ -154,6 +154,10 @@ public class MagicGolemEntity extends IronGolemEntity implements Angerable {
                 basicMagic.setDegree(255);
                 this.world.spawnEntity(basicMagic);
                 break;
+            case STONE:
+                basicMagic.setDegree(315);
+                this.world.spawnEntity(basicMagic);
+                break;
         }
     }
     @Override
@@ -269,7 +273,11 @@ public class MagicGolemEntity extends IronGolemEntity implements Angerable {
                 this.getWorld().addParticle(ParticleTypes.END_ROD,
                         this.getX() + random.nextFloat() * 2 -1,
                         this.getY() + random.nextFloat() * 2.5f, this.getZ() + random.nextFloat() * 2 -1, 0, 0, 0);
-
+                break;
+            case STONE:
+                this.getWorld().addParticle(ParticleTypes.ASH,
+                        this.getX() + random.nextFloat() * 2 -1,
+                        this.getY() + random.nextFloat() * 2.5f, this.getZ() + random.nextFloat() * 2 -1, 0, 0, 0);
                 break;
         }
     }

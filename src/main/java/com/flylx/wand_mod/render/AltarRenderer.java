@@ -33,6 +33,12 @@ public class AltarRenderer implements BlockEntityRenderer<AltarEntity> {
             add(Items.CHORUS_FRUIT);
             add(Items.STRING);
             add(Items.WHITE_WOOL);
+            add(Items.TNT);
+            add(Items.NETHER_STAR);
+            add(Items.GOLDEN_APPLE);
+            add(Items.DARK_OAK_WOOD);
+            add(modItemRegistry.MAGIC_ORE);
+            add(modItemRegistry.WAND_CORE);
         }
     };
 
@@ -63,4 +69,6 @@ public class AltarRenderer implements BlockEntityRenderer<AltarEntity> {
         matrices.pop();
 
     }
+
+
 }

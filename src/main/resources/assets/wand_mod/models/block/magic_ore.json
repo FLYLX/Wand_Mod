@@ -1,7 +1,8 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "wand_mod:block/magic_ore"
+    "all": "wand_mod:block/magic_ore",
+    "particle": "wand_mod:block/magic_ore"
   }
 }
 

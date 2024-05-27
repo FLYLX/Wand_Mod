@@ -5,4 +5,5 @@ public enum MagicGolemTypes {
     FROZE,
     POISON,
     END,
+    STONE,
 }

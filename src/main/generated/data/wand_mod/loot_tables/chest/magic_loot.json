@@ -57,6 +57,17 @@
               "function": "minecraft:set_count"
             }
           ],
+          "name": "wand_mod:scroll_belt"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
           "name": "minecraft:diamond"
         },
         {
@@ -64,11 +75,11 @@
           "functions": [
             {
               "add": false,
-              "count": 32.0,
+              "count": 1.0,
               "function": "minecraft:set_count"
             }
           ],
-          "name": "minecraft:apple"
+          "name": "minecraft:golden_apple"
         },
         {
           "type": "minecraft:item",
@@ -78,7 +89,7 @@
               "levels": {
                 "type": "minecraft:uniform",
                 "max": 50.0,
-                "min": 40.0
+                "min": 2.0
               },
               "treasure": false
             }

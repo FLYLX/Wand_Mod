@@ -34,11 +34,13 @@ public class ChestLootTables extends SimpleFabricLootTableProvider {
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
                         .with(ItemEntry.builder(modItemRegistry.CLAW_SCROLL)
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                        .with(ItemEntry.builder(modItemRegistry.SCROLL_BELT_ITEM)
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
                         .with(ItemEntry.builder(Items.DIAMOND)
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
-                        .with(ItemEntry.builder(Items.APPLE)
-                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(32.0F))))
-                                .with(ItemEntry.builder(Items.DIAMOND_SWORD).apply(EnchantWithLevelsLootFunction.builder(UniformLootNumberProvider.create(40.0f,50.0f)))))
+                        .with(ItemEntry.builder(Items.GOLDEN_APPLE)
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                                .with(ItemEntry.builder(Items.DIAMOND_SWORD).apply(EnchantWithLevelsLootFunction.builder(UniformLootNumberProvider.create(2.0f,50.0f)))))
                 );
     }
 }

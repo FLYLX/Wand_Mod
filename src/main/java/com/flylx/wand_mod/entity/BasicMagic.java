@@ -1,10 +1,11 @@
 package com.flylx.wand_mod.entity;
 
 
-
+import com.flylx.wand_mod.item.modItemRegistry;
 import com.flylx.wand_mod.mob.MagicGolemEntity;
 import com.flylx.wand_mod.mob.MagicGolemTypes;
 import com.flylx.wand_mod.mob.modMobRegistry;
+import com.flylx.wand_mod.sound.ModSounds;
 import com.flylx.wand_mod.util.IEntityDataSaver;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -24,6 +25,8 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -75,7 +78,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         if(owner instanceof PlayerEntity) {
             Degree = ((IEntityDataSaver) owner).getPersistentData().getFloat(
                     "switch");
-        }else{
+        }else {
             Degree = 0;
         }
         this.getDataTracker().set(DEGREE,Degree);
@@ -99,6 +102,8 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         this.setPitch((float)(MathHelper.atan2(vec3d.y, vec3d.horizontalLength()) * 57.2957763671875));
         this.prevYaw = this.getYaw();
         this.prevPitch = this.getPitch();
+        //sounds
+
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -148,6 +153,17 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     @Override
     public void tick() {
         ++basicmagicAge;
+        if(basicmagicAge == 5){
+            if(getDegree()>=0&&getDegree()<60) {
+                world.playSound(null, getBlockPos(), ModSounds.FIRE_MAGIC, SoundCategory.BLOCKS, 1f, 1f);
+            }else if (getDegree()>=60&&getDegree()<120){
+                world.playSound(null, getBlockPos(), ModSounds.FROZE_MAGIC, SoundCategory.BLOCKS, 1f, 1f);
+            }else if(getDegree()>=120&&getDegree()<180){
+                world.playSound(null, getBlockPos(), ModSounds.POISON_MAGIC, SoundCategory.BLOCKS, 1f, 1f);
+            }if(getDegree()>=180&&getDegree()<240){
+                world.playSound(null, getBlockPos(), ModSounds.CURE_MAGIC, SoundCategory.BLOCKS, 1f, 1f);
+            }
+        }
         LogManager.getLogger().info(getDegree());
         if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z,2))<0.3F) {
             if(ownerItem!=null) {
@@ -202,6 +218,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     }
 
     @Override
+    protected SoundEvent getHitSound() {
+        return ModSounds.MAGIC_HIT;
+    }
+
+    @Override
     protected void onBlockHit(BlockHitResult blockHitResult) {
         super.onBlockHit(blockHitResult);
         if (this.world.isClient) {
@@ -227,15 +248,15 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     public void doDamage() {
         if(getDegree()>=0&&getDegree()<60) {
-
             explosionMagic();
         }else if (getDegree()>=60&&getDegree()<120){
             frozeMagic();
-
         }else if(getDegree()>=120&&getDegree()<180){
             poisonMagic();
-        }if(getDegree()>=180&&getDegree()<240){
+        }else if(getDegree()>=180&&getDegree()<240){
             heartMagic();
+        }else if(getDegree()>=300&&getDegree()<360){
+            stoneMagic();
         }
     }
 
@@ -300,9 +321,15 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
                 }
 
                 change_golem(target,MagicGolemTypes.END);
-                ownerItem.decrement(1);
+                if((getOwner() instanceof  PlayerEntity)&&ownerItem.isOf(modItemRegistry.CLAW_SCROLL)){
+                    ownerItem.decrement(1);
+                }
             }
-
+        }if(getDegree()>=300&&getDegree()<360){
+            if(!(target instanceof IronGolemEntity)) {
+                stoneMagic();
+            }
+            change_golem(target,MagicGolemTypes.STONE);
         }
     }
 
@@ -382,6 +409,18 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
 
     }
 
+    public void stoneMagic(){
+        MagicAreaCloud magicAreaCloud = new MagicAreaCloud(this.world,this.getX(),this.getY(),this.getZ());
+        magicAreaCloud.setRadius(12.0f);
+        magicAreaCloud.setRadiusGrowth(-0.05f);
+        magicAreaCloud.setDegree(getDegree());
+        Entity entity = this.getOwner();
+        if (entity instanceof LivingEntity) {
+            magicAreaCloud.setOwner((LivingEntity) entity);
+        }
+        this.world.spawnEntity(magicAreaCloud);
+    }
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
@@ -397,11 +436,11 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
     public void hookPlayer(PlayerEntity player, World world, Entity entity){
         if(getOwner()!=null) {
             if (((PlayerEntity) this.getOwner()).handSwinging) {
-                player.setVelocity(player.getVelocity().getX() + (entity.getPos().getX() - player.getPos().getX())/2 ,
-                        player.getVelocity().getY() + (entity.getPos().getY() - player.getPos().getY()) /5,
-                        player.getVelocity().getZ() + (entity.getPos().getZ() - player.getPos().getZ())/2
+                player.setVelocity(player.getVelocity().getX() + (entity.getPos().getX() - player.getPos().getX())/3 ,
+                        0 + (entity.getPos().getY() - player.getPos().getY()) /6,
+                        player.getVelocity().getZ() + (entity.getPos().getZ() - player.getPos().getZ())/3
                 );
-                if(ownerItem != null){
+                if(ownerItem != null && ownerItem.isOf(modItemRegistry.CLAW_SCROLL)){
                     ownerItem.decrement(1);
                 }
 

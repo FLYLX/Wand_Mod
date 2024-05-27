@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +25,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.listener.GameEventListener;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -36,8 +36,6 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
     public static final IntProperty ITEM_PROPERTY = IntProperty.of("items", 0, 1024);
 
     public static final IntProperty HAS_ITEM = ITEM_PROPERTY;
-
-
 
 
     public static final Map<Item, Integer> content_map = new HashMap<>(){
@@ -53,6 +51,12 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
             put(Items.CHORUS_FRUIT,8);
             put(Items.STRING,9);
             put(Items.WHITE_WOOL,10);
+            put(Items.TNT,11);
+            put(Items.NETHER_STAR,12);
+            put(Items.GOLDEN_APPLE,13);
+            put(Items.DARK_OAK_WOOD,14);
+            put(modItemRegistry.MAGIC_ORE,15);
+            put(modItemRegistry.WAND_CORE,16);
         }
     };
 
@@ -68,6 +72,12 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
             put(Items.CHORUS_FRUIT,false);
             put(Items.STRING,false);
             put(Items.WHITE_WOOL,false);
+            put(Items.TNT,false);
+            put(Items.NETHER_STAR,false);
+            put(Items.GOLDEN_APPLE,false);
+            put(Items.DARK_OAK_WOOD,false);
+            put(modItemRegistry.MAGIC_ORE,false);
+            put(modItemRegistry.WAND_CORE,false);
         }
     };
 
@@ -90,7 +100,6 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
         if (blockEntity instanceof AltarEntity) {
             AltarEntity altarEntity = (AltarEntity)blockEntity;
             altarEntity.setContent(item.getDefaultStack());
-            LogManager.getLogger().info(altarEntity.getContent());
             AltarBlock.setHasItem(world, pos, state, render_num);
             world.emitGameEvent((Entity)player, GameEvent.BLOCK_CHANGE, pos);
         }
@@ -127,10 +136,12 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
             if (bl != bl2) {
                 if (bl2) {
                     if (!player.getAbilities().creativeMode) {
+                        ItemStack stack = itemStack.copy();
+                        putItemIfAbsent(player, world, pos, state, stack);
                         itemStack.decrement(1);
+                    }else {
+                        putItemIfAbsent(player, world, pos, state, itemStack);
                     }
-
-                    putItemIfAbsent(player,world,pos,state,itemStack);
                 } else {
 
                     ItemStack itemStack2 = altarEntity.content;
@@ -194,4 +205,23 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return makeShape();
     }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        dropContent(world,pos);
+    }
+    private void dropContent( World world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof AltarEntity) {
+            AltarEntity altarEntity = (AltarEntity)blockEntity;
+            ItemStack itemStack = altarEntity.getContent().copy();
+            ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5 , pos.getY() + 1, (double)pos.getZ() + 0.5, itemStack);
+            itemEntity.setToDefaultPickupDelay();
+            world.spawnEntity(itemEntity);
+            altarEntity.setContent(ItemStack.EMPTY);
+        }
+    }
+
+
 }

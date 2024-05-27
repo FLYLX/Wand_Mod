@@ -30,8 +30,12 @@ public class modItemRegistry {
             new CureScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final ClawScroll CLAW_SCROLL = (ClawScroll) registerItem("claw_scroll",
             new ClawScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+    public static final StoneScroll STONE_SCROLL = (StoneScroll) registerItem("stone_scroll",
+            new StoneScroll(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
     public static final MagicDust MAGIC_DUST = (MagicDust) registerItem("magic_dust",
             new MagicDust(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(64)));
+    public static final WandBox WAND_BOX = (WandBox) registerItem("wand_box",
+            new WandBox(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",

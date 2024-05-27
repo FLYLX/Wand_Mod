@@ -18,6 +18,7 @@ public class MagicGolemEntityRenderer extends MobEntityRenderer<MagicGolemEntity
     private static final Identifier FROZE = new Identifier(Wand_mod.ModID,"textures/mob/froze_golem.png");
     private static final Identifier POISON = new Identifier(Wand_mod.ModID,"textures/mob/poison_golem.png");
     private static final Identifier END = new Identifier(Wand_mod.ModID,"textures/mob/end_golem.png");
+    private static final Identifier STONE = new Identifier(Wand_mod.ModID,"textures/mob/stone_golem.png");
 
     public MagicGolemEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new MagicGolemEntityModel(context.getPart(EntityModelLayers.IRON_GOLEM)), 0.7f);
@@ -34,6 +35,8 @@ public class MagicGolemEntityRenderer extends MobEntityRenderer<MagicGolemEntity
             return POISON;
         }else if(entity.getMagicGolemTypes() == MagicGolemTypes.END){
             return END;
+        }else if(entity.getMagicGolemTypes() == MagicGolemTypes.STONE){
+            return STONE;
         }else{
             return FIRE;
         }

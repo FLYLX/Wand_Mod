@@ -1,11 +1,6 @@
 package com.flylx.wand_mod.mob;
 
-
-
-
 public class MagicGolemType {
-
-
     public static String MagicTypeToString(MagicGolemTypes magicGolemTypes) {
         switch (magicGolemTypes) {
             case FIRE:
@@ -16,6 +11,8 @@ public class MagicGolemType {
                 return "poison";
             case END:
                 return "end";
+            case STONE:
+                return "stone";
             default:
                 return "fire";
         }
@@ -31,6 +28,8 @@ public class MagicGolemType {
                 return MagicGolemTypes.POISON;
             case "end":
                 return MagicGolemTypes.END;
+            case "stone":
+                return MagicGolemTypes.STONE;
             default:
                 return MagicGolemTypes.FIRE;
         }

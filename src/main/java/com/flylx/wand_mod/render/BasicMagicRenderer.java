@@ -91,10 +91,20 @@ public class BasicMagicRenderer extends GeoProjectilesRenderer<BasicMagic> {
 
         }else if(animatable.getDegree()>=240&&animatable.getDegree()<300&&!MinecraftClient.getInstance().isPaused()){
 
-
-
                 hook_render(animatable, yaw, partialTick, poseStack, bufferSource, packedLight);
                 //鱼钩那样的特效
+        }else if(animatable.getDegree()>=300&&animatable.getDegree()<360&&!MinecraftClient.getInstance().isPaused()){
+            int m = 0x533D3A;
+            double n = (float) (m >> 16 & 0xFF) / 255.0f;
+            double o = (float) (m >> 8 & 0xFF) / 255.0f;
+            double p = (float) (m & 0xFF) / 255.0f;
+            Particle particle =
+                    MinecraftClient.getInstance().particleManager.addParticle(ParticleTypes.ASH,
+                            animatable.getParticleX(0.5D),
+                            animatable.getY(),
+                            animatable.getParticleZ(0.5D),
+                            n,o,p );
+            particle.setColor((float) n,(float)o,(float)p);
 
 
         }

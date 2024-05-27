@@ -1,11 +1,11 @@
 {
   "criteria": {
-    "got_dirt": {
+    "got_magic": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:dirt"
+              "wand_mod:magic_dust"
             ]
           }
         ]
@@ -17,21 +17,21 @@
     "announce_to_chat": true,
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
-      "text": "现在做了一个 3x3 ！"
+      "text": "法师的开始！"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "minecraft:dirt"
+      "item": "wand_mod:magic_dust"
     },
     "show_toast": true,
     "title": {
-      "text": "你的第一个泥土方块！"
+      "text": "启程之路！"
     }
   },
   "requirements": [
     [
-      "got_dirt"
+      "got_magic"
     ]
   ]
 }
