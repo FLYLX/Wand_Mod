@@ -30,4 +30,15 @@ public class ScrollBeltInventory implements ImplementedInventory  {
     public void setInventory(DefaultedList<ItemStack> inventory) {
         this.inventory = inventory;
     }
+
+
+//        if(player instanceof ServerPlayerEntity){
+//            ((ServerPlayerEntity)player).closeScreenHandler();
+//            ((ServerPlayerEntity)player).closeHandledScreen();
+//        }else{
+//            ((ClientPlayerEntity)player).closeHandledScreen();
+//        }
+
+
+
 }

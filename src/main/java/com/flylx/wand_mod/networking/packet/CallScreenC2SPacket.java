@@ -19,7 +19,7 @@ public class CallScreenC2SPacket {
 
         if (user.getEquippedStack(EquipmentSlot.CHEST).isOf(modItemRegistry.SCROLL_BELT_ITEM)) {
             NamedScreenHandlerFactory screenHandlerFactory = new SimpleNamedScreenHandlerFactory((syncId, inventory,
-                                                                                                  player) -> new MagicScreenHandler(syncId, inventory), Text.literal("aaa"));
+                                                                                                  player) -> new MagicScreenHandler(syncId, inventory), Text.literal("BeltInventory"));
 
             if (screenHandlerFactory != null) {
                 // 这个调用会让服务器请求客户端开启合适的 Screenhandler

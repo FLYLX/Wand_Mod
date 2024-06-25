@@ -14,12 +14,12 @@ import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 @Environment(value= EnvType.CLIENT)
-public class MagicScreen extends HandledScreen<MagicScreenHandler> {
+public class MagicHandScreen extends HandledScreen<MagicScreenHandHandler> {
 
 
     private static final Identifier TEXTURE =new Identifier ("minecraft", "textures/gui/container/dispenser.png");
 
-    public MagicScreen(MagicScreenHandler handler, PlayerInventory inventory, Text title) {
+    public MagicHandScreen(MagicScreenHandHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
 

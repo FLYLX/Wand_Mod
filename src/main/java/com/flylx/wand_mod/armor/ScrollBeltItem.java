@@ -1,13 +1,13 @@
 package com.flylx.wand_mod.armor;
 
 import com.flylx.wand_mod.item.modItemRegistry;
+import com.flylx.wand_mod.screen.MagicScreenHandHandler;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemStack;
@@ -106,18 +106,15 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
         if(!world.isClient) {
 
             if(user.getStackInHand(hand).isOf(modItemRegistry.SCROLL_BELT_ITEM)&&user.getEquippedStack(EquipmentSlot.CHEST).isOf(modItemRegistry.SCROLL_BELT_ITEM)) {
-                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
-                ScrollBeltInventory scrollBeltInventory = new ScrollBeltInventory(user.getStackInHand(hand));
-                Inventories.readNbt(user.getStackInHand(hand).getNbt(),inventory1);
-                scrollBeltInventory.setInventory(inventory1);
-                NamedScreenHandlerFactory screenHandlerFactory = new SimpleNamedScreenHandlerFactory((syncId, inventory,
-                                                                                                      player) -> new MagicScreenHandler(syncId, inventory,scrollBeltInventory), Text.literal("aaa"));
 
+                NamedScreenHandlerFactory screenHandlerFactory = new SimpleNamedScreenHandlerFactory((syncId, inventory,
+                                                                                                      player) -> new MagicScreenHandHandler(syncId, inventory), Text.literal("BeltInventory"));
                 if (screenHandlerFactory != null) {
                     // 这个调用会让服务器请求客户端开启合适的 Screenhandler
-                    user.openHandledScreen(screenHandlerFactory);
 
+                    user.openHandledScreen(screenHandlerFactory);
                 }
+
             }
         }
         return super.use(world, user, hand);
@@ -127,9 +124,6 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         super.onStoppedUsing(stack, world, user, remainingUseTicks);
-
-
-
     }
 
     @Override
@@ -157,4 +151,6 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
         super.postProcessNbt(nbt);
 
     }
+
+
 }

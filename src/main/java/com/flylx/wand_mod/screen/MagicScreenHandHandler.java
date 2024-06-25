@@ -3,6 +3,7 @@ package com.flylx.wand_mod.screen;
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.armor.ScrollBeltInventory;
 import com.flylx.wand_mod.armor.ScrollBeltSlot;
+import com.flylx.wand_mod.item.modItemRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -14,28 +15,35 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.collection.DefaultedList;
 
 
-public class MagicScreenHandler extends ScreenHandler {
+public class MagicScreenHandHandler extends ScreenHandler {
     private final Inventory inventory;
     //type 1 is main hand , 2 is off hand , 3 is bag
 
-    public MagicScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory,getInventory(playerInventory.getArmorStack(2),playerInventory));
+
+    public MagicScreenHandHandler(int syncId, PlayerInventory playerInventory) {
+        this(syncId, playerInventory,getInventory(playerInventory));
 
     }
 
-    public static  ScrollBeltInventory getInventory(ItemStack itemStack,PlayerInventory playerInventory){
+    public static  ScrollBeltInventory getInventory(PlayerInventory playerInventory){
         ScrollBeltInventory scrollBeltInventory;
+            if(playerInventory.player.getMainHandStack().isOf(modItemRegistry.SCROLL_BELT_ITEM)){
+                scrollBeltInventory = new ScrollBeltInventory(playerInventory.player.getMainHandStack());
+                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
+                Inventories.readNbt(playerInventory.player.getMainHandStack().getNbt(),inventory1);
+                scrollBeltInventory.setInventory(inventory1);
+            }else{
+                scrollBeltInventory = new ScrollBeltInventory(playerInventory.player.getOffHandStack());
+                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
+                Inventories.readNbt(playerInventory.player.getOffHandStack().getNbt(),inventory1);
+                scrollBeltInventory.setInventory(inventory1);
+            }
         //优先主手
-        scrollBeltInventory = new ScrollBeltInventory(itemStack);
-        DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
-        Inventories.readNbt(itemStack.getNbt(),inventory1);
-        scrollBeltInventory.setInventory(inventory1);
-
         return scrollBeltInventory;
     }
 
-    public MagicScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        super(Wand_mod.MAGIC_SCREEN_HANDLER, syncId);
+    public MagicScreenHandHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
+        super(Wand_mod.MAGIC_SCREEN_HAND_HANDLER, syncId);
         checkSize(inventory, 9);
         this.inventory = inventory;
 

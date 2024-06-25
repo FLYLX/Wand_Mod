@@ -12,6 +12,7 @@ import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.particle.MagicShieldParticle;
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.render.*;
+import com.flylx.wand_mod.screen.MagicHandScreen;
 import com.flylx.wand_mod.screen.MagicScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -49,6 +50,7 @@ public class Wand_modClient implements ClientModInitializer {
 
         GeoItemRenderer.registerItemRenderer(modItemRegistry.MAGIC_SHIELD,new MagicShieldRenderer());
         GeoItemRenderer.registerItemRenderer(modItemRegistry.WAND_CORE,new WandCoreRenderer());
+        GeoItemRenderer.registerItemRenderer(modItemRegistry.SCROLL_STICK,new ScrollStickRenderer());
 
 
         //block
@@ -68,6 +70,7 @@ public class Wand_modClient implements ClientModInitializer {
 
         //screen
         HandledScreens.register(Wand_mod.MAGIC_SCREEN_HANDLER, MagicScreen::new);
+        HandledScreens.register(Wand_mod.MAGIC_SCREEN_HAND_HANDLER, MagicHandScreen::new);
 
         //particle
         ParticleFactoryRegistry.getInstance().register(modParticleRegistry.MAGICSHIELD_PARTICLE,
