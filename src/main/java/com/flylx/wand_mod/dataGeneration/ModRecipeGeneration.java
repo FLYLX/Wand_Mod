@@ -13,6 +13,7 @@ public class ModRecipeGeneration extends FabricRecipeProvider {
 
     @Override
     protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
-
+        //shapeless recipe
+        //shape
     }
 }
