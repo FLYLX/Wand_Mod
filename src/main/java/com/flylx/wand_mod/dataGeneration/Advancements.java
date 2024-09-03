@@ -17,7 +17,7 @@ public class Advancements implements Consumer<Consumer<Advancement>> {
                 .display(
                         modItemRegistry.MAGIC_DUST, // 显示的图标
                         Text.literal("启程之路！"), // 标题
-                        Text.literal("法师的开始！"), // 描述
+                        Text.literal("混沌的开始！"), // 描述
                         new Identifier("textures/gui/advancements/backgrounds/adventure.png"), // 使用的背景图片
                         AdvancementFrame.TASK, // 选项: TASK, CHALLENGE, GOAL
                         true, // 在右上角显示

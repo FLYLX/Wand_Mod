@@ -25,10 +25,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.listener.GameEventListener;
+import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class AltarBlock extends Block implements BlockEntityProvider  {
 
@@ -38,29 +40,34 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
     public static final IntProperty HAS_ITEM = ITEM_PROPERTY;
 
 
-    public static final Map<Item, Integer> content_map = new HashMap<>(){
-        {
-            put(Items.AIR,0);
-            put(modItemRegistry.FLAME_SCROLL,1);
-            put(modItemRegistry.FROZE_SCROLL,2);
-            put(modItemRegistry.CLAW_SCROLL,3);
-            put(modItemRegistry.CURE_SCROLL,4);
-            put(modItemRegistry.POISON_SCROLL,5);
-            put(Items.DIAMOND_BLOCK,6);
-            put(Items.EMERALD_BLOCK,7);
-            put(Items.CHORUS_FRUIT,8);
-            put(Items.STRING,9);
-            put(Items.WHITE_WOOL,10);
-            put(Items.TNT,11);
-            put(Items.NETHER_STAR,12);
-            put(Items.GOLDEN_APPLE,13);
-            put(Items.DARK_OAK_WOOD,14);
-            put(modItemRegistry.MAGIC_ORE,15);
-            put(modItemRegistry.WAND_CORE,16);
-        }
-    };
+    public static final Map<Item, Integer> content_map(){
+        return new HashMap<>(){
+            {
+                put(Items.AIR,0);
+                put(modItemRegistry.FLAME_SCROLL,1);
+                put(modItemRegistry.FROZE_SCROLL,2);
+                put(modItemRegistry.CLAW_SCROLL,3);
+                put(modItemRegistry.CURE_SCROLL,4);
+                put(modItemRegistry.POISON_SCROLL,5);
+                put(Items.DIAMOND_BLOCK,6);
+                put(Items.EMERALD_BLOCK,7);
+                put(Items.CHORUS_FRUIT,8);
+                put(Items.STRING,9);
+                put(Items.WHITE_WOOL,10);
+                put(Items.TNT,11);
+                put(Items.NETHER_STAR,12);
+                put(Items.GOLDEN_APPLE,13);
+                put(Items.DARK_OAK_WOOD,14);
+                put(modItemRegistry.MAGIC_ORE,15);
+                put(modItemRegistry.WAND_CORE,16);
+                put(modItemRegistry.STONE_SCROLL,17);
 
-    private static final Map<Item, Boolean> CONTENT_TO_POTTED = new HashMap<>(){
+            }
+        };
+    }
+
+    private static Map<Item, Boolean> CONTENT_TO_POTTED(){
+        return new HashMap<>(){
         {
             put(modItemRegistry.FLAME_SCROLL,false);
             put(modItemRegistry.FROZE_SCROLL,false);
@@ -78,8 +85,10 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
             put(Items.DARK_OAK_WOOD,false);
             put(modItemRegistry.MAGIC_ORE,false);
             put(modItemRegistry.WAND_CORE,false);
+            put(modItemRegistry.STONE_SCROLL,false);
         }
-    };
+     };
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -95,7 +104,7 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
     private static void putItem(@Nullable PlayerEntity player, World world, BlockPos pos, BlockState state,
                            ItemStack stack) {
         Item item = stack.getItem();
-        int render_num = content_map.getOrDefault(item,0);
+        int render_num = content_map().getOrDefault(item,0);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof AltarEntity) {
             AltarEntity altarEntity = (AltarEntity)blockEntity;
@@ -129,7 +138,12 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
             ItemStack itemStack = player.getStackInHand(hand);
             Item item = itemStack.getItem();
             boolean bl;
-            bl = CONTENT_TO_POTTED.getOrDefault(item, true);
+            bl = CONTENT_TO_POTTED().getOrDefault(item, true);
+            LogManager.getLogger().info(modItemRegistry.MAGIC_ORE);
+            Set<Item> keys = CONTENT_TO_POTTED().keySet();
+            for (Item key : keys) {
+                LogManager.getLogger().info(key);
+            }
 
             boolean bl2 = this.isEmpty(altarEntity.content.getItem());
 

@@ -27,8 +27,6 @@ import net.minecraft.world.World;
 public class MagicOreBlock extends Block {
     public static final BooleanProperty LIT = BooleanProperty.of("lit");
 
-
-
     public MagicOreBlock(AbstractBlock.Settings settings) {
         super(settings);
         this.setDefaultState((BlockState)this.getDefaultState().with(LIT, false));

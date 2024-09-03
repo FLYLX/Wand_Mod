@@ -62,6 +62,7 @@ public class modItemRegistry {
     }
 
     public static Item registerItem(String name,BlockItem blockitem){
+        ((BlockItem)blockitem).appendBlocks(Item.BLOCK_ITEMS, blockitem);
         return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),blockitem);
     }
 }

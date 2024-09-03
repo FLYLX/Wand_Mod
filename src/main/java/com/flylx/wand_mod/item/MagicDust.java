@@ -12,6 +12,8 @@ import net.minecraft.block.pattern.BlockPatternBuilder;
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 
 import java.util.*;
 
@@ -54,6 +57,18 @@ public class MagicDust extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
         ItemStack itemStack = user.getStackInHand(hand);
+        LivingEntity targetEntity = world.getClosestEntity(LivingEntity.class, TargetPredicate.createNonAttackable().setBaseMaxDistance(6.0), user, user.getX(), user.getY(), user.getZ(), user.getBoundingBox().expand(6.0, 2.0, 6.0));
+        if(targetEntity!=null) {
+            for (int i = 0;i<10;i++){
+                double xoffset = new Random().nextDouble() * 2 - 1;
+                double yoffset = new Random().nextDouble() * 2 - 1;
+                double zoffset = new Random().nextDouble() * 2 - 1;
+                world.addParticle(ParticleTypes.SCULK_SOUL,user.getX()+xoffset,user.getY()+yoffset+1,user.getZ()+zoffset,0,0,0);
+            }
+            targetEntity.setVelocity(0.0d,1.0d,0.0d);
+            targetEntity.setFrozenTicks(200);
+            world.createExplosion(targetEntity, targetEntity.getX(), targetEntity.getY(), targetEntity.getZ(), 1.0f, true, Explosion.DestructionType.NONE);
+        }
         return TypedActionResult.consume(itemStack);
     }
 
@@ -62,7 +77,7 @@ public class MagicDust extends Item {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 
         super.inventoryTick(stack, world, entity, slot, selected);
-        if(spawn_age == 275&&blockPos!=null){
+        if(spawn_age == 195&&blockPos!=null&&world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)){
             world.playSound(null,blockPos, ModSounds.SPAWN_END, SoundCategory.BLOCKS,3f,1f);
         }
         if(!world.isClient){
@@ -80,7 +95,7 @@ public class MagicDust extends Item {
                             (double)blockPos.getY()+(double)spawn_age/100+1,
                             (double)blockPos.getZ()+0.5+ MathHelper.cos(spawn_age/10)/spawn_age*100,0,0,0,0,0
                     ));
-                    if(spawn_age==275){
+                    if(spawn_age==195){
                         player.networkHandler.sendPacket(new ParticleS2CPacket(ParticleTypes.FLASH,true,
                                 blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
                                 blockPos.getZ() + 0.5f,0,0,0,0,0
@@ -89,7 +104,7 @@ public class MagicDust extends Item {
                 }
 
             }
-                if(spawn_age>280){
+                if(spawn_age>200){
                     //生成过程
                     if(!world.isClient) {
                         if (dropItem != null) {
@@ -106,15 +121,14 @@ public class MagicDust extends Item {
                         }
                     }
                 }
-                if (spawn_age > 300) {
+                if (spawn_age > 225) {
                     state = 0;
                     spawn_age = 0;
                 }
             }
             if (state == 2) {
                 break_age++;
-                if (break_age > 200) {
-
+                if (break_age > 125) {
                     state = 0;
                     break_age = 0;
                 }
@@ -127,13 +141,13 @@ public class MagicDust extends Item {
         if(state == 1){
             return ActionResult.FAIL;
         }
-        context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
 
         if(world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)) {
             check_spawn(blockPos, world,context);
+            context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
 
         }
 
@@ -229,9 +243,10 @@ public class MagicDust extends Item {
         Item[][] itemStacks = {
                 {modItemRegistry.FLAME_SCROLL,modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
                         modItemRegistry.CURE_SCROLL,modItemRegistry.POISON_SCROLL,Items.DIAMOND_BLOCK,
-                        Items.EMERALD_BLOCK,Items.CHORUS_FRUIT},
+                        Items.EMERALD_BLOCK,modItemRegistry.STONE_SCROLL},
                 {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,Items.TNT,Items.TNT,
                         Items.NETHER_STAR,Items.DIAMOND_BLOCK,Items.GOLDEN_APPLE,modItemRegistry.MAGIC_ORE},
+
                 {Items.DARK_OAK_WOOD,modItemRegistry.MAGIC_ORE,Items.GOLDEN_APPLE},
 
                 {Items.STRING},
@@ -242,6 +257,8 @@ public class MagicDust extends Item {
                 {modItemRegistry.POISON_SCROLL},
                 {modItemRegistry.CLAW_SCROLL},
                 {modItemRegistry.CURE_SCROLL},
+                {modItemRegistry.STONE_SCROLL},
+
 
         };
         //生成表
@@ -257,6 +274,7 @@ public class MagicDust extends Item {
                 modItemRegistry.POISON_SCROLL,
                 modItemRegistry.CLAW_SCROLL,
                 modItemRegistry.CURE_SCROLL,
+                modItemRegistry.STONE_SCROLL,
                 modItemRegistry.FLAME_SCROLL
 
         };
