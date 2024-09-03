@@ -33,6 +33,15 @@ public class ModRecipeGeneration extends FabricRecipeProvider {
                         FabricRecipeProvider.conditionsFromItem(Items.DARK_OAK_WOOD))
                 .offerTo(exporter);
 
+        ShapedRecipeJsonBuilder.create(modItemRegistry.FLAME_SCROLL).pattern("bbb").pattern("bib").pattern("bbb")
+                .input('b', modItemRegistry.SCROLL_STICK)
+                .input('i', Items.PAPER)
+                .criterion(FabricRecipeProvider.hasItem(modItemRegistry.SCROLL_STICK),
+                        FabricRecipeProvider.conditionsFromItem(Items.PAPER))
+                .criterion(FabricRecipeProvider.hasItem(Items.PAPER),
+                        FabricRecipeProvider.conditionsFromItem(modItemRegistry.SCROLL_STICK))
+                .offerTo(exporter);
+
 
         //baking recipe
     }

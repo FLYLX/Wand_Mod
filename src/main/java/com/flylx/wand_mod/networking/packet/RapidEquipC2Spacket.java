@@ -27,7 +27,7 @@ public class RapidEquipC2Spacket {
 
         if (user.getEquippedStack(EquipmentSlot.CHEST).isOf(modItemRegistry.SCROLL_BELT_ITEM)&&user.getOffHandStack().isOf(Items.AIR)) {
 
-            DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+            DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
             Inventories.readNbt(user.getEquippedStack(EquipmentSlot.CHEST).getNbt(),inventory);
             checkInventory(inventory,user);
             NbtCompound nbtCompound = new NbtCompound();

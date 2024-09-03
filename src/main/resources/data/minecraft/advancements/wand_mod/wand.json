@@ -1,11 +1,12 @@
 {
+  "parent": "minecraft:wand_mod/shield",
   "criteria": {
-    "got_magic": {
+    "got_wand": {
       "conditions": {
         "items": [
           {
             "items": [
-              "wand_mod:magic_dust"
+              "wand_mod:base_wand"
             ]
           }
         ]
@@ -17,21 +18,22 @@
     "announce_to_chat": true,
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
-      "text": "混沌的开始！"
+      "text": "超高校级的幸运"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "wand_mod:magic_dust"
+      "item": "wand_mod:base_wand",
+      "nbt": "{Damage:0}"
     },
     "show_toast": true,
     "title": {
-      "text": "启程之路！"
+      "text": "无限魔力"
     }
   },
   "requirements": [
     [
-      "got_magic"
+      "got_wand"
     ]
   ]
 }

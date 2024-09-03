@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "wand_mod:scroll_stick"
+    },
+    "i": {
+      "item": "minecraft:paper"
+    }
+  },
+  "pattern": [
+    "iii",
+    "ibi",
+    "iii"
+  ],
+  "result": {
+    "item": "wand_mod:flame_scroll"
+  }
+}

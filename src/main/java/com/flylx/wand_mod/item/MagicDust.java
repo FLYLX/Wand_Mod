@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.BlockPatternBuilder;
 import net.minecraft.block.pattern.CachedBlockPosition;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -25,6 +26,7 @@ import net.minecraft.predicate.block.BlockStatePredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -59,6 +61,7 @@ public class MagicDust extends Item {
         ItemStack itemStack = user.getStackInHand(hand);
         LivingEntity targetEntity = world.getClosestEntity(LivingEntity.class, TargetPredicate.createNonAttackable().setBaseMaxDistance(6.0), user, user.getX(), user.getY(), user.getZ(), user.getBoundingBox().expand(6.0, 2.0, 6.0));
         if(targetEntity!=null) {
+            itemStack.decrement(1);
             for (int i = 0;i<10;i++){
                 double xoffset = new Random().nextDouble() * 2 - 1;
                 double yoffset = new Random().nextDouble() * 2 - 1;

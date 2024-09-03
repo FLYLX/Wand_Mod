@@ -81,8 +81,7 @@ public class animated_base_wand extends Item implements  IAnimatable, ISyncable 
                     basicMagic.hasNoGravity();
 
                     basicMagic.setOwnerItem(stack);
-
-
+                    
                     world.spawnEntity(basicMagic);
             }
         }

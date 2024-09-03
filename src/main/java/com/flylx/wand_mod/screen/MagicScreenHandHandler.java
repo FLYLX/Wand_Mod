@@ -29,12 +29,12 @@ public class MagicScreenHandHandler extends ScreenHandler {
         ScrollBeltInventory scrollBeltInventory;
             if(playerInventory.player.getMainHandStack().isOf(modItemRegistry.SCROLL_BELT_ITEM)){
                 scrollBeltInventory = new ScrollBeltInventory(playerInventory.player.getMainHandStack());
-                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
+                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(27, ItemStack.EMPTY);
                 Inventories.readNbt(playerInventory.player.getMainHandStack().getNbt(),inventory1);
                 scrollBeltInventory.setInventory(inventory1);
             }else{
                 scrollBeltInventory = new ScrollBeltInventory(playerInventory.player.getOffHandStack());
-                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
+                DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(27, ItemStack.EMPTY);
                 Inventories.readNbt(playerInventory.player.getOffHandStack().getNbt(),inventory1);
                 scrollBeltInventory.setInventory(inventory1);
             }
@@ -44,7 +44,7 @@ public class MagicScreenHandHandler extends ScreenHandler {
 
     public MagicScreenHandHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(Wand_mod.MAGIC_SCREEN_HAND_HANDLER, syncId);
-        checkSize(inventory, 9);
+        checkSize(inventory, 27);
         this.inventory = inventory;
 
         //some inventories do custom logic when a player opens it.
@@ -55,8 +55,8 @@ public class MagicScreenHandHandler extends ScreenHandler {
         int l;
         //Our inventory
         for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 3; ++l) {
-                this.addSlot(new ScrollBeltSlot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
+            for (l = 0; l < 9; ++l) {
+                this.addSlot(new ScrollBeltSlot(inventory, l + m * 9, 8 + l * 18, 17 + m * 18));
             }
         }
         //The player inventory

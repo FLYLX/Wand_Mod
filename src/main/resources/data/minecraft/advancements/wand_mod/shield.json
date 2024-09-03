@@ -1,11 +1,12 @@
 {
+  "parent": "minecraft:wand_mod/root",
   "criteria": {
-    "got_magic": {
+    "got_shield": {
       "conditions": {
         "items": [
           {
             "items": [
-              "wand_mod:magic_dust"
+              "wand_mod:magic_shield"
             ]
           }
         ]
@@ -17,21 +18,21 @@
     "announce_to_chat": true,
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
-      "text": "混沌的开始！"
+      "text": "无畏的象征"
     },
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "wand_mod:magic_dust"
+      "item": "wand_mod:magic_shield"
     },
     "show_toast": true,
     "title": {
-      "text": "启程之路！"
+      "text": "绝对防御"
     }
   },
   "requirements": [
     [
-      "got_magic"
+      "got_shield"
     ]
   ]
 }

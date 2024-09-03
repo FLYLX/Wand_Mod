@@ -188,6 +188,10 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         return this.factory;
     }
 
+    @Override
+    public void setDamage(double damage) {
+        super.setDamage(0.0d);
+    }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
