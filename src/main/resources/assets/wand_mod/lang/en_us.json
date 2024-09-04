@@ -1,0 +1,19 @@
+{
+  "item.wand_mod.scroll_belt": "Scroll Belt",
+  "item.wand_mod.empty_scroll": "Empty Scroll",
+  "item.wand_mod.flame_scroll": "Flame Scroll",
+  "item.wand_mod.froze_scroll": "Froze Scroll",
+  "item.wand_mod.poison_scroll": "Poison Scroll",
+  "item.wand_mod.cure_scroll": "Cure Scroll",
+  "item.wand_mod.claw_scroll": "Claw Scroll",
+  "item.wand_mod.stone_scroll": "Stone Scroll",
+  "item.wand_mod.magic_dust": "Magic Dust",
+  "item.wand_mod.wand_box": "Wand Box",
+  "item.wand_mod.scroll_stick": "Scroll Stick",
+  "item.wand_mod.base_wand": "Base Wand",
+  "item.wand_mod.magic_shield": "Magic Shield",
+  "item.wand_mod.wand_core": "Wand Core",
+  "block.wand_mod.wand_table": "Wand Table",
+  "block.wand_mod.magic_ore": "Magic Ore",
+  "block.wand_mod.altar_block": "Altar"
+}
