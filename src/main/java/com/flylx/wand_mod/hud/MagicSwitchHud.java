@@ -2,10 +2,12 @@ package com.flylx.wand_mod.hud;
 
 import com.flylx.wand_mod.Wand_mod;
 import com.flylx.wand_mod.event.KeyInputHandler;
+import com.flylx.wand_mod.item.modItemRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -40,8 +42,14 @@ public class MagicSwitchHud implements HudRenderCallback {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null)
             return;
-
         if (!KeyInputHandler.ISPRESS_R)
+            return;
+
+        ClientPlayerEntity player = client.player;
+        if (player == null)
+            return;
+        if (!player.getMainHandStack().isOf(modItemRegistry.BASE_WAND)
+         && !player.getOffHandStack().isOf(modItemRegistry.BASE_WAND))
             return;
 
         double width = client.getWindow().getScaledWidth();
@@ -67,7 +75,7 @@ public class MagicSwitchHud implements HudRenderCallback {
         matrixStack.pop();
 
         matrixStack.push();
-        matrixStack.translate(width - 28 * 2, 11 * 2, 0);
+        matrixStack.translate(width - 27 * 2, 11 * 2, 0);
         matrixStack.scale(2, 2, 1);
         RenderSystem.setShaderTexture(0, MagicIcon[magic1]);
         DrawableHelper.drawTexture(matrixStack, 0, 0, 0, 0, 16, 16, 16, 16);
