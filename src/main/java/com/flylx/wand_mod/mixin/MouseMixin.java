@@ -37,9 +37,9 @@ public abstract class MouseMixin {
             ||  player.getOffHandStack().isOf(modItemRegistry.BASE_WAND))) {
                 if (vertical != 0) {
                     if (vertical > 0)
-                        MagicSwitchHud.setHudDegree(MagicSwitchHud.getHubDegree() + 60);
-                    else if (vertical < 0)
                         MagicSwitchHud.setHudDegree(MagicSwitchHud.getHubDegree() - 60);
+                    else if (vertical < 0)
+                        MagicSwitchHud.setHudDegree(MagicSwitchHud.getHubDegree() + 60);
                     if (client.player != null)
                         client.player.playSound(SoundEvents.UI_BUTTON_CLICK, 1, 1);
                 }
