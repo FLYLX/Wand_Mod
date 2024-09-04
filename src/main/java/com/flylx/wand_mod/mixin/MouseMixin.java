@@ -8,6 +8,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,18 +21,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MouseMixin {
     @Shadow public abstract boolean wasLeftButtonClicked();
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow @Final private MinecraftClient client = MinecraftClient.getInstance();
 
     @Shadow public abstract boolean wasRightButtonClicked();
 
     MagicSwitchHud magicSwitchHud = new MagicSwitchHud();
     @Inject(at = {@At("RETURN")}, method = {"onMouseScroll(JDD)V"})
-    private void onOnMouseScroll(long long_1, double double_1, double double_2, CallbackInfo ci) {
-
+    private void onOnMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
         if(KeyInputHandler.ISPRESS_R){
-            magicSwitchHud.setHudDegree((float) double_2*5f);
+            if (vertical != 0) {
+                if (vertical > 0)
+                    MagicSwitchHud.setHudDegree(MagicSwitchHud.getHubDegree() + 60);
+                else if (vertical < 0)
+                    MagicSwitchHud.setHudDegree(MagicSwitchHud.getHubDegree() - 60);
+                if (client.player != null)
+                    client.player.playSound(SoundEvents.UI_BUTTON_CLICK, 1, 1);
+            }
         }
-
     }
 
     @Inject(at = {@At("RETURN")}, method = {"onMouseButton"})
