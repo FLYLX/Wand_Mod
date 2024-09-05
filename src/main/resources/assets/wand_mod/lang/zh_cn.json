@@ -1,28 +1,10 @@
 {
-<<<<<<< HEAD
-  "item.wand_mod.scroll_belt": "卷轴背带",
-  "item.wand_mod.empty_scroll": "卷轴",
-=======
   "item.wand_mod.scroll_belt": "卷轴带",
   "item.wand_mod.empty_scroll": "空卷轴",
->>>>>>> 8090911ca95bee20c372899ead5f07dd9e2f8490
   "item.wand_mod.flame_scroll": "火焰卷轴",
   "item.wand_mod.froze_scroll": "冻结卷轴",
   "item.wand_mod.poison_scroll": "毒卷轴",
   "item.wand_mod.cure_scroll": "治愈卷轴",
-<<<<<<< HEAD
-  "item.wand_mod.claw_scroll": "虚探卷轴",
-  "item.wand_mod.stone_scroll": "石滴卷轴",
-  "item.wand_mod.magic_dust": "蕴魔粉尘",
-  "item.wand_mod.wand_box": "魔杖盒",
-  "item.wand_mod.scroll_stick": "卷轴中轴",
-  "item.wand_mod.base_wand": "平和魔杖",
-  "item.wand_mod.magic_shield": "蕴魔转盘",
-  "item.wand_mod.wand_core": "魔杖核心",
-  "block.wand_mod.wand_table": "魔杖台",
-  "block.wand_mod.magic_ore": "蕴魔矿石",
-  "block.wand_mod.altar_block": "蕴魔祭坛"
-=======
   "item.wand_mod.claw_scroll": "虚绳卷轴",
   "item.wand_mod.stone_scroll": "石滴卷轴",
   "item.wand_mod.magic_dust": "蕴魔粉尘",
@@ -34,6 +16,5 @@
   "item.wand_mod.wand_table": "魔杖台",
   "item.wand_mod.magic_ore": "蕴魔矿石",
   "item.wand_mod.altar_block": "蕴魔祭坛"
->>>>>>> 8090911ca95bee20c372899ead5f07dd9e2f8490
 }
 

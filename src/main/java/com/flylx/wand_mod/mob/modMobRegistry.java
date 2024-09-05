@@ -17,8 +17,16 @@ public class modMobRegistry {
         ).dimensions(EntityDimensions.fixed(1.4f, 2.7f)).build()
     );
 
-    public static void registryAttribute(){
+    public static final EntityType<MagicPolymer> MAGIC_POLYMER = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(Wand_mod.ModID, "magic_polymer"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, MagicPolymer::new
+            ).dimensions(EntityDimensions.fixed(1.4f, 2.0f)).build()
+    );
 
+    public static void registryAttribute(){
         FabricDefaultAttributeRegistry.register(MAGIC_GOLEM_ENTITY,MagicGolemEntity.createMagicGolemEntity());
+        FabricDefaultAttributeRegistry.register(MAGIC_POLYMER,MagicPolymer.createMagicPolymerEntity());
+
     }
 }

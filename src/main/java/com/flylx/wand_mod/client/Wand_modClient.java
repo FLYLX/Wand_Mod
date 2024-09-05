@@ -66,6 +66,8 @@ public class Wand_modClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(modMobRegistry.MAGIC_GOLEM_ENTITY,(ctx)->new MagicGolemEntityRenderer(ctx));
 
+        EntityRendererRegistry.register(modMobRegistry.MAGIC_POLYMER,MagicPolymerRenderer::new);
+
 
 
         //screen

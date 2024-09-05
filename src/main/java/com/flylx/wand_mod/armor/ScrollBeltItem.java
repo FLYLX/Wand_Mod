@@ -9,7 +9,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
@@ -174,8 +173,8 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
         Box box = new Box(owner.getX()-2,owner.getY()-2,owner.getZ()-2,owner.getX()+2,owner.getY()+2,owner.getZ()+2);
         List<LivingEntity> list = world.getNonSpectatingEntities(LivingEntity.class, box);
         List<ItemEntity> list1 = world.getNonSpectatingEntities(ItemEntity.class, box);
-        List<PersistentProjectileEntity> list2 =
-                world.getNonSpectatingEntities(PersistentProjectileEntity.class, box);
+        List<Entity> list2 =
+                world.getNonSpectatingEntities(Entity.class, box);
 
         for (LivingEntity livingEntity : list) {
             if (!world.isClient) {
@@ -221,9 +220,9 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
 
         }
 
-        for(PersistentProjectileEntity persistentProjectileEntity:list2){
-            persistentProjectileEntity.setVelocity(new Vec3d((persistentProjectileEntity.getX()-owner.getX())/10,
-                    (persistentProjectileEntity.getY()-owner.getY())/10,(persistentProjectileEntity.getZ()-owner.getZ())/10));
+        for(Entity entity:list2){
+            entity.setVelocity(new Vec3d((entity.getX()-owner.getX())/10,
+                    (entity.getY()-owner.getY())/10,(entity.getZ()-owner.getZ())/10));
         }
     }
 
