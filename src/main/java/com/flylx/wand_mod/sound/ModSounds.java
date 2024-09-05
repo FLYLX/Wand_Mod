@@ -15,6 +15,9 @@ public class ModSounds {
     public static final SoundEvent SPAWN_ITEM = registerSoundEvent("spawn");
     public static final SoundEvent SPAWN_END = registerSoundEvent("spawn_end");
 
+    public static final SoundEvent MAGIC_POLYMER_AMBIENT = registerSoundEvent("magic_polymer_ambient");
+    public static final SoundEvent MAGIC_POLYMER_HURT = registerSoundEvent("magic_polymer_hurt");
+
     public static SoundEvent registerSoundEvent(String name){
         Identifier id = new Identifier(Wand_mod.ModID,name);
         return Registry.register(Registry.SOUND_EVENT,id,new SoundEvent(id));

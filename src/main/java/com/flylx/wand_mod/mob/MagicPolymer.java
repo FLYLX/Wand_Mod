@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.mob;
 
 import com.flylx.wand_mod.entity.BasicMagic;
+import com.flylx.wand_mod.sound.ModSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.Thickness;
@@ -12,17 +13,19 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -108,8 +111,9 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
 
     private void shootMagicAt( Entity target) {
         if (!this.isSilent()) {
-            this.world.syncWorldEvent(null, WorldEvents.WITHER_SHOOTS, this.getBlockPos(), 0);
+            target.playSound(ModSounds.MAGIC_HIT, 1, 1);
         }
+
         int choice = random.nextInt(6);
         if(choice > 4){
             double randx = (Math.random() * 2) - 1;
@@ -187,7 +191,26 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
     }
 
     @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.MAGIC_POLYMER_AMBIENT;
+    }
+
+    @Override
     public SoundCategory getSoundCategory() {
         return SoundCategory.BLOCKS;
     }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) { return ModSounds.MAGIC_POLYMER_HURT; }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_GENERIC_EXPLODE;
+    }
+
+    @Override
+    public LivingEntity.FallSounds getFallSounds() {
+        return new LivingEntity.FallSounds(SoundEvents.ENTITY_GENERIC_EXPLODE, SoundEvents.ENTITY_GENERIC_EXPLODE);
+    }
+
 }

@@ -46,6 +46,20 @@
     "sounds": [
       "wand_mod:spawn_end"
     ]
+  },
+  "magic_polymer_ambient": {
+    "subtitle": "subtitles.wand_mod.magic_polymer_ambient",
+    "sounds": [
+      "magic_polymer_ambient"
+    ]
+  },
+  "magic_polymer_hurt": {
+    "subtitle": "subtitles.wand_mod.magic_polymer_hurt",
+    "sounds": [
+      "wand_mod:magic_polymer_hurt0",
+      "wand_mod:magic_polymer_hurt1",
+      "wand_mod:magic_polymer_hurt2"
+    ]
   }
 }
 
