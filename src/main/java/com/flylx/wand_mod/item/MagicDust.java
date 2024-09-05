@@ -4,13 +4,14 @@ import com.flylx.wand_mod.block.AltarBlock;
 import com.flylx.wand_mod.block.MagicOreBlock;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import com.flylx.wand_mod.entity.AltarEntity;
+import com.flylx.wand_mod.mob.MagicPolymer;
+import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.sound.ModSounds;
 import net.minecraft.block.*;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.block.pattern.BlockPatternBuilder;
 import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +27,6 @@ import net.minecraft.predicate.block.BlockStatePredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -34,6 +34,7 @@ import net.minecraft.util.function.MaterialPredicate;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
@@ -49,6 +50,74 @@ public class MagicDust extends Item {
     int spawn_age = 0;
     int break_age = 0;
     Item dropItem ;
+
+    private Map<List<Item>,Item> getSpawnMap(){
+        //合成表
+
+        Item[][] itemStacks = {
+                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
+                        modItemRegistry.CURE_SCROLL,modItemRegistry.POISON_SCROLL,Items.DIAMOND_BLOCK,
+                        Items.EMERALD_BLOCK,modItemRegistry.STONE_SCROLL},
+                {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,Items.TNT,Items.TNT,
+                        Items.NETHER_STAR,Items.DIAMOND_BLOCK,Items.GOLDEN_APPLE,modItemRegistry.MAGIC_ORE},
+
+                {Items.DARK_OAK_WOOD,modItemRegistry.MAGIC_ORE,Items.GOLDEN_APPLE},
+
+                {Items.STRING},
+                {Items.WHITE_WOOL},
+
+                {modItemRegistry.FLAME_SCROLL},
+                {modItemRegistry.FROZE_SCROLL},
+                {modItemRegistry.POISON_SCROLL},
+                {modItemRegistry.CLAW_SCROLL},
+                {modItemRegistry.CURE_SCROLL},
+                {modItemRegistry.STONE_SCROLL},
+
+                {modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,
+                        modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,},
+
+        };
+        //生成表
+        Item[] items1 = {
+                modItemRegistry.MAGIC_ORE,
+                modItemRegistry.MAGIC_SHIELD,
+                modItemRegistry.WAND_CORE,
+
+                Items.COBWEB,
+                Items.STRING,
+
+                modItemRegistry.FROZE_SCROLL,
+                modItemRegistry.POISON_SCROLL,
+                modItemRegistry.CLAW_SCROLL,
+                modItemRegistry.CURE_SCROLL,
+                modItemRegistry.STONE_SCROLL,
+                modItemRegistry.FLAME_SCROLL,
+
+                Items.AIR,
+
+
+        };
+
+
+        if(this.spawnMap.isEmpty()){
+
+            for(int i = 0;i<items1.length;i++){
+                List<Item> list = new ArrayList<>();
+                for(int j = 0;j<itemStacks[i].length;j++){
+                    list.add(itemStacks[i][j]);
+                }
+                list.sort(new Comparator<Item>() {
+                    @Override
+                    public int compare(Item o1, Item o2) {
+                        return  o1.hashCode()-o2.hashCode();
+                    }
+                });
+                this.spawnMap.put(list,items1[i]);
+            }
+        }
+
+        return this.spawnMap;
+    }
 
     public MagicDust(Settings settings) {
 
@@ -111,7 +180,13 @@ public class MagicDust extends Item {
                     //生成过程
                     if(!world.isClient) {
                         if (dropItem != null) {
-                            if(dropItem == Items.STRING||dropItem == modItemRegistry.MAGIC_ORE) {
+                            if(dropItem == Items.STRING||dropItem == modItemRegistry.MAGIC_ORE||dropItem == Items.AIR) {
+                                //生成怪物
+                                if(dropItem == Items.AIR){
+                                    MagicPolymer magicGolemEntity = modMobRegistry.MAGIC_POLYMER.create(world);
+                                    magicGolemEntity.setPosition(new Vec3d(blockPos.getX(),blockPos.getY()+1,blockPos.getZ()));
+                                    world.spawnEntity(magicGolemEntity);
+                                }
                                 world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
                                         blockPos.getZ() + 0.5f,
                                         new ItemStack(dropItem,16)));
@@ -151,9 +226,7 @@ public class MagicDust extends Item {
         if(world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)) {
             check_spawn(blockPos, world,context);
             context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
-
         }
-
         if (blockState.getBlock() instanceof DyedCarpetBlock) {
             BlockPos blockPos1 = new BlockPos(blockPos.getX(), blockPos.getY() - 1,
                     blockPos.getZ());
@@ -240,68 +313,7 @@ public class MagicDust extends Item {
 
     }
 
-    private Map<List<Item>,Item> getSpawnMap(){
-        //合成表
 
-        Item[][] itemStacks = {
-                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
-                        modItemRegistry.CURE_SCROLL,modItemRegistry.POISON_SCROLL,Items.DIAMOND_BLOCK,
-                        Items.EMERALD_BLOCK,modItemRegistry.STONE_SCROLL},
-                {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,Items.TNT,Items.TNT,
-                        Items.NETHER_STAR,Items.DIAMOND_BLOCK,Items.GOLDEN_APPLE,modItemRegistry.MAGIC_ORE},
-
-                {Items.DARK_OAK_WOOD,modItemRegistry.MAGIC_ORE,Items.GOLDEN_APPLE},
-
-                {Items.STRING},
-                {Items.WHITE_WOOL},
-
-                {modItemRegistry.FLAME_SCROLL},
-                {modItemRegistry.FROZE_SCROLL},
-                {modItemRegistry.POISON_SCROLL},
-                {modItemRegistry.CLAW_SCROLL},
-                {modItemRegistry.CURE_SCROLL},
-                {modItemRegistry.STONE_SCROLL},
-
-
-        };
-        //生成表
-        Item[] items1 = {
-                modItemRegistry.MAGIC_ORE,
-                modItemRegistry.MAGIC_SHIELD,
-                modItemRegistry.WAND_CORE,
-
-                Items.COBWEB,
-                Items.STRING,
-
-                modItemRegistry.FROZE_SCROLL,
-                modItemRegistry.POISON_SCROLL,
-                modItemRegistry.CLAW_SCROLL,
-                modItemRegistry.CURE_SCROLL,
-                modItemRegistry.STONE_SCROLL,
-                modItemRegistry.FLAME_SCROLL
-
-        };
-
-
-        if(this.spawnMap.isEmpty()){
-
-            for(int i = 0;i<items1.length;i++){
-                List<Item> list = new ArrayList<>();
-                for(int j = 0;j<itemStacks[i].length;j++){
-                    list.add(itemStacks[i][j]);
-                }
-                list.sort(new Comparator<Item>() {
-                    @Override
-                    public int compare(Item o1, Item o2) {
-                        return  o1.hashCode()-o2.hashCode();
-                    }
-                });
-                this.spawnMap.put(list,items1[i]);
-            }
-        }
-
-        return this.spawnMap;
-    }
 
 
     private List<BlockPattern> getAltarPattern() {
