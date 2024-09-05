@@ -6,6 +6,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.Thickness;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RangedAttackMob;
+import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -14,6 +15,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.property.Properties;
@@ -21,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
+import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -75,7 +78,7 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
     }
 
     public static DefaultAttributeContainer.Builder createMagicPolymerEntity() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 20.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 100.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.0).add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 20.0).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0);
 
     }
 
@@ -83,8 +86,8 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
     @Override
     protected void initGoals() {
         this.goalSelector.add(2, new ProjectileAttackGoal(this, 1.0, 40, 20.0f));
-        this.goalSelector.add(5, new FlyGoal(this, 1.0));
-        this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.add(5, new FlyGoal(this, 10.0));
+        this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 20.0f));
         this.goalSelector.add(7, new LookAroundGoal(this));
         this.targetSelector.add(1, new RevengeGoal(this, new Class[0]));
         this.targetSelector.add(2, new ActiveTargetGoal<LivingEntity>(this, LivingEntity.class, 0, false, false, CAN_ATTACK_PREDICATE));
@@ -107,15 +110,16 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
         if (!this.isSilent()) {
             this.world.syncWorldEvent(null, WorldEvents.WITHER_SHOOTS, this.getBlockPos(), 0);
         }
-        int choice = random.nextInt(3);
-        if(choice == 2){
+        int choice = random.nextInt(6);
+        if(choice > 4){
             double randx = (Math.random() * 2) - 1;
             double randz = (Math.random() * 2) - 1;
             BlockPos pos = new BlockPos(target.getX(),target.getY()+5,target.getZ());
             this.setPos(target.getX()+randx,target.getY(),target.getZ()+randz);
             BlockState dripstoneState = Blocks.POINTED_DRIPSTONE.getDefaultState().with(Properties.VERTICAL_DIRECTION, Direction.DOWN);
             spawnFallingBlock(dripstoneState, (ServerWorld) world, pos);
-        }else {
+
+        }else if(choice < 2){
             BasicMagic basicMagic = new BasicMagic(this.world, this);
             basicMagic.setVelocity((target.getX() - this.getX()) / 3, (target.getY() + 1 - this.getY()) / 3,
                     (target.getZ() - this.getZ()) / 3);
@@ -133,6 +137,19 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
             }
             basicMagic.setDegree(randomNumber);
             this.world.spawnEntity(basicMagic);
+        }else{
+            LivingEntity targetEntity = world.getClosestEntity(LivingEntity.class, TargetPredicate.createNonAttackable().setBaseMaxDistance(6.0), this, this.getX(), this.getY(), this.getZ(), this.getBoundingBox().expand(20.0, 6.0, 20.0));
+            if(targetEntity!=null) {
+                for (int i = 0;i<10;i++){
+                    double xoffset = new Random().nextDouble() * 2 - 1;
+                    double yoffset = new Random().nextDouble() * 2 - 1;
+                    double zoffset = new Random().nextDouble() * 2 - 1;
+                    world.addParticle(ParticleTypes.SCULK_SOUL,this.getX()+xoffset,this.getY()+yoffset+1,this.getZ()+zoffset,0,0,0);
+                }
+                targetEntity.setVelocity(0.0d,1.0d,0.0d);
+                targetEntity.setFrozenTicks(200);
+                world.createExplosion(targetEntity, targetEntity.getX(), targetEntity.getY(), targetEntity.getZ(), 1.0f, true, Explosion.DestructionType.NONE);
+            }
         }
     }
     private static void spawnFallingBlock(BlockState state, ServerWorld world, BlockPos pos) {
