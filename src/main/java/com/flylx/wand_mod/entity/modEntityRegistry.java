@@ -20,7 +20,7 @@ public class modEntityRegistry {
             0.5F, SpawnGroup.MISC);
 
     public static final EntityType<MagicAreaCloud> MAGIC_AREA = buildEntity(MagicAreaCloud::new,MagicAreaCloud.class
-            ,6.0f, 0.5f,SpawnGroup.MISC);
+            ,6.0f, 3.0f,SpawnGroup.MISC);
 
     public static final EntityType<MagicShieldEffect> MAGIC_SHIELD = buildEntity(MagicShieldEffect::new,
             MagicShieldEffect.class
