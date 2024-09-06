@@ -180,8 +180,8 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
             if (!world.isClient) {
                 if(!livingEntity.equals(owner)){
                     livingEntity.takeKnockback(0.2, owner.getX() - livingEntity.getX(), owner.getZ() - livingEntity.getZ());
-                    livingEntity.setVelocity(livingEntity.getVelocity().add((livingEntity.getX() - owner.getX()) / 10,
-                            (livingEntity.getY() - owner.getY()) / 10, (livingEntity.getZ() - owner.getZ()) / 10));
+                    livingEntity.setVelocity(livingEntity.getVelocity().add((livingEntity.getX() - owner.getX()) / 5,
+                            (livingEntity.getY() - owner.getY()) / 5, (livingEntity.getZ() - owner.getZ()) / 5));
                     if(livingEntity instanceof ServerPlayerEntity) {
                         ((ServerPlayerEntity) livingEntity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(livingEntity.getId(),
                                 new Vec3d((livingEntity.getX() - owner.getX()) / 10,
@@ -196,8 +196,6 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
 //                                    ++i;
 //                                }
                     }
-                    ((ServerWorld)(world)).spawnParticles(ParticleTypes.FLASH,livingEntity.getX(),
-                            livingEntity.getY(),livingEntity.getZ(),1,0,0,0,1);
                 }
             }
 //                if (world.isClient) {

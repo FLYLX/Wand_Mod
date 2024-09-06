@@ -314,7 +314,8 @@ public class MagicDust extends Item {
                                     for(double k = -1;k<=1;k++) {
                                         BlockPos blockPos2 = new BlockPos((double)blockPos1.getX() + i, (double)blockPos1.getY()+j, (double)blockPos1.getZ() + k);
                                         if(judgeDirt(world,blockPos2)) {
-                                            Thread.sleep(250);
+                                            int rand = new Random().nextInt(350)+150;
+                                            Thread.sleep(rand);
                                             queue.offer(blockPos2);
                                             atom_count.decrementAndGet();
                                         }
