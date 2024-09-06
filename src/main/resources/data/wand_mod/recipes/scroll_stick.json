@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "b": {
-      "item": "minecraft:dark_oak_wood"
+      "item": "minecraft:stick"
     }
   },
   "pattern": [
@@ -11,7 +11,6 @@
     "bbb"
   ],
   "result": {
-    "item": "wand_mod:scroll_stick",
-    "count": 16
+    "item": "wand_mod:scroll_stick"
   }
 }

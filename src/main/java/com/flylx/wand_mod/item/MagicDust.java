@@ -398,7 +398,7 @@ public class MagicDust extends Item {
                                     items.add(altarEntity.getContent().getItem());
                                     altarEntity.setContent(Items.AIR.getDefaultStack());
                                     BlockState state1 = world.getBlockState(altarEntity.getPos());
-                                    AltarBlock.setHasItem(world, altarEntity.getPos()
+                                    AltarBlock.setItem(world, altarEntity.getPos()
                                             , state1, 0);
                                 }
                     }

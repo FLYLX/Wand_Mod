@@ -6,7 +6,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,10 +24,14 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.listener.GameEventListener;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class AltarBlock extends Block implements BlockEntityProvider  {
 
@@ -37,10 +40,13 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
 
     public static final IntProperty HAS_ITEM = ITEM_PROPERTY;
 
+    @Nullable
+    private static Map<Item, Integer> CONTENT_MAP = null;
 
-    public static final Map<Item, Integer> content_map(){
-        return new HashMap<>(){
-            {
+    @NotNull
+    private static Map<Item, Integer> getContentMap() {
+        if (CONTENT_MAP == null)
+            CONTENT_MAP = new HashMap<>(){{
                 put(Items.AIR,0);
                 put(modItemRegistry.FLAME_SCROLL,1);
                 put(modItemRegistry.FROZE_SCROLL,2);
@@ -59,33 +65,36 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
                 put(modItemRegistry.MAGIC_ORE,15);
                 put(modItemRegistry.WAND_CORE,16);
                 put(modItemRegistry.STONE_SCROLL,17);
-
-            }
-        };
+            }};
+        return CONTENT_MAP;
     }
 
-    private static Map<Item, Boolean> CONTENT_TO_POTTED(){
-        return new HashMap<>(){
-        {
-            put(modItemRegistry.FLAME_SCROLL,false);
-            put(modItemRegistry.FROZE_SCROLL,false);
-            put(modItemRegistry.CLAW_SCROLL,false);
-            put(modItemRegistry.CURE_SCROLL,false);
-            put(modItemRegistry.POISON_SCROLL,false);
-            put(Items.DIAMOND_BLOCK,false);
-            put(Items.EMERALD_BLOCK,false);
-            put(Items.CHORUS_FRUIT,false);
-            put(Items.STRING,false);
-            put(Items.WHITE_WOOL,false);
-            put(Items.TNT,false);
-            put(Items.NETHER_STAR,false);
-            put(Items.GOLDEN_APPLE,false);
-            put(Items.DARK_OAK_WOOD,false);
-            put(modItemRegistry.MAGIC_ORE,false);
-            put(modItemRegistry.WAND_CORE,false);
-            put(modItemRegistry.STONE_SCROLL,false);
-        }
-     };
+    @Nullable
+    private static Set<Item> ALLOWED_ITEMS = null;
+
+    @NotNull
+    private static Set<Item> getAllowedItems() {
+        if (ALLOWED_ITEMS == null)
+            ALLOWED_ITEMS = new HashSet<>() {{
+                add(modItemRegistry.FLAME_SCROLL);
+                add(modItemRegistry.FROZE_SCROLL);
+                add(modItemRegistry.CLAW_SCROLL);
+                add(modItemRegistry.CURE_SCROLL);
+                add(modItemRegistry.POISON_SCROLL);
+                add(Items.DIAMOND_BLOCK);
+                add(Items.EMERALD_BLOCK);
+                add(Items.CHORUS_FRUIT);
+                add(Items.STRING);
+                add(Items.WHITE_WOOL);
+                add(Items.TNT);
+                add(Items.NETHER_STAR);
+                add(Items.GOLDEN_APPLE);
+                add(Items.DARK_OAK_WOOD);
+                add(modItemRegistry.MAGIC_ORE);
+                add(modItemRegistry.WAND_CORE);
+                add(modItemRegistry.STONE_SCROLL);
+            }};
+        return ALLOWED_ITEMS;
     }
 
     @Override
@@ -98,76 +107,41 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
         this.setDefaultState((this.stateManager.getDefaultState()).with(HAS_ITEM, 0));
     }
 
-    //放置东西
-    private static void putItem(@Nullable PlayerEntity player, World world, BlockPos pos, BlockState state,
-                           ItemStack stack) {
-        Item item = stack.getItem();
-        int render_num = content_map().getOrDefault(item,0);
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AltarEntity) {
-            AltarEntity altarEntity = (AltarEntity)blockEntity;
-            altarEntity.setContent(item.getDefaultStack());
-            AltarBlock.setHasItem(world, pos, state, render_num);
-            world.emitGameEvent((Entity)player, GameEvent.BLOCK_CHANGE, pos);
-        }
-    }
-
-    public static boolean putItemIfAbsent(@Nullable PlayerEntity player, World world, BlockPos pos, BlockState state,
-                                       ItemStack stack) {
-        if (state.get(HAS_ITEM) == 0) {
-            if (!world.isClient) {
-
-                AltarBlock.putItem(player, world, pos, state, stack);
-            }
-            return true;
-        }
-        return false;
-    }
     //设置状态
-    public static void setHasItem(World world, BlockPos pos, BlockState state, Integer hasItem) {
-        world.setBlockState(pos, (state).with(HAS_ITEM, hasItem), Block.NOTIFY_ALL);
+    public static void setItem(World world, BlockPos pos, BlockState state, Integer item) {
+        world.setBlockState(pos, (state).with(HAS_ITEM, item), Block.NOTIFY_ALL);
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof AltarEntity) {
-            AltarEntity altarEntity = (AltarEntity) blockEntity;
-            ItemStack itemStack = player.getStackInHand(hand);
-            Item item = itemStack.getItem();
-            boolean bl;
-            bl = CONTENT_TO_POTTED().getOrDefault(item, true);
+        if (!(blockEntity instanceof AltarEntity altarEntity))
+            return ActionResult.CONSUME;
 
-            boolean bl2 = this.isEmpty(altarEntity.content.getItem());
+        ItemStack playerItemStack = player.getStackInHand(hand);
+        ItemStack altarItemStack = altarEntity.content;
 
-            if (bl != bl2) {
-                if (bl2) {
-                    if (!player.getAbilities().creativeMode) {
-                        ItemStack stack = itemStack.copy();
-                        putItemIfAbsent(player, world, pos, state, stack);
-                        itemStack.decrement(1);
-                    }else {
-                        putItemIfAbsent(player, world, pos, state, itemStack);
-                    }
-                } else {
+        boolean changed = false;
 
-                    ItemStack itemStack2 = altarEntity.content;
-                    if (itemStack.isEmpty()) {
-                        player.setStackInHand(hand, itemStack2);
-                    } else if (!player.giveItemStack(itemStack2)) {
-                        player.dropItem(itemStack2, false);
-                    }
-                    AltarBlock.setHasItem(world, pos
-                            , state, 0);
-                    altarEntity.setContent(ItemStack.EMPTY);
-                }
-                return ActionResult.success(world.isClient);
-            } else {
-
-                return ActionResult.CONSUME;
-            }
+        if (!altarItemStack.isEmpty()) {
+            world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), altarItemStack));
+            altarEntity.setContent(ItemStack.EMPTY);
+            changed = true;
         }
-        return ActionResult.CONSUME;
+
+        if (getAllowedItems().contains(playerItemStack.getItem())) {
+            if (!player.getAbilities().creativeMode)
+                playerItemStack.decrement(1);
+            altarEntity.setContent(new ItemStack(playerItemStack.getItem()));
+            changed = true;
+        }
+
+        if (changed) {
+            world.setBlockState(pos, state.with(HAS_ITEM, getContentMap().getOrDefault(altarEntity.content.getItem(), 0)), Block.NOTIFY_ALL);
+            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+        }
+
+        return ActionResult.success(world.isClient);
     }
     @Override
     public BlockRenderType getRenderType(BlockState state) {

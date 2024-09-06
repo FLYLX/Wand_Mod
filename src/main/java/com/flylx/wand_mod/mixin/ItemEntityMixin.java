@@ -48,11 +48,13 @@ public abstract class ItemEntityMixin {
         if(!self().world.isClient) {
             //变成冰卷轴
             if (this.getStack().isOf(modItemRegistry.EMPTY_SCROLL)) {
-                if(self().world.getBlockState(new BlockPos(self().getPos())).isOf(Blocks.ICE)){
+                if(self().world.getBlockState(new BlockPos(self().getPos().add(0, -1, 0))).isOf(Blocks.ICE)){
                     self().world.spawnEntity(new ItemEntity(self().world,
-                            self().getX(), self().getY(),
-                            self().getZ(),modItemRegistry.FROZE_SCROLL.getDefaultStack()));
-                    self().world.setBlockState(new BlockPos(self().getPos()),Blocks.AIR.getDefaultState());
+                            self().getX(), self().getY(), self().getZ(),
+                            modItemRegistry.FROZE_SCROLL.getDefaultStack()));
+                    self().world.setBlockState(
+                            new BlockPos(self().getPos().add(0, -1, 0)),
+                            Blocks.WATER.getDefaultState());
                     self().discard();
             //火卷轴
                 }else if(self().world.getBlockState(new BlockPos(self().getPos())).isOf(Blocks.FIRE)){
@@ -62,7 +64,7 @@ public abstract class ItemEntityMixin {
                     self().world.setBlockState(new BlockPos(self().getPos()),Blocks.AIR.getDefaultState());
                     self().discard();
 
-            //治愈代码
+            // 落石
                 }else if(self().world.getBlockState(new BlockPos(self().getPos())).isOf(Blocks.DRIPSTONE_BLOCK)){
                     self().world.spawnEntity(new ItemEntity(self().world,
                             self().getX(), self().getY(),
