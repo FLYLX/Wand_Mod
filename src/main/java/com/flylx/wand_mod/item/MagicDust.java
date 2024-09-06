@@ -68,81 +68,72 @@ public class MagicDust extends Item {
     };
 
     private Map<List<Item>,Item> getSpawnMap(){
-        //合成表
+        if (this.spawnMap.isEmpty()) {
+            Item[][] itemStacks = {
+                    {modItemRegistry.FLAME_SCROLL, modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
+                            modItemRegistry.CURE_SCROLL, modItemRegistry.POISON_SCROLL, Items.DIAMOND_BLOCK,
+                            Items.EMERALD_BLOCK, modItemRegistry.STONE_SCROLL},
+                    {modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL, Items.TNT, Items.TNT,
+                            Items.NETHER_STAR, Items.DIAMOND_BLOCK, Items.GOLDEN_APPLE, modItemRegistry.MAGIC_ORE},
 
-        Item[][] itemStacks = {
-                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FROZE_SCROLL, modItemRegistry.CLAW_SCROLL,
-                        modItemRegistry.CURE_SCROLL,modItemRegistry.POISON_SCROLL,Items.DIAMOND_BLOCK,
-                        Items.EMERALD_BLOCK,modItemRegistry.STONE_SCROLL},
-                {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,Items.TNT,Items.TNT,
-                        Items.NETHER_STAR,Items.DIAMOND_BLOCK,Items.GOLDEN_APPLE,modItemRegistry.MAGIC_ORE},
+                    {Items.STRING},
+                    {Items.WHITE_WOOL},
 
-                {Items.STRING},
-                {Items.WHITE_WOOL},
+                    {modItemRegistry.FLAME_SCROLL},
+                    {modItemRegistry.FROZE_SCROLL},
+                    {modItemRegistry.POISON_SCROLL},
+                    {modItemRegistry.CLAW_SCROLL},
+                    {modItemRegistry.CURE_SCROLL},
+                    {modItemRegistry.STONE_SCROLL},
 
-                {modItemRegistry.FLAME_SCROLL},
-                {modItemRegistry.FROZE_SCROLL},
-                {modItemRegistry.POISON_SCROLL},
-                {modItemRegistry.CLAW_SCROLL},
-                {modItemRegistry.CURE_SCROLL},
-                {modItemRegistry.STONE_SCROLL},
+                    {modItemRegistry.MAGIC_ORE, modItemRegistry.MAGIC_ORE, modItemRegistry.MAGIC_ORE, modItemRegistry.MAGIC_ORE,
+                            modItemRegistry.MAGIC_ORE, modItemRegistry.MAGIC_ORE, modItemRegistry.MAGIC_ORE, modItemRegistry.MAGIC_ORE,},
+                    {modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL,
+                            modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL, modItemRegistry.FLAME_SCROLL,},
+                    {modItemRegistry.FROZE_SCROLL, modItemRegistry.FROZE_SCROLL, modItemRegistry.FROZE_SCROLL, modItemRegistry.FROZE_SCROLL,
+                            modItemRegistry.FROZE_SCROLL, modItemRegistry.FROZE_SCROLL, modItemRegistry.FROZE_SCROLL, modItemRegistry.FROZE_SCROLL,},
+                    {modItemRegistry.POISON_SCROLL, modItemRegistry.POISON_SCROLL, modItemRegistry.POISON_SCROLL, modItemRegistry.POISON_SCROLL,
+                            modItemRegistry.POISON_SCROLL, modItemRegistry.POISON_SCROLL, modItemRegistry.POISON_SCROLL, modItemRegistry.POISON_SCROLL,},
+                    {modItemRegistry.CURE_SCROLL, modItemRegistry.CURE_SCROLL, modItemRegistry.CURE_SCROLL, modItemRegistry.CURE_SCROLL,
+                            modItemRegistry.CURE_SCROLL, modItemRegistry.CURE_SCROLL, modItemRegistry.CURE_SCROLL, modItemRegistry.CURE_SCROLL,},
+                    {modItemRegistry.STONE_SCROLL, modItemRegistry.STONE_SCROLL, modItemRegistry.STONE_SCROLL, modItemRegistry.STONE_SCROLL,
+                            modItemRegistry.STONE_SCROLL, modItemRegistry.STONE_SCROLL, modItemRegistry.STONE_SCROLL, modItemRegistry.STONE_SCROLL,},
+                    {modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL,
+                            modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL, modItemRegistry.CLAW_SCROLL,},
 
-                {modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,
-                        modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,},
-                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,
-                        modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,},
-                {modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,
-                        modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,},
-                {modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,
-                        modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,},
-                {modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,
-                        modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,},
-                {modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,
-                        modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,},
-                {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,
-                        modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,},
+            };
+            //生成表
+            Item[] items1 = {
+                    modItemRegistry.MAGIC_ORE,
+                    modItemRegistry.MAGIC_SHIELD,
 
-        };
-        //生成表
-        Item[] items1 = {
-                modItemRegistry.MAGIC_ORE,
-                modItemRegistry.MAGIC_SHIELD,
+                    Items.COBWEB,
+                    Items.STRING,
 
-                Items.COBWEB,
-                Items.STRING,
+                    modItemRegistry.FROZE_SCROLL,
+                    modItemRegistry.POISON_SCROLL,
+                    modItemRegistry.CLAW_SCROLL,
+                    modItemRegistry.CURE_SCROLL,
+                    modItemRegistry.STONE_SCROLL,
+                    modItemRegistry.FLAME_SCROLL,
 
-                modItemRegistry.FROZE_SCROLL,
-                modItemRegistry.POISON_SCROLL,
-                modItemRegistry.CLAW_SCROLL,
-                modItemRegistry.CURE_SCROLL,
-                modItemRegistry.STONE_SCROLL,
-                modItemRegistry.FLAME_SCROLL,
+                    //不代表真实产生物品
+                    Items.AIR,
+                    Items.FIRE_CHARGE,
+                    Items.PACKED_ICE,
+                    Items.POISONOUS_POTATO,
+                    Items.SHEARS,
+                    Items.STONE,
+                    Items.ENDERMAN_SPAWN_EGG
+            };
 
-                //不代表真实产生物品
-                Items.AIR,
-                Items.FIRE_CHARGE,
-                Items.PACKED_ICE,
-                Items.POISONOUS_POTATO,
-                Items.SHEARS,
-                Items.STONE,
-                Items.ENDERMAN_SPAWN_EGG
-        };
-
-
-        if(this.spawnMap.isEmpty()){
-
-            for(int i = 0;i<items1.length;i++){
+            for (int i = 0; i < items1.length; i++) {
                 List<Item> list = new ArrayList<>();
-                for(int j = 0;j<itemStacks[i].length;j++){
+                for (int j = 0; j < itemStacks[i].length; j++) {
                     list.add(itemStacks[i][j]);
                 }
-                list.sort(new Comparator<Item>() {
-                    @Override
-                    public int compare(Item o1, Item o2) {
-                        return  o1.hashCode()-o2.hashCode();
-                    }
-                });
-                this.spawnMap.put(list,items1[i]);
+                list.sort(Comparator.comparingInt(Object::hashCode));
+                this.spawnMap.put(list, items1[i]);
             }
         }
 
@@ -150,7 +141,6 @@ public class MagicDust extends Item {
     }
 
     public MagicDust(Settings settings) {
-
         super(settings);
     }
 
@@ -349,7 +339,7 @@ public class MagicDust extends Item {
         BlockState blockState = world.getBlockState(blockPos);
 
         if(world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)) {
-            check_spawn(blockPos, world,context);
+            trySpawn(blockPos, world,context);
         }
 
         if (blockState.getBlock() instanceof DyedCarpetBlock) {
@@ -372,74 +362,59 @@ public class MagicDust extends Item {
         return ActionResult.FAIL;
 
     }
-    public void check_spawn(BlockPos pos,World world, ItemUsageContext context){
-        if(checkPattern(getAltarPattern(),pos,world)){
-            context.getStack().decrement(1);
-            context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
-        }
-    }
 
-    private boolean checkPattern(List<BlockPattern> blockPatternList,BlockPos pos,World world){
+    private boolean trySpawn(BlockPos pos, World world, ItemUsageContext context) {
+        List<BlockPattern> blockPatternList = getAltarPattern();
         List<AltarEntity> altarEntityList = new ArrayList<>();
         List<Item> items = new ArrayList<>();
         BlockPattern.Result result;
-        for(int i = (-1)*blockPatternList.size()/2;i<blockPatternList.size()/2+1;i++){
-            result = blockPatternList.get(i+blockPatternList.size()/2).searchAround(world,pos.add(0,1,i));
-            if(result == null){
+
+        for (int i = (-1) * blockPatternList.size() / 2; i < blockPatternList.size() / 2 + 1; i++) {
+            result = blockPatternList.get(i + blockPatternList.size() / 2).searchAround(world, pos.add(0, 1, i));
+            if (result == null) {
                 return false;
             }
-//            for (int j = (-1)*blockPatternList.get(i+blockPatternList.size()/2).getWidth()/2; j < this.blockPatternList.get(i+blockPatternList.size()/2).getWidth()/2 +1; ++j) {
-            for (int j = 0; j < this.blockPatternList.get(i+blockPatternList.size()/2).getWidth(); ++j) {
-                    CachedBlockPosition cachedBlockPosition = result.translate(j, 0, 0);
-                        if(cachedBlockPosition.getBlockEntity() instanceof AltarEntity){
-                            AltarEntity altarEntity = (AltarEntity) cachedBlockPosition.getBlockEntity();
-                            if(!altarEntity.getContent().isOf(Items.AIR)){
-                                if(!world.isClient) {
-                                    for (ServerPlayerEntity player : ((ServerWorld)world).getPlayers()) {
-                                        player.networkHandler.sendPacket(new ParticleS2CPacket(ParticleTypes.SPIT, true,
-                                                altarEntity.getPos().getX()+0.5,
-                                                altarEntity.getPos().getY()+1,
-                                                altarEntity.getPos().getZ()+0.5, 0, 0, 0, 0, 0
-                                        ));
-                                    }
-                                    items.add(altarEntity.getContent().getItem());
-                                    altarEntityList.add(altarEntity);
-                                }
+            for (int j = 0; j < this.blockPatternList.get(i + blockPatternList.size() / 2).getWidth(); ++j) {
+                CachedBlockPosition cachedBlockPosition = result.translate(j, 0, 0);
+                if (cachedBlockPosition.getBlockEntity() instanceof AltarEntity) {
+                    AltarEntity altarEntity = (AltarEntity) cachedBlockPosition.getBlockEntity();
+                    if (!altarEntity.getContent().isOf(Items.AIR)) {
+                        if (!world.isClient) {
+                            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
+                                player.networkHandler.sendPacket(new ParticleS2CPacket(ParticleTypes.SPIT, true,
+                                        altarEntity.getPos().getX() + 0.5,
+                                        altarEntity.getPos().getY() + 1,
+                                        altarEntity.getPos().getZ() + 0.5, 0, 0, 0, 0, 0
+                                ));
+                            }
+                            items.add(altarEntity.getContent().getItem());
+                            altarEntityList.add(altarEntity);
+                        }
                     }
                 }
-                }
+            }
         }
         //测试用
         this.blockPos = pos;
-        items.sort(new Comparator<Item>() {
-            @Override
-            public int compare(Item o1, Item o2) {
-                return o1.hashCode()-o2.hashCode();
-            }
-        });
-//        Set<List<Item>> keySet = getSpawnMap().keySet();
-//        List<Item> firstKey = keySet.iterator().next();
-//        LogManager.getLogger().info(items);
-//        LogManager.getLogger().info(firstKey);
+        items.sort(Comparator.comparingInt(Object::hashCode));
 
-//        LogManager.getLogger().info(items.equals(firstKey));
-//        LogManager.getLogger().info((items.get(1)).equals(((Item)firstKey.get(1))));
-
-        if(getSpawnMap().get(items) != null){
-            this.dropItem = getSpawnMap().get(items);
-
-            for (AltarEntity altarEntity : altarEntityList) {
-                altarEntity.setContent(Items.AIR.getDefaultStack());
-                BlockState state = world.getBlockState(altarEntity.getPos());
-                AltarBlock.setItem(world, altarEntity.getPos(), state, 0);
-            }
-
-            state = State.Generate;
-            return true;
-        }else{
+        if (getSpawnMap().get(items) == null)
             return false;
+
+        this.dropItem = getSpawnMap().get(items);
+
+        for (AltarEntity altarEntity : altarEntityList) {
+            altarEntity.setContent(Items.AIR.getDefaultStack());
+            BlockState state = world.getBlockState(altarEntity.getPos());
+            AltarBlock.setItem(world, altarEntity.getPos(), state, 0);
         }
 
+        context.getStack().decrement(1);
+        context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
+
+        state = State.Generate;
+
+        return true;
     }
 
     @Nullable
