@@ -29,6 +29,7 @@ import net.minecraft.predicate.block.BlockStatePredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -55,10 +56,22 @@ public class MagicDust extends Item {
     Item dropItem ;
 
     Block[] randFlower = {
+            //tall flower
             Blocks.SUNFLOWER,
             Blocks.LILAC,
             Blocks.ROSE_BUSH,
             Blocks.PEONY,
+            //short flower
+            Blocks.DANDELION,
+            Blocks.POPPY,
+            Blocks.BLUE_ORCHID,
+            Blocks.ALLIUM,
+            Blocks.AZURE_BLUET,
+            Blocks.RED_TULIP,
+            Blocks.PINK_TULIP,
+            Blocks.OXEYE_DAISY,
+            Blocks.CORNFLOWER,
+            Blocks.LILY_OF_THE_VALLEY,
     };
 
     private Map<List<Item>,Item> getSpawnMap(){
@@ -268,7 +281,7 @@ public class MagicDust extends Item {
             magicAreaCloud.setRadius(25.0F);
             magicAreaCloud.setRadiusGrowth(-0.01f);
             magicAreaCloud.setDegree(210.0F);
-            searchBlock(world,new BlockPos(blockPos.getX()-0.5,blockPos.getY()+0.5,blockPos.getZ()-0.5),90);
+            searchBlock(world,new BlockPos(blockPos.getX(),blockPos.getY()+0.5,blockPos.getZ()),648);
             world.spawnEntity(magicAreaCloud);
         }else if(dropItem == Items.STONE){
             MagicAreaCloud magicAreaCloud = new MagicAreaCloud(world,blockPos.getX(),blockPos.getY(),blockPos.getZ());
@@ -299,13 +312,13 @@ public class MagicDust extends Item {
                         BlockPos blockPos1;
                         while (!(queue.size() == 1)&&atom_count.get()>0){
                             blockPos1 = queue.poll();
-                            blockPos1 = new BlockPos((double)(blockPos1.getX()) , (double)(blockPos1.getY())+0.5, (double) (blockPos1.getZ()));
+                            blockPos1 = new BlockPos((double)(blockPos1.getX()), (double)(blockPos1.getY()), (double) (blockPos1.getZ()));
                             for(double i = -1;i<=1;i++){
                                 for(double j = -1;j<=1;j++){
                                     for(double k = -1;k<=1;k++) {
                                         BlockPos blockPos2 = new BlockPos((double)blockPos1.getX() + i, (double)blockPos1.getY()+j, (double)blockPos1.getZ() + k);
                                         if(judgeDirt(world,blockPos2)) {
-                                            Thread.sleep(100);
+                                            Thread.sleep(250);
                                             queue.offer(blockPos2);
                                             atom_count.decrementAndGet();
                                         }
@@ -324,9 +337,18 @@ public class MagicDust extends Item {
     public boolean judgeDirt(World world,BlockPos blockPos){
         if((world.getBlockState(blockPos).getBlock() == Blocks.ROOTED_DIRT || world.getBlockState(blockPos).getBlock() == Blocks.DIRT||
                 world.getBlockState(blockPos).getBlock() == Blocks.ROOTED_DIRT ||world.getBlockState(blockPos).getBlock() == Blocks.GRASS_BLOCK)&&
-                world.getBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ())).getBlock() == Blocks.AIR){
-            int rand = new Random().nextInt(4);
-            world.setBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ()),randFlower[rand].getDefaultState());
+                (world.getBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ())).getBlock() == Blocks.AIR&&
+                world.getBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+2,blockPos.getZ())).getBlock() == Blocks.AIR)){
+            int rand = new Random().nextInt(randFlower.length);
+            if(new Random().nextInt(5)>1&&rand<=3){
+                rand = rand*4+1;
+            }
+            if(randFlower[rand] instanceof TallFlowerBlock) {
+                TallPlantBlock.placeAt(world, randFlower[rand].getDefaultState(), new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ()), 2);
+            }else{
+                world.setBlockState(new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ()),randFlower[rand].getDefaultState());
+            }
+            world.playSound(null, blockPos, SoundEvents.ITEM_CROP_PLANT, SoundCategory.BLOCKS, 1f, 1f);
             return true;
         }
         return false;
@@ -448,7 +470,6 @@ public class MagicDust extends Item {
         if (this.blockPatternList.size() == 0) {
             for (int i = 0 ; i<pattern.length;i++){
                 this.blockPatternList.add(BlockPatternBuilder.start().aisle(
-
                                pattern[i])
                         .where('#',
                                 CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(modBlockRegistry.ALTAR_BLOCK)))
