@@ -374,7 +374,7 @@ public class MagicDust extends Item {
     }
 
     private boolean checkPattern(List<BlockPattern> blockPatternList,BlockPos pos,World world){
-
+        List<AltarEntity> altarEntityList = new ArrayList<>();
         List<Item> items = new ArrayList<>();
         BlockPattern.Result result;
         for(int i = (-1)*blockPatternList.size()/2;i<blockPatternList.size()/2+1;i++){
@@ -397,10 +397,7 @@ public class MagicDust extends Item {
                                         ));
                                     }
                                     items.add(altarEntity.getContent().getItem());
-                                    altarEntity.setContent(Items.AIR.getDefaultStack());
-                                    BlockState state1 = world.getBlockState(altarEntity.getPos());
-                                    AltarBlock.setItem(world, altarEntity.getPos()
-                                            , state1, 0);
+                                    altarEntityList.add(altarEntity);
                                 }
                     }
                 }
@@ -424,6 +421,12 @@ public class MagicDust extends Item {
 
         if(getSpawnMap().get(items) != null){
             this.dropItem = getSpawnMap().get(items);
+
+            for (AltarEntity altarEntity : altarEntityList) {
+                altarEntity.setContent(Items.AIR.getDefaultStack());
+                BlockState state = world.getBlockState(altarEntity.getPos());
+                AltarBlock.setItem(world, altarEntity.getPos(), state, 0);
+            }
 
             state = 1;
             return true;
