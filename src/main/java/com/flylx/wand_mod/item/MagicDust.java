@@ -39,12 +39,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MagicDust extends Item {
-    List<BlockPattern> blockPatternList = new ArrayList<>();
     Map<List<Item>,Item> spawnMap = new HashMap<>();
     //0是无事发生，1是生成特效，2是爆炸特效
     private int state = 0;
@@ -432,30 +432,33 @@ public class MagicDust extends Item {
 
     }
 
+    @Nullable
+    private static List<BlockPattern> blockPatternList = null;
 
+    private static List<BlockPattern> getAltarPattern() {
+        if (blockPatternList == null) {
+            blockPatternList = new ArrayList<>();
 
+            String[] pattern = {
+                    "~~#~#~~",
+                    "~~~~~~~",
+                    "#~___~#",
+                    "~~___~~",
+                    "#~___~#",
+                    "~~~~~~~",
+                    "~~#~#~~"
+            };
 
-    private List<BlockPattern> getAltarPattern() {
-        String[] pattern = {
-                  "~~#~#~~"
-                , "~~~~~~~"
-                , "#~~~~~#"
-                , "~~~~~~~"
-                , "#~~~~~#"
-                , "~~~~~~~"
-                , "~~#~#~~"
-        };
-        if (this.blockPatternList.size() == 0) {
-            for (int i = 0 ; i<pattern.length;i++){
-                this.blockPatternList.add(BlockPatternBuilder.start().aisle(
-
-                               pattern[i])
-                        .where('#',
-                                CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(modBlockRegistry.ALTAR_BLOCK)))
-                        .where('~', CachedBlockPosition.matchesBlockState(MaterialPredicate.create(Material.AIR))).build());
+            for (String s : pattern) {
+                blockPatternList.add(
+                        BlockPatternBuilder.start().aisle(s)
+                                .where('#', CachedBlockPosition.matchesBlockState(BlockStatePredicate.forBlock(modBlockRegistry.ALTAR_BLOCK)))
+                                .where('_', CachedBlockPosition.matchesBlockState(MaterialPredicate.create(Material.AIR)))
+                                .where('~', CachedBlockPosition.matchesBlockState(BlockStatePredicate.ANY))
+                                .build());
             }
         }
-        return this.blockPatternList;
+        return blockPatternList;
     }
 
     public Box getBox(BlockPos blockPos,double x, double y, double z) {
