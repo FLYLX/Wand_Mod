@@ -54,6 +54,8 @@ public class MagicGolemEntity extends IronGolemEntity implements Angerable {
 
     }
 
+
+
     @Override
     protected void initDataTracker() {
         super.initDataTracker();

@@ -62,6 +62,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
         this.ownerUuid = owner == null ? null : owner.getUuid();
     }
 
+
     @Nullable
     public LivingEntity getOwner() {
         Entity entity;
@@ -141,8 +142,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                     o = 0.01f;
                     p = (0.5 - this.random.nextDouble()) * 0.15;
                     d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                    e = this.random.nextDouble()-this.random.nextDouble();
-
+                    e = this.random.nextDouble()*5-this.random.nextDouble()*5;
                     l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                     this.world.addImportantParticle(ParticleTypes.SMALL_FLAME,
                             getX() + d,
@@ -172,8 +172,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                     o = 0.01f;
                     p = (0.5 - this.random.nextDouble()) * 0.15;
                     d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                    e = this.random.nextDouble()-this.random.nextDouble();
-
+                    e = this.random.nextDouble()*5-this.random.nextDouble()*5;
                     l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                     this.world.addImportantParticle(ParticleTypes.SNOWFLAKE,
                             getX() + d,
@@ -206,8 +205,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 for (int i = 0; i < getRadius(); i++) {
 
                     d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                    e = this.random.nextDouble()-this.random.nextDouble();
-
+                    e = this.random.nextDouble()*5-this.random.nextDouble()*5;
                     l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                     this.world.addImportantParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT,
                             getX() + d,
@@ -241,7 +239,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 o = 0.01f;
                 p = (0.5 - this.random.nextDouble()) * 0.15;
                 d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                e = this.random.nextDouble()-this.random.nextDouble();
+                e = this.random.nextDouble()*5-this.random.nextDouble()*5;
 
                 l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                 this.world.addImportantParticle(ParticleTypes.HEART,
@@ -274,7 +272,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                 BlockPos pos = new BlockPos(
                         getX() + d,
-                        getY() + e+10,
+                        getY() + e+ Math.random()*5+4,
                         getZ() + l);
                 if(!world.isClient) {
                     if(world.getTime()%3 == 0) {
@@ -330,7 +328,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return EntityDimensions.changing(this.getRadius() * 2.0f, 0.5f);
+        return EntityDimensions.changing(this.getRadius() * 2.0f, 5.0f);
     }
 
     @Override

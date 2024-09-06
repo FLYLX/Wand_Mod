@@ -25,12 +25,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.event.listener.GameEventListener;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class AltarBlock extends Block implements BlockEntityProvider  {
 
@@ -139,11 +137,6 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
             Item item = itemStack.getItem();
             boolean bl;
             bl = CONTENT_TO_POTTED().getOrDefault(item, true);
-            LogManager.getLogger().info(modItemRegistry.MAGIC_ORE);
-            Set<Item> keys = CONTENT_TO_POTTED().keySet();
-            for (Item key : keys) {
-                LogManager.getLogger().info(key);
-            }
 
             boolean bl2 = this.isEmpty(altarEntity.content.getItem());
 

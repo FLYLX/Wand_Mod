@@ -20,7 +20,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -42,6 +41,7 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
     private final ObjectArrayList<BlockPos> affectedBlocks = new ObjectArrayList();
     private int restart ;
     private double parameter,parameter1,cumsum=0;
+    private double circle = 16.0;
 
 
     Vec3d velocity;
@@ -219,7 +219,7 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
                 setPosition(owner.getX(), owner.getY(), owner.getZ());
             }
             if (restart != 0) {
-                if (this.getRadius() > 16.0f) {
+                if (this.getRadius() > circle) {
                     this.setRadiusGrowth(-1f);
                     restart = restart - 1;
                 } else if (this.getRadius() <= 0.5f) {
@@ -312,7 +312,6 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //            count--;
 //        }
         if(getRadius()>1&&world.getTickOrder()%1==0){
-            LogManager.getLogger().info("radius:"+getRadius());
             for (double j = 180;j>=-180;j=j-45) {
                 cumsum = cumsum + 0.5;
                 parameter1 = Math.toRadians(j);
@@ -340,5 +339,13 @@ public class MagicShieldEffect extends AreaEffectCloudEntity{
 //
 //                }
             }
+    }
+
+    public void setCircle(double circle) {
+        this.circle = circle;
+    }
+
+    public double getCircle() {
+        return circle;
     }
 }

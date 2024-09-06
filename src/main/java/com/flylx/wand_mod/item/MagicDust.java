@@ -4,6 +4,8 @@ import com.flylx.wand_mod.block.AltarBlock;
 import com.flylx.wand_mod.block.MagicOreBlock;
 import com.flylx.wand_mod.block.modBlockRegistry;
 import com.flylx.wand_mod.entity.AltarEntity;
+import com.flylx.wand_mod.entity.MagicAreaCloud;
+import com.flylx.wand_mod.entity.MagicShieldEffect;
 import com.flylx.wand_mod.mob.MagicPolymer;
 import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.particle.modParticleRegistry;
@@ -37,8 +39,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MagicDust extends Item {
     List<BlockPattern> blockPatternList = new ArrayList<>();
@@ -51,6 +55,13 @@ public class MagicDust extends Item {
     int break_age = 0;
     Item dropItem ;
 
+    Block[] randFlower = {
+            Blocks.SUNFLOWER,
+            Blocks.LILAC,
+            Blocks.ROSE_BUSH,
+            Blocks.PEONY,
+    };
+
     private Map<List<Item>,Item> getSpawnMap(){
         //合成表
 
@@ -60,8 +71,6 @@ public class MagicDust extends Item {
                         Items.EMERALD_BLOCK,modItemRegistry.STONE_SCROLL},
                 {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,Items.TNT,Items.TNT,
                         Items.NETHER_STAR,Items.DIAMOND_BLOCK,Items.GOLDEN_APPLE,modItemRegistry.MAGIC_ORE},
-
-                {Items.DARK_OAK_WOOD,modItemRegistry.MAGIC_ORE,Items.GOLDEN_APPLE},
 
                 {Items.STRING},
                 {Items.WHITE_WOOL},
@@ -75,13 +84,24 @@ public class MagicDust extends Item {
 
                 {modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,
                         modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,modItemRegistry.MAGIC_ORE,},
+                {modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,
+                        modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,modItemRegistry.FLAME_SCROLL,},
+                {modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,
+                        modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,modItemRegistry.FROZE_SCROLL,},
+                {modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,
+                        modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,modItemRegistry.POISON_SCROLL,},
+                {modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,
+                        modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.CURE_SCROLL,},
+                {modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,
+                        modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,modItemRegistry.STONE_SCROLL,},
+                {modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,
+                        modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CLAW_SCROLL,},
 
         };
         //生成表
         Item[] items1 = {
                 modItemRegistry.MAGIC_ORE,
                 modItemRegistry.MAGIC_SHIELD,
-                modItemRegistry.WAND_CORE,
 
                 Items.COBWEB,
                 Items.STRING,
@@ -93,9 +113,14 @@ public class MagicDust extends Item {
                 modItemRegistry.STONE_SCROLL,
                 modItemRegistry.FLAME_SCROLL,
 
+                //不代表真实产生物品
                 Items.AIR,
-
-
+                Items.FIRE_CHARGE,
+                Items.PACKED_ICE,
+                Items.POISONOUS_POTATO,
+                Items.SHEARS,
+                Items.STONE,
+                Items.ENDERMAN_SPAWN_EGG
         };
 
 
@@ -180,16 +205,18 @@ public class MagicDust extends Item {
                     //生成过程
                     if(!world.isClient) {
                         if (dropItem != null) {
-                            if(dropItem == Items.STRING||dropItem == modItemRegistry.MAGIC_ORE||dropItem == Items.AIR) {
-                                //生成怪物
-                                if(dropItem == Items.AIR){
-                                    MagicPolymer magicGolemEntity = modMobRegistry.MAGIC_POLYMER.create(world);
-                                    magicGolemEntity.setPosition(new Vec3d(blockPos.getX(),blockPos.getY()+1,blockPos.getZ()));
-                                    world.spawnEntity(magicGolemEntity);
+                            if(dropItem == Items.STRING||dropItem == modItemRegistry.MAGIC_ORE||dropItem == Items.AIR||dropItem == Items.FIRE_CHARGE||
+                                    dropItem == Items.PACKED_ICE||dropItem == Items.POISONOUS_POTATO||dropItem == Items.SHEARS||dropItem == Items.STONE||
+                                    dropItem == Items.ENDERMAN_SPAWN_EGG) {
+                                //特殊生成
+                                if(dropItem == Items.AIR||dropItem == Items.FIRE_CHARGE||dropItem == Items.PACKED_ICE||dropItem == Items.POISONOUS_POTATO||
+                                        dropItem == Items.SHEARS||dropItem == Items.STONE||dropItem == Items.ENDERMAN_SPAWN_EGG){
+                                   specialSpawn(dropItem,world,blockPos);
+                                }else {
+                                    world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
+                                            blockPos.getZ() + 0.5f,
+                                            new ItemStack(dropItem, 16)));
                                 }
-                                world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
-                                        blockPos.getZ() + 0.5f,
-                                        new ItemStack(dropItem,16)));
                             }else{
                                 world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
                                         blockPos.getZ() + 0.5f,
@@ -211,6 +238,108 @@ public class MagicDust extends Item {
                     break_age = 0;
                 }
             }
+    }
+
+    public void specialSpawn(Item dropItem,World world,BlockPos blockPos){
+        if(dropItem == Items.AIR){
+            MagicPolymer magicGolemEntity = modMobRegistry.MAGIC_POLYMER.create(world);
+            magicGolemEntity.setPosition(new Vec3d(blockPos.getX(),blockPos.getY()+1,blockPos.getZ()));
+            world.spawnEntity(magicGolemEntity);
+        }else if(dropItem == Items.FIRE_CHARGE){
+            MagicAreaCloud magicAreaCloud = new MagicAreaCloud(world,blockPos.getX(),blockPos.getY(),blockPos.getZ());
+            magicAreaCloud.setRadius(25.0F);
+            magicAreaCloud.setRadiusGrowth(-0.01f);
+            magicAreaCloud.setDegree(30.0F);
+            world.spawnEntity(magicAreaCloud);
+        }else if(dropItem == Items.PACKED_ICE){
+            MagicAreaCloud magicAreaCloud = new MagicAreaCloud(world,blockPos.getX(),blockPos.getY(),blockPos.getZ());
+            magicAreaCloud.setRadius(25.0F);
+            magicAreaCloud.setRadiusGrowth(-0.01f);
+            magicAreaCloud.setDegree(90.0F);
+            world.spawnEntity(magicAreaCloud);
+        }else if(dropItem == Items.POISONOUS_POTATO){
+            MagicAreaCloud magicAreaCloud = new MagicAreaCloud(world,blockPos.getX(),blockPos.getY(),blockPos.getZ());
+            magicAreaCloud.setRadius(25.0F);
+            magicAreaCloud.setRadiusGrowth(-0.01f);
+            magicAreaCloud.setDegree(150.0F);
+            world.spawnEntity(magicAreaCloud);
+        }else if(dropItem == Items.SHEARS){
+            //cure
+            MagicAreaCloud magicAreaCloud = new MagicAreaCloud(world,blockPos.getX(),blockPos.getY(),blockPos.getZ());
+            magicAreaCloud.setRadius(25.0F);
+            magicAreaCloud.setRadiusGrowth(-0.01f);
+            magicAreaCloud.setDegree(210.0F);
+            searchBlock(world,new BlockPos(blockPos.getX()-0.5,blockPos.getY()+0.5,blockPos.getZ()-0.5),90);
+            world.spawnEntity(magicAreaCloud);
+        }else if(dropItem == Items.STONE){
+            MagicAreaCloud magicAreaCloud = new MagicAreaCloud(world,blockPos.getX(),blockPos.getY(),blockPos.getZ());
+            magicAreaCloud.setRadius(25.0F);
+            magicAreaCloud.setRadiusGrowth(-0.01f);
+            magicAreaCloud.setDegree(330.0F);
+            world.spawnEntity(magicAreaCloud);
+        }else if(dropItem == Items.ENDERMAN_SPAWN_EGG){
+            MagicShieldEffect magicShieldEffect = new MagicShieldEffect(world, blockPos.getX(), blockPos.getY(),blockPos.getZ());
+            magicShieldEffect.setCircle(20.0d);
+            magicShieldEffect.setRadius(1.5f);
+            magicShieldEffect.setRadiusGrowth(-1f);
+            magicShieldEffect.setRestart(18);
+            world.spawnEntity(magicShieldEffect);
+        }
+    }
+
+
+    public void searchBlock(World world,BlockPos blockPos,int count){
+        AtomicInteger atom_count = new AtomicInteger(count);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                        Stack<BlockPos> stack = new Stack<>();
+                        stack.push(blockPos);
+                        stack.push(blockPos);
+                        BlockPos blockPos1;
+                        while (!(stack.size() == 1)&&atom_count.get()>0){
+                            blockPos1 = stack.pop();
+                            world.setBlockState(new BlockPos(blockPos1.getX() + 1, blockPos1.getY()+0.5, blockPos1.getZ() + 1),Blocks.DIAMOND_BLOCK.getDefaultState());
+                            for(double i = -1;i<=1;i++){
+                                for(double j = -1;j<=1;j++){
+                                    for(double k = -1;k<=1;k++) {
+                                        LogManager.getLogger().info("i"+i+"j"+j+"k"+k);
+                                        blockPos1 = new BlockPos((double)(blockPos1.getX() + i), (double)(blockPos1.getY() + j), (double)(blockPos1.getZ() + k));
+                                        LogManager.getLogger().info("get"+world.getBlockState(blockPos1));
+                                        world.setBlockState(blockPos1,Blocks.REDSTONE_BLOCK.getDefaultState());
+                                        Thread.sleep(100);
+//                                            if(judgeDirt(world,blockPos1)) {
+//                                                stack.push(blockPos1);
+//
+//                                                atom_count.decrementAndGet();
+//
+//                                        }
+                                    }
+                                }
+                            }
+                        }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public boolean judgeDirt(World world,BlockPos blockPos){
+        if((world.getBlockState(blockPos).getBlock() == Blocks.ROOTED_DIRT || world.getBlockState(blockPos).getBlock() == Blocks.DIRT||
+                world.getBlockState(blockPos).getBlock() == Blocks.ROOTED_DIRT ||world.getBlockState(blockPos).getBlock() == Blocks.GRASS_BLOCK)&&
+                world.getBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ())).getBlock() == Blocks.AIR){
+            if(world.getBlockState(blockPos).getBlock() == Blocks.GRASS_BLOCK){
+                LogManager.getLogger().info("AAAAAAAAAAAAAA");
+                LogManager.getLogger().info(world.getBlockState(blockPos).getBlock());
+            }
+            int rand = new Random().nextInt(4);
+            world.setBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ()),randFlower[rand].getDefaultState());
+            return true;
+        }
+        return false;
     }
 
     @Override
