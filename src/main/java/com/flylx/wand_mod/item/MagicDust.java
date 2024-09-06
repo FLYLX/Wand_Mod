@@ -344,8 +344,8 @@ public class MagicDust extends Item {
 
         if(world.getBlockState(blockPos).isOf(modBlockRegistry.MAGIC_ORE)) {
             check_spawn(blockPos, world,context);
-            context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
         }
+
         if (blockState.getBlock() instanceof DyedCarpetBlock) {
             BlockPos blockPos1 = new BlockPos(blockPos.getX(), blockPos.getY() - 1,
                     blockPos.getZ());
@@ -369,6 +369,7 @@ public class MagicDust extends Item {
     public void check_spawn(BlockPos pos,World world, ItemUsageContext context){
         if(checkPattern(getAltarPattern(),pos,world)){
             context.getStack().decrement(1);
+            context.getWorld().playSound(null,context.getBlockPos(), ModSounds.SPAWN_ITEM, SoundCategory.BLOCKS,2f,1f);
         }
     }
 
