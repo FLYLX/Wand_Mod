@@ -39,7 +39,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -294,27 +293,22 @@ public class MagicDust extends Item {
             @Override
             public void run() {
                 try {
-                        Stack<BlockPos> stack = new Stack<>();
-                        stack.push(blockPos);
-                        stack.push(blockPos);
+                        Queue<BlockPos> queue = new LinkedList<>();
+                        queue.offer(blockPos);
+                        queue.offer(blockPos);
                         BlockPos blockPos1;
-                        while (!(stack.size() == 1)&&atom_count.get()>0){
-                            blockPos1 = stack.pop();
-                            world.setBlockState(new BlockPos(blockPos1.getX() + 1, blockPos1.getY()+0.5, blockPos1.getZ() + 1),Blocks.DIAMOND_BLOCK.getDefaultState());
+                        while (!(queue.size() == 1)&&atom_count.get()>0){
+                            blockPos1 = queue.poll();
+                            blockPos1 = new BlockPos((double)(blockPos1.getX()) , (double)(blockPos1.getY())+0.5, (double) (blockPos1.getZ()));
                             for(double i = -1;i<=1;i++){
                                 for(double j = -1;j<=1;j++){
                                     for(double k = -1;k<=1;k++) {
-                                        LogManager.getLogger().info("i"+i+"j"+j+"k"+k);
-                                        blockPos1 = new BlockPos((double)(blockPos1.getX() + i), (double)(blockPos1.getY() + j), (double)(blockPos1.getZ() + k));
-                                        LogManager.getLogger().info("get"+world.getBlockState(blockPos1));
-                                        world.setBlockState(blockPos1,Blocks.REDSTONE_BLOCK.getDefaultState());
-                                        Thread.sleep(100);
-//                                            if(judgeDirt(world,blockPos1)) {
-//                                                stack.push(blockPos1);
-//
-//                                                atom_count.decrementAndGet();
-//
-//                                        }
+                                        BlockPos blockPos2 = new BlockPos((double)blockPos1.getX() + i, (double)blockPos1.getY()+j, (double)blockPos1.getZ() + k);
+                                        if(judgeDirt(world,blockPos2)) {
+                                            Thread.sleep(100);
+                                            queue.offer(blockPos2);
+                                            atom_count.decrementAndGet();
+                                        }
                                     }
                                 }
                             }
@@ -331,10 +325,6 @@ public class MagicDust extends Item {
         if((world.getBlockState(blockPos).getBlock() == Blocks.ROOTED_DIRT || world.getBlockState(blockPos).getBlock() == Blocks.DIRT||
                 world.getBlockState(blockPos).getBlock() == Blocks.ROOTED_DIRT ||world.getBlockState(blockPos).getBlock() == Blocks.GRASS_BLOCK)&&
                 world.getBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ())).getBlock() == Blocks.AIR){
-            if(world.getBlockState(blockPos).getBlock() == Blocks.GRASS_BLOCK){
-                LogManager.getLogger().info("AAAAAAAAAAAAAA");
-                LogManager.getLogger().info(world.getBlockState(blockPos).getBlock());
-            }
             int rand = new Random().nextInt(4);
             world.setBlockState(new BlockPos(blockPos.getX(),blockPos.getY()+1,blockPos.getZ()),randFlower[rand].getDefaultState());
             return true;
