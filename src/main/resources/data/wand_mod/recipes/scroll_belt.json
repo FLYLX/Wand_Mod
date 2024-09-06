@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "key": {
+      "#": { "item": "minecraft:leather" },
+      "|": { "item": "wand_mod:empty_scroll" }
+    },
+    "pattern": [
+      "#|#",
+      "#|#",
+      "#|#"
+    ],
+    "result": {
+      "item": "wand_mod:scroll_belt"
+    }
+}
