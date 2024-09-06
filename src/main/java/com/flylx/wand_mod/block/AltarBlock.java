@@ -130,9 +130,9 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
         }
 
         if (getAllowedItems().contains(playerItemStack.getItem())) {
+            altarEntity.setContent(new ItemStack(playerItemStack.getItem()));
             if (!player.getAbilities().creativeMode)
                 playerItemStack.decrement(1);
-            altarEntity.setContent(new ItemStack(playerItemStack.getItem()));
             changed = true;
         }
 
