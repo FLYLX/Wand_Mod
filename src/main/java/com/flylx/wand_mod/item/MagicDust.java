@@ -46,8 +46,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MagicDust extends Item {
     Map<List<Item>,Item> spawnMap = new HashMap<>();
-    //0是无事发生，1是生成特效，2是爆炸特效
-    private int state = 0;
+
+    private enum State {
+        None,
+        Generate, // 生成特效
+        Blooming  // 绽放特效
+    }
+
+    private State state = State.None;
 
     BlockPos blockPos;
     int spawn_age = 0;
@@ -177,7 +183,7 @@ public class MagicDust extends Item {
             world.playSound(null,blockPos, ModSounds.SPAWN_END, SoundCategory.BLOCKS,3f,1f);
         }
         if(!world.isClient){
-            if (state == 1) {
+            if (state == State.Generate) {
                 spawn_age++;
                 for (ServerPlayerEntity player : ((ServerWorld)world).getPlayers()) {
                     player.networkHandler.sendPacket(new ParticleS2CPacket(modParticleRegistry.MAGICSHIELD_PARTICLE,true,
@@ -226,14 +232,14 @@ public class MagicDust extends Item {
                     }
                 }
                 if (spawn_age > 225) {
-                    state = 0;
+                    state = State.None;
                     spawn_age = 0;
                 }
             }
-            if (state == 2) {
+            if (state == State.Blooming) {
                 break_age++;
                 if (break_age > 125) {
-                    state = 0;
+                    state = State.None;
                     break_age = 0;
                 }
             }
@@ -335,7 +341,7 @@ public class MagicDust extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
 
-        if(state == 1){
+        if(state == State.Generate){
             return ActionResult.FAIL;
         }
         World world = context.getWorld();
@@ -428,7 +434,7 @@ public class MagicDust extends Item {
                 AltarBlock.setItem(world, altarEntity.getPos(), state, 0);
             }
 
-            state = 1;
+            state = State.Generate;
             return true;
         }else{
             return false;
