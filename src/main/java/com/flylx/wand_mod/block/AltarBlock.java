@@ -12,6 +12,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.ActionResult;
@@ -124,12 +126,14 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
         boolean changed = false;
 
         if (!altarItemStack.isEmpty()) {
+            player.playSound(SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, 1, 1);
             world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), altarItemStack));
             altarEntity.setContent(ItemStack.EMPTY);
             changed = true;
         }
 
         if (getAllowedItems().contains(playerItemStack.getItem())) {
+            player.playSound(SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, 1, 1);
             altarEntity.setContent(new ItemStack(playerItemStack.getItem()));
             if (!player.getAbilities().creativeMode)
                 playerItemStack.decrement(1);
@@ -137,6 +141,7 @@ public class AltarBlock extends Block implements BlockEntityProvider  {
         }
 
         if (changed) {
+            player.playSound(SoundEvents.AMBIENT_BASALT_DELTAS_LOOP, 1, 1);
             world.setBlockState(pos, state.with(HAS_ITEM, getContentMap().getOrDefault(altarEntity.content.getItem(), 0)), Block.NOTIFY_ALL);
             world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
         }
