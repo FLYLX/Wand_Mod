@@ -16,10 +16,10 @@ public class FlowerSeaParticle  extends SpriteBillboardParticle {
         this.gravityStrength = -0.015F;
         this.velocityMultiplier = 1.0F;
         this.spriteProvider = spriteProvider;
-        this.velocityX = velocityX + (Math.random() * 2.0D - 1) * 0.05000000074505806D;
-        this.velocityY = velocityY + (Math.random() * 2.0D + 1.0D) * 0.05000000074505806D;
-        this.velocityZ = velocityZ + (Math.random() * 2.0D - 1) * 0.05000000074505806D;
-        this.scale = 0.03F * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
+        this.velocityX = velocityX + (Math.random() * 0.5D ) * 0.05000000074505806D;
+        this.velocityY = velocityY + (Math.random() * 0.8D) * 0.05000000074505806D;
+        this.velocityZ = velocityZ + (Math.random() * 0.5D ) * 0.05000000074505806D;
+        this.scale = 0.05F * (this.random.nextFloat() * this.random.nextFloat() * 1.0F + 1.0F);
         this.maxAge = (int)(16.0D / ((double)this.random.nextFloat() * 0.8D + 0.2D))+1;
         this.setSpriteForAge(spriteProvider);
     }
