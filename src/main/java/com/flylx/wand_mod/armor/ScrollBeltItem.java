@@ -195,7 +195,7 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
 //                                            y, z,
 //                                            particleS2CPacket)) continue;
 //                                    ++i;
-//                                }
+//                                }hu
                     }
                 }
             }
