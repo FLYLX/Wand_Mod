@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class MagicAreaCloud extends AreaEffectCloudEntity {
 
@@ -159,9 +160,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 //                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
 //                statusEffectInstance.getEffectType()
 //                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
-                livingEntity.damage(DamageSource.GENERIC,damage);
-
-
+                livingEntity.damage(DamageSource.ON_FIRE,damage);
             }
         }else  if(this.getDegree()>=60&&this.getDegree()<120) {
             //ice
