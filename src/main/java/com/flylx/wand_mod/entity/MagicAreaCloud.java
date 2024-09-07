@@ -11,6 +11,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -252,10 +253,11 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
             float damage = (this.getDegree()-180)/100;
 
             for (LivingEntity livingEntity : list) {
-                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
-                statusEffectInstance.getEffectType()
-                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),damage);
-
+                if(!(livingEntity instanceof HostileEntity)) {
+                    StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
+                    statusEffectInstance.getEffectType()
+                            .applyInstantEffect(this, this.getOwner(), livingEntity, statusEffectInstance.getAmplifier(), damage);
+                }
             }
         }else if(this.getDegree()>=300&&this.getDegree()<360) {
             //stone

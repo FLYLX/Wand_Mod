@@ -21,7 +21,7 @@ import java.util.List;
 public class RapidEquipC2Spacket {
 
     private static List<Item> list = Arrays.asList(modItemRegistry.FROZE_SCROLL,modItemRegistry.FLAME_SCROLL,
-            modItemRegistry.POISON_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CURE_SCROLL);
+            modItemRegistry.POISON_SCROLL,modItemRegistry.CLAW_SCROLL,modItemRegistry.CURE_SCROLL,modItemRegistry.STONE_SCROLL);
     public static void receive(MinecraftServer server, ServerPlayerEntity user, ServerPlayNetworkHandler handler,
                                PacketByteBuf buf, PacketSender responseSender) {
 

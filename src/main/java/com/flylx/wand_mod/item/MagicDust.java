@@ -223,7 +223,7 @@ public class MagicDust extends Item {
                                 }else {
                                     world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,
                                             blockPos.getZ() + 0.5f,
-                                            new ItemStack(dropItem, 16)));
+                                            new ItemStack(dropItem, 8)));
                                 }
                             }else{
                                 world.spawnEntity(new ItemEntity(world, blockPos.getX() + 0.5f, blockPos.getY() + 3.5f,

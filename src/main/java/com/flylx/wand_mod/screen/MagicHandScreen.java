@@ -1,6 +1,7 @@
 package com.flylx.wand_mod.screen;
 
 
+import com.flylx.wand_mod.Wand_mod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 public class MagicHandScreen extends HandledScreen<MagicScreenHandHandler> {
 
 
-    private static final Identifier TEXTURE =new Identifier ("minecraft", "textures/gui/container/dispenser.png");
+    private static final Identifier TEXTURE =new Identifier (Wand_mod.ModID, "textures/gui/magic_screen.png");
 
     public MagicHandScreen(MagicScreenHandHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);

@@ -66,5 +66,22 @@ public class ModMobLootGenerator extends SimpleFabricLootTableProvider {
                                 .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F)))))
 
         );
+
+        identifierBuilderBiConsumer.accept(new Identifier(Wand_mod.ModID,"entities/magic_polymer"),LootTable.builder()
+                .pool(LootPool.builder().rolls(UniformLootNumberProvider.create(1.0F,3.0F))
+                        .with(ItemEntry.builder(modItemRegistry.WAND_CORE))
+                        .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F)))
+                        .with(ItemEntry.builder(modItemRegistry.CLAW_SCROLL)
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                        .with(ItemEntry.builder(modItemRegistry.POISON_SCROLL)
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                        .with(ItemEntry.builder(modItemRegistry.FROZE_SCROLL)
+                        .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                        .with(ItemEntry.builder(modItemRegistry.STONE_SCROLL)
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F))))
+                        .with(ItemEntry.builder(modItemRegistry.FLAME_SCROLL)
+                                .apply(SetCountLootFunction.builder(ConstantLootNumberProvider.create(1.0F)))))
+
+        );
     }
 }

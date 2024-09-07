@@ -31,7 +31,7 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "nbt": "{}"
+                "nbt": "{golem_types:\"end\"}"
               }
             }
           ],
@@ -71,7 +71,7 @@
               "condition": "minecraft:entity_properties",
               "entity": "this",
               "predicate": {
-                "nbt": "{}"
+                "nbt": "{golem_types:\"froze\"}"
               }
             }
           ],

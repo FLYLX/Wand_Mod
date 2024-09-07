@@ -1,7 +1,7 @@
-// 1.19.2	2024-09-04T00:47:01.4667527	Recipes
-dbf56451b43d436a98acee9a1cbc4874e9cbcd64 data\wand_mod\recipes\flame_scroll.json
-6d1387c03211d5e0c0b812b03153d3b8f8967021 data\wand_mod\recipes\scroll_stick.json
-1b85b15b64a07d0c256d3edaa2d0826309949308 data\wand_mod\advancements\recipes\wand_mod.wand_mod\magic_dust.json
-7ad67af2f346a83a1e9b7abd9baca39c8d561148 data\wand_mod\advancements\recipes\wand_mod.wand_mod\flame_scroll.json
-55a2474f688b4809792316f01cd9548cde17da2f data\wand_mod\recipes\magic_dust.json
+// 1.19.2	2024-09-06T22:14:59.9875919	Recipes
 079b4128c0e46a261828211b74ae2eaf477f7a81 data\wand_mod\advancements\recipes\wand_mod.wand_mod\scroll_stick.json
+dbf56451b43d436a98acee9a1cbc4874e9cbcd64 data\wand_mod\recipes\flame_scroll.json
+1b85b15b64a07d0c256d3edaa2d0826309949308 data\wand_mod\advancements\recipes\wand_mod.wand_mod\magic_dust.json
+55a2474f688b4809792316f01cd9548cde17da2f data\wand_mod\recipes\magic_dust.json
+6d1387c03211d5e0c0b812b03153d3b8f8967021 data\wand_mod\recipes\scroll_stick.json
+7ad67af2f346a83a1e9b7abd9baca39c8d561148 data\wand_mod\advancements\recipes\wand_mod.wand_mod\flame_scroll.json

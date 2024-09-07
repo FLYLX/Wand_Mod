@@ -305,7 +305,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
 
             statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
-                    2000, 20,
+                    8, 20,
                     statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
             target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
 

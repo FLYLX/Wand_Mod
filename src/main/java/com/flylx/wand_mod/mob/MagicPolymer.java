@@ -125,7 +125,7 @@ public class MagicPolymer extends HostileEntity implements RangedAttackMob,IAnim
 
         }else if(choice < 2){
             BasicMagic basicMagic = new BasicMagic(this.world, this);
-            basicMagic.setVelocity((target.getX() - this.getX()) / 3, (target.getY() + 1 - this.getY()) / 3,
+            basicMagic.setVelocity((target.getX() - this.getX()) / 3, (target.getY() - this.getY()) / 3,
                     (target.getZ() - this.getZ()) / 3);
             basicMagic.setPosition(this.getX(), this.getY() + 1, this.getZ());
             basicMagic.age = 30;
