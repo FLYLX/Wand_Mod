@@ -1,5 +1,6 @@
 package com.flylx.wand_mod.entity;
 
+import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.google.common.collect.Maps;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -242,7 +243,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 e = this.random.nextDouble()*5-this.random.nextDouble()*5;
 
                 l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                this.world.addImportantParticle(ParticleTypes.HEART,
+                this.world.addImportantParticle(modParticleRegistry.FLOWERSEA_PARTICLE,
                         getX() + d,
                         getY() + e,
                         getZ() + l, n, o, p);

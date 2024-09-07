@@ -8,9 +8,11 @@ import net.minecraft.util.registry.Registry;
 
 public class modParticleRegistry {
     public static final DefaultParticleType MAGICSHIELD_PARTICLE = FabricParticleTypes.simple();
-
+    public static final DefaultParticleType FLOWERSEA_PARTICLE = FabricParticleTypes.simple();
     public static void registerParticles(){
         Registry.register(Registry.PARTICLE_TYPE,new Identifier(Wand_mod.ModID,"magic_shield"),
                 MAGICSHIELD_PARTICLE);
+        Registry.register(Registry.PARTICLE_TYPE,new Identifier(Wand_mod.ModID,"flower_sea"),
+                FLOWERSEA_PARTICLE);
     }
 }

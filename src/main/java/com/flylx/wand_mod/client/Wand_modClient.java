@@ -9,6 +9,7 @@ import com.flylx.wand_mod.hud.MagicSwitchHud;
 import com.flylx.wand_mod.item.modItemRegistry;
 import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.networking.ModMessages;
+import com.flylx.wand_mod.particle.FlowerSeaParticle;
 import com.flylx.wand_mod.particle.MagicShieldParticle;
 import com.flylx.wand_mod.particle.modParticleRegistry;
 import com.flylx.wand_mod.render.*;
@@ -78,6 +79,8 @@ public class Wand_modClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(modParticleRegistry.MAGICSHIELD_PARTICLE,
                 MagicShieldParticle.Factary::new);
 
+        ParticleFactoryRegistry.getInstance().register(modParticleRegistry.FLOWERSEA_PARTICLE,
+                FlowerSeaParticle.Factory::new);
 
         //keybind
         KeyInputHandler.register();
