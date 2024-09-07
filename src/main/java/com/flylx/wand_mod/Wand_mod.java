@@ -9,6 +9,7 @@ import com.flylx.wand_mod.item.modItemRegistry;
 import com.flylx.wand_mod.mob.modMobRegistry;
 import com.flylx.wand_mod.networking.ModMessages;
 import com.flylx.wand_mod.particle.modParticleRegistry;
+import com.flylx.wand_mod.screen.MagicScreenHandHandler;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
 import com.flylx.wand_mod.sound.ModSounds;
 import net.fabricmc.api.ModInitializer;
@@ -30,7 +31,8 @@ public class Wand_mod implements ModInitializer {
 
     public static final ScreenHandlerType<MagicScreenHandler> MAGIC_SCREEN_HANDLER =
             new ScreenHandlerType<>(MagicScreenHandler::new);
-
+    public static final ScreenHandlerType<MagicScreenHandHandler> MAGIC_SCREEN_HAND_HANDLER =
+            new ScreenHandlerType<>(MagicScreenHandHandler::new);
 
     @Override
     public void onInitialize() {

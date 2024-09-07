@@ -17,7 +17,7 @@
     "announce_to_chat": true,
     "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
     "description": {
-      "text": "法师的开始！"
+      "text": "混沌的开始！"
     },
     "frame": "task",
     "hidden": false,

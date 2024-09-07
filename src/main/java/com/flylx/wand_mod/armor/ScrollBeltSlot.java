@@ -13,4 +13,6 @@ public class ScrollBeltSlot extends Slot {
         return stack.getItem().canBeNested();
     }
 
+
+
 }

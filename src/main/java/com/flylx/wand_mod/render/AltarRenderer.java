@@ -20,27 +20,31 @@ import java.util.List;
 public class AltarRenderer implements BlockEntityRenderer<AltarEntity> {
 
 
-    public static final List<Item> render_map = new ArrayList<>(){
-        {
-            add(Items.AIR);
-            add(modItemRegistry.FLAME_SCROLL);
-            add(modItemRegistry.FROZE_SCROLL);
-            add(modItemRegistry.CLAW_SCROLL);
-            add(modItemRegistry.CURE_SCROLL);
-            add(modItemRegistry.POISON_SCROLL);
-            add(Items.DIAMOND_BLOCK);
-            add(Items.EMERALD_BLOCK);
-            add(Items.CHORUS_FRUIT);
-            add(Items.STRING);
-            add(Items.WHITE_WOOL);
-            add(Items.TNT);
-            add(Items.NETHER_STAR);
-            add(Items.GOLDEN_APPLE);
-            add(Items.DARK_OAK_WOOD);
-            add(modItemRegistry.MAGIC_ORE);
-            add(modItemRegistry.WAND_CORE);
-        }
-    };
+    public static List<Item> render_map()
+    {
+        return new ArrayList<>() {
+            {
+                add(Items.AIR);
+                add(modItemRegistry.FLAME_SCROLL);
+                add(modItemRegistry.FROZE_SCROLL);
+                add(modItemRegistry.CLAW_SCROLL);
+                add(modItemRegistry.CURE_SCROLL);
+                add(modItemRegistry.POISON_SCROLL);
+                add(Items.DIAMOND_BLOCK);
+                add(Items.EMERALD_BLOCK);
+                add(Items.CHORUS_FRUIT);
+                add(Items.STRING);
+                add(Items.WHITE_WOOL);
+                add(Items.TNT);
+                add(Items.NETHER_STAR);
+                add(Items.GOLDEN_APPLE);
+                add(Items.DARK_OAK_WOOD);
+                add(modItemRegistry.MAGIC_ORE);
+                add(modItemRegistry.WAND_CORE);
+                add(modItemRegistry.STONE_SCROLL);
+            }
+        };
+    }
 
     public AltarRenderer(BlockEntityRendererFactory.Context ctx) {}
 
@@ -51,7 +55,7 @@ public class AltarRenderer implements BlockEntityRenderer<AltarEntity> {
         if (blockState.get(AltarBlock.HAS_ITEM) == 0) {
             return;
         }
-        Item item = render_map.get(blockState.get(AltarBlock.HAS_ITEM));
+        Item item = render_map().get(blockState.get(AltarBlock.HAS_ITEM));
 
         matrices.push();
 

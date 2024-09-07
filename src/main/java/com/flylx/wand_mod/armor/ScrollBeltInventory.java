@@ -7,7 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
 
 public class ScrollBeltInventory implements ImplementedInventory  {
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
     private final ItemStack itemStack ;
     public ScrollBeltInventory(ItemStack itemStack){
         this.itemStack = itemStack;
@@ -30,4 +30,15 @@ public class ScrollBeltInventory implements ImplementedInventory  {
     public void setInventory(DefaultedList<ItemStack> inventory) {
         this.inventory = inventory;
     }
+
+
+//        if(player instanceof ServerPlayerEntity){
+//            ((ServerPlayerEntity)player).closeScreenHandler();
+//            ((ServerPlayerEntity)player).closeHandledScreen();
+//        }else{
+//            ((ClientPlayerEntity)player).closeHandledScreen();
+//        }
+
+
+
 }

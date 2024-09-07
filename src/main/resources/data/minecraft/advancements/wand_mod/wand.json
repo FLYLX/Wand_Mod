@@ -1,0 +1,39 @@
+{
+  "parent": "minecraft:wand_mod/shield",
+  "criteria": {
+    "got_wand": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "wand_mod:base_wand"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "description": {
+      "text": "超高校级的幸运"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "wand_mod:base_wand",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "text": "无限魔力"
+    }
+  },
+  "requirements": [
+    [
+      "got_wand"
+    ]
+  ]
+}

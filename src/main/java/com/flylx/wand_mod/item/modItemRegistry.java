@@ -35,7 +35,9 @@ public class modItemRegistry {
     public static final MagicDust MAGIC_DUST = (MagicDust) registerItem("magic_dust",
             new MagicDust(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(64)));
     public static final WandBox WAND_BOX = (WandBox) registerItem("wand_box",
-            new WandBox(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(1)));
+            new WandBox(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(16)));
+    public static final ScrollStick SCROLL_STICK = (ScrollStick) registerItem("scroll_stick",
+            new ScrollStick(new FabricItemSettings().group(ModItemGroup.WAND_MAGIC).maxCount(64)));
 
 
     public static final animated_base_wand BASE_WAND = (animated_base_wand) registerItem("base_wand",
@@ -60,6 +62,7 @@ public class modItemRegistry {
     }
 
     public static Item registerItem(String name,BlockItem blockitem){
+        ((BlockItem)blockitem).appendBlocks(Item.BLOCK_ITEMS, blockitem);
         return Registry.register(Registry.ITEM,new Identifier(Wand_mod.ModID,name),blockitem);
     }
 }

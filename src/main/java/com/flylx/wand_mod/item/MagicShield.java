@@ -47,6 +47,7 @@ public class MagicShield extends Item implements IAnimatable, ISyncable {
             magicShieldEffect.setRadiusGrowth(-1f);
             magicShieldEffect.setOwner(user);
             magicShieldEffect.setRestart(2);
+            magicShieldEffect.setCircle(16.0d);
             world.spawnEntity(magicShieldEffect);
 
         }

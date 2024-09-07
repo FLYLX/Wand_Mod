@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "bbb",
+    " b ",
+    "bbb"
+  ],
+  "result": {
+    "item": "wand_mod:scroll_stick"
+  }
+}

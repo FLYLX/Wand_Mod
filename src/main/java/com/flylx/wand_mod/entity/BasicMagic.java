@@ -34,7 +34,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -164,7 +163,6 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
                 world.playSound(null, getBlockPos(), ModSounds.CURE_MAGIC, SoundCategory.BLOCKS, 1f, 1f);
             }
         }
-        LogManager.getLogger().info(getDegree());
         if(Math.sqrt(Math.pow(this.getVelocity().x,2)+Math.pow(this.getVelocity().y,2)+Math.pow(this.getVelocity().z,2))<0.3F) {
             if(ownerItem!=null) {
                 NbtCompound nbtCompound = new NbtCompound();
@@ -188,6 +186,10 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
         return this.factory;
     }
 
+    @Override
+    public void setDamage(double damage) {
+        super.setDamage(0.0d);
+    }
 
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
@@ -303,7 +305,7 @@ public class BasicMagic extends PersistentProjectileEntity implements IAnimatabl
             StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
 
             statusEffectInstance = new StatusEffectInstance(statusEffectInstance.getEffectType(),
-                    2000, 20,
+                    8, 20,
                     statusEffectInstance.isAmbient(), statusEffectInstance.shouldShowParticles());
             target.addStatusEffect(new StatusEffectInstance(statusEffectInstance),getOwner());
 

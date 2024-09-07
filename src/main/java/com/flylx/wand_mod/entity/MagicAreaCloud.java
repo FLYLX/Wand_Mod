@@ -11,6 +11,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class MagicAreaCloud extends AreaEffectCloudEntity {
 
@@ -61,6 +63,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
         this.owner = owner;
         this.ownerUuid = owner == null ? null : owner.getUuid();
     }
+
 
     @Nullable
     public LivingEntity getOwner() {
@@ -141,8 +144,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                     o = 0.01f;
                     p = (0.5 - this.random.nextDouble()) * 0.15;
                     d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                    e = this.random.nextDouble()-this.random.nextDouble();
-
+                    e = this.random.nextDouble()*5-this.random.nextDouble()*5;
                     l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                     this.world.addImportantParticle(ParticleTypes.SMALL_FLAME,
                             getX() + d,
@@ -158,9 +160,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 //                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE);
 //                statusEffectInstance.getEffectType()
 //                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),0.5);
-                livingEntity.damage(DamageSource.GENERIC,damage);
-
-
+                livingEntity.damage(DamageSource.ON_FIRE,damage);
             }
         }else  if(this.getDegree()>=60&&this.getDegree()<120) {
             //ice
@@ -172,8 +172,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                     o = 0.01f;
                     p = (0.5 - this.random.nextDouble()) * 0.15;
                     d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                    e = this.random.nextDouble()-this.random.nextDouble();
-
+                    e = this.random.nextDouble()*5-this.random.nextDouble()*5;
                     l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                     this.world.addImportantParticle(ParticleTypes.SNOWFLAKE,
                             getX() + d,
@@ -206,8 +205,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 for (int i = 0; i < getRadius(); i++) {
 
                     d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                    e = this.random.nextDouble()-this.random.nextDouble();
-
+                    e = this.random.nextDouble()*5-this.random.nextDouble()*5;
                     l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                     this.world.addImportantParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT,
                             getX() + d,
@@ -241,7 +239,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 o = 0.01f;
                 p = (0.5 - this.random.nextDouble()) * 0.15;
                 d = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
-                e = this.random.nextDouble()-this.random.nextDouble();
+                e = this.random.nextDouble()*5-this.random.nextDouble()*5;
 
                 l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                 this.world.addImportantParticle(ParticleTypes.HEART,
@@ -254,10 +252,11 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
             float damage = (this.getDegree()-180)/100;
 
             for (LivingEntity livingEntity : list) {
-                StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
-                statusEffectInstance.getEffectType()
-                        .applyInstantEffect(this,this.getOwner(),livingEntity,statusEffectInstance.getAmplifier(),damage);
-
+                if(!(livingEntity instanceof HostileEntity)) {
+                    StatusEffectInstance statusEffectInstance = new StatusEffectInstance(StatusEffects.INSTANT_HEALTH);
+                    statusEffectInstance.getEffectType()
+                            .applyInstantEffect(this, this.getOwner(), livingEntity, statusEffectInstance.getAmplifier(), damage);
+                }
             }
         }else if(this.getDegree()>=300&&this.getDegree()<360) {
             //stone
@@ -274,7 +273,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
                 l = (this.random.nextDouble()-this.random.nextDouble())*getRadius();
                 BlockPos pos = new BlockPos(
                         getX() + d,
-                        getY() + e+10,
+                        getY() + e+ Math.random()*5+4,
                         getZ() + l);
                 if(!world.isClient) {
                     if(world.getTime()%3 == 0) {
@@ -330,7 +329,7 @@ public class MagicAreaCloud extends AreaEffectCloudEntity {
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return EntityDimensions.changing(this.getRadius() * 2.0f, 0.5f);
+        return EntityDimensions.changing(this.getRadius() * 2.0f, 5.0f);
     }
 
     @Override

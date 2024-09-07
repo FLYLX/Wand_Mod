@@ -16,22 +16,27 @@ import net.minecraft.util.collection.DefaultedList;
 
 public class MagicScreenHandler extends ScreenHandler {
     private final Inventory inventory;
+    //type 1 is main hand , 2 is off hand , 3 is bag
 
     public MagicScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory,getInventory(playerInventory.getArmorStack(2)));
+        this(syncId, playerInventory,getInventory(playerInventory.getArmorStack(2),playerInventory));
+
     }
 
-    public static ScrollBeltInventory getInventory(ItemStack itemStack){
-        DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(9, ItemStack.EMPTY);
-        ScrollBeltInventory scrollBeltInventory = new ScrollBeltInventory(itemStack);
+    public static  ScrollBeltInventory getInventory(ItemStack itemStack,PlayerInventory playerInventory){
+        ScrollBeltInventory scrollBeltInventory;
+        //优先主手
+        scrollBeltInventory = new ScrollBeltInventory(itemStack);
+        DefaultedList<ItemStack> inventory1 = DefaultedList.ofSize(27, ItemStack.EMPTY);
         Inventories.readNbt(itemStack.getNbt(),inventory1);
         scrollBeltInventory.setInventory(inventory1);
+
         return scrollBeltInventory;
     }
 
     public MagicScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(Wand_mod.MAGIC_SCREEN_HANDLER, syncId);
-        checkSize(inventory, 9);
+        checkSize(inventory, 27);
         this.inventory = inventory;
 
         //some inventories do custom logic when a player opens it.
@@ -42,8 +47,8 @@ public class MagicScreenHandler extends ScreenHandler {
         int l;
         //Our inventory
         for (m = 0; m < 3; ++m) {
-            for (l = 0; l < 3; ++l) {
-                this.addSlot(new ScrollBeltSlot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
+            for (l = 0; l < 9; ++l) {
+                this.addSlot(new ScrollBeltSlot(inventory, l + m * 9, 8 + l * 18, 17 + m * 18));
             }
         }
         //The player inventory
@@ -103,5 +108,10 @@ public class MagicScreenHandler extends ScreenHandler {
         return super.getType();
     }
 
+    @Override
+    public void close(PlayerEntity player) {
+        super.close(player);
+
+    }
 
 }
