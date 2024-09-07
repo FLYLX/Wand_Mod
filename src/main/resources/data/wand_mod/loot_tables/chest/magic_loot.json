@@ -68,6 +68,28 @@
               "function": "minecraft:set_count"
             }
           ],
+          "name": "wand_mod:stone_scroll"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "wand_mod:poison_scroll"
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": 1.0,
+              "function": "minecraft:set_count"
+            }
+          ],
           "name": "minecraft:diamond"
         },
         {
@@ -97,7 +119,7 @@
           "name": "minecraft:diamond_sword"
         }
       ],
-      "rolls": 5.0
+      "rolls": 9.0
     }
   ]
 }

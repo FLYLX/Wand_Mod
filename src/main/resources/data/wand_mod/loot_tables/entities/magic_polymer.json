@@ -6,10 +6,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wand_mod:wand_core"
-        },
-        {
-          "type": "minecraft:item",
           "functions": [
             {
               "add": false,
@@ -79,6 +75,20 @@
           "name": "wand_mod:magic_dust"
         }
       ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 7.0,
+        "min": 3.0
+      }
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "wand_mod:wand_core"
+        }
+      ],
       "functions": [
         {
           "add": false,
@@ -86,11 +96,7 @@
           "function": "minecraft:set_count"
         }
       ],
-      "rolls": {
-        "type": "minecraft:uniform",
-        "max": 10.0,
-        "min": 7.0
-      }
+      "rolls": 1.0
     }
   ]
 }
