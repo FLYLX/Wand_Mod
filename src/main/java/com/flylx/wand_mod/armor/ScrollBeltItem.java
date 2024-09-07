@@ -1,5 +1,6 @@
 package com.flylx.wand_mod.armor;
 
+import com.flylx.wand_mod.entity.BasicMagic;
 import com.flylx.wand_mod.item.modItemRegistry;
 import com.flylx.wand_mod.screen.MagicScreenHandHandler;
 import com.flylx.wand_mod.screen.MagicScreenHandler;
@@ -194,7 +195,7 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
 //                                            y, z,
 //                                            particleS2CPacket)) continue;
 //                                    ++i;
-//                                }
+//                                }hu
                     }
                 }
             }
@@ -219,8 +220,15 @@ public class ScrollBeltItem extends ArmorItem implements IAnimatable, NamedScree
         }
 
         for(Entity entity:list2){
-            entity.setVelocity(new Vec3d((entity.getX()-owner.getX())/10,
-                    (entity.getY()-owner.getY())/10,(entity.getZ()-owner.getZ())/10));
+            if(entity instanceof BasicMagic){
+                if(((BasicMagic) entity).getOwner() != owner){
+                    entity.setVelocity(new Vec3d((entity.getX() - owner.getX()) / 10,
+                            (entity.getY() - owner.getY()) / 10, (entity.getZ() - owner.getZ()) / 10));
+                }
+            }else {
+                entity.setVelocity(new Vec3d((entity.getX() - owner.getX()) / 10,
+                        (entity.getY() - owner.getY()) / 10, (entity.getZ() - owner.getZ()) / 10));
+            }
         }
     }
 
